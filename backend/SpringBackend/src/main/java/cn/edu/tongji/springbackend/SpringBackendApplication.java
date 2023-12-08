@@ -1,4 +1,4 @@
-package com.example.springbackend;
+package cn.edu.tongji.springbackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

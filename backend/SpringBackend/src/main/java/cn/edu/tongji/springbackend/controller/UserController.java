@@ -1,11 +1,9 @@
-package com.example.springbackend.controller;
+package cn.edu.tongji.springbackend.controller;
 
-import com.example.springbackend.entity.User;
-import com.example.springbackend.service.UserService;
-import com.example.springbackend.mapper.UserMapper;
+import cn.edu.tongji.springbackend.model.User;
+import cn.edu.tongji.springbackend.mapper.UserMapper;
+import cn.edu.tongji.springbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

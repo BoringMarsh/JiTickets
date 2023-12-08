@@ -1,6 +1,6 @@
-package com.example.springbackend.mapper;
+package cn.edu.tongji.springbackend.mapper;
 
-import com.example.springbackend.entity.User;
+import cn.edu.tongji.springbackend.model.User;
 import org.apache.ibatis.annotations.*;
 
 
@@ -8,6 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+    @Select("select * from user where id=#{id}}")
+    User selectById(@Param("id") int id);
+
     @Select("select * from user")
     List<User> findAll();
 

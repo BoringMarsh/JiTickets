@@ -1,7 +1,7 @@
-package com.example.springbackend.service;
+package cn.edu.tongji.springbackend.service;
 
-import com.example.springbackend.entity.User;
-import com.example.springbackend.mapper.UserMapper;
+import cn.edu.tongji.springbackend.model.User;
+import cn.edu.tongji.springbackend.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
