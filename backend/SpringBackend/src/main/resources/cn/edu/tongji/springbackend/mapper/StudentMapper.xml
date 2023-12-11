@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.StudentMapper">
+    <resultMap id="studentResultMap" type="student">
+        <!-- Add result mappings for each field in the Student class -->
+    </resultMap>
+
+    <select id="getStudentById" resultMap="studentResultMap">
+        SELECT * FROM student WHERE stu_id = #{stuId}
+    </select>
+
+    <insert id="insertStudent" parameterType="student">
+        <!-- Insert statement for student -->
+    </insert>
+
+    <update id="updateStudent" parameterType="student">
+        <!-- Update statement for student -->
+    </update>
+</mapper>

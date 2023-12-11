@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.UserMapper">
+    <select id="getUserById" parameterType="int" resultType="user">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        INSERT INTO user (username, password, email, phone, campus, login_status, account_status, balance, pay_password, reg_time, role)
+        VALUES (#{username}, #{password}, #{email}, #{phone}, #{campus}, #{loginStatus}, #{accountStatus}, #{balance}, #{payPassword}, #{regTime}, #{role})
+    </insert>
+
+
+</mapper>

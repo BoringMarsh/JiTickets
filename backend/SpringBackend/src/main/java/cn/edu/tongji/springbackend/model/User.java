@@ -18,5 +18,6 @@ public class User {
     private Double balance;
     private String payPassword;
     private LocalDateTime regTime;
-    private Integer type;
+    private Integer role;
 }
+

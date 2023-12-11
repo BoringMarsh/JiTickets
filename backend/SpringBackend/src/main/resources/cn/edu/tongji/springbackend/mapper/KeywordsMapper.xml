@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.KeywordsMapper">
+    <resultMap id="keywordsResultMap" type="keywords">
+        <!-- Add result mappings for each field in the Keywords class -->
+    </resultMap>
+
+    <select id="getAllKeywords" resultMap="keywordsResultMap">
+        SELECT * FROM keywords
+    </select>
+</mapper>
