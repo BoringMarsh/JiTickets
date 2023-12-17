@@ -48,8 +48,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void setUserProhibitedStatus(SetUserProhibitedStatusRequest setUserProhibitedStatusRequest) {
-        User user = userMapper.selectById(setUserProhibitedStatusRequest.getUserId());
-        user.setAccountStatus(setUserProhibitedStatusRequest.getIfProhibited() ? 0 : 1);
-        userMapper.update(user);
+        //User user = userMapper.selectById(setUserProhibitedStatusRequest.getUserId());
+        //user.setAccountStatus(setUserProhibitedStatusRequest.getIfProhibited() ? 0 : 1);
+        //userMapper.update(user);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    @Autowiredser
+    @Autowired
     private UserService userService;
 
     @PostMapping("/register/student")
@@ -38,6 +38,7 @@ public class UserController {
         }
     }
 
+    /*
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
@@ -48,5 +49,5 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(new LoginResponse("Login failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 }

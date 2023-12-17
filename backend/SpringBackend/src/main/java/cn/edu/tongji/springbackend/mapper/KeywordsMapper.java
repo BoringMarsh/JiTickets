@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface KeywordsMapper {
-    List<Keywords> getAllKeywords();
+    List<String> getAllKeywords();
     // Add other methods as needed
 }
