@@ -1,9 +1,9 @@
 package cn.edu.tongji.springbackend.controller;
 
 import cn.edu.tongji.springbackend.dto.AddAppealRequest;
+import cn.edu.tongji.springbackend.dto.AppealDetailedInfo;
 import cn.edu.tongji.springbackend.dto.GetAppealPageResponse;
 import cn.edu.tongji.springbackend.dto.SetUserProhibitedStatusRequest;
-import cn.edu.tongji.springbackend.model.Appeal;
 import cn.edu.tongji.springbackend.service.OrderService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,18 @@ public class OrderController {
     @Resource
     private OrderService orderService;
 
-    @GetMapping("/appeal/{page}")
+    @GetMapping("/appeal/{id}")
+    public ResponseEntity<?> getAppeal(@PathVariable("id") int id) {
+        try {
+            AppealDetailedInfo appealDetailedInfo = orderService.getAppeal(id);
+            return new ResponseEntity<>(appealDetailedInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("get appeal failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/appeal/page/{page}")
     public ResponseEntity<?> getAppealPage(@PathVariable("page") int page) {
         try {
             GetAppealPageResponse getAppealPageResponse = orderService.getAppealPage(page);
@@ -30,8 +41,8 @@ public class OrderController {
     @PostMapping("/appeal")
     public ResponseEntity<?> addAppeal(@RequestBody AddAppealRequest addAppealRequest) {
         try {
-            Appeal appeal = orderService.addAppeal(addAppealRequest);
-            return new ResponseEntity<>(appeal, HttpStatus.OK);
+            orderService.addAppeal(addAppealRequest);
+            return new ResponseEntity<>("successfully add appeal", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("add appeal failed", HttpStatus.INTERNAL_SERVER_ERROR);

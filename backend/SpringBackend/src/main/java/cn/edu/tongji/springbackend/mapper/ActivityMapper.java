@@ -1,6 +1,6 @@
 package cn.edu.tongji.springbackend.mapper;
 
-import cn.edu.tongji.springbackend.model.Appeal;
+import cn.edu.tongji.springbackend.model.Activity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,8 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface AppealMapper {
-    Appeal getById(@Param("appId") int appId);
+public interface ActivityMapper {
     int getCount();
-    List<Appeal> getByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
-    int add(Appeal appeal);
+    Activity getById(@Param("id") int id);
+    List<Activity> getByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 }

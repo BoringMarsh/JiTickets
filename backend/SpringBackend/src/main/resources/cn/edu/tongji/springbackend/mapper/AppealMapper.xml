@@ -4,7 +4,7 @@
 <mapper namespace="cn.edu.tongji.springbackend.mapper.AppealMapper">
     <select id="getById" resultType="appeal">
         SELECT * FROM appeal
-        WHERE app_id = #{id};
+        WHERE app_id = #{appId};
     </select>
 
     <select id="getCount" resultType="int">
