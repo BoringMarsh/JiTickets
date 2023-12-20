@@ -7,10 +7,9 @@
         SELECT * FROM user WHERE id = #{id}
     </select>
 
-    <insert id="insertUser" parameterType="user">
+    <insert id="insertUser" parameterType="user" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, password, email, phone, campus, login_status, account_status, balance, pay_password, reg_time, role)
         VALUES (#{username}, #{password}, #{email}, #{phone}, #{campus}, #{loginStatus}, #{accountStatus}, #{balance}, #{payPassword}, #{regTime}, #{role})
     </insert>
-
 
 </mapper>

@@ -12,8 +12,10 @@
     </select>
 
     <insert id="insertStudentKeyword" parameterType="studentKeyword">
-        <!-- Insert statement for student_keyword -->
+        INSERT INTO student_keyword (stu_id, keyword, prefer_weight)
+        VALUES (#{stuId}, #{keyword}, #{preferWeight})
     </insert>
+
 
     <update id="updateStudentKeyword" parameterType="studentKeyword">
         <!-- Update statement for student_keyword -->

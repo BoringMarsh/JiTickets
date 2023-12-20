@@ -12,8 +12,10 @@
     </select>
 
     <insert id="insertStudent" parameterType="student">
-        <!-- Insert statement for student -->
+        INSERT INTO student (stu_id, stu_name, stu_year, stu_school, stu_major, stu_notes)
+        VALUES (#{stuId}, #{stuName}, #{stuYear}, #{stuSchool}, #{stuMajor}, #{stuNotes})
     </insert>
+
 
     <update id="updateStudent" parameterType="student">
         <!-- Update statement for student -->

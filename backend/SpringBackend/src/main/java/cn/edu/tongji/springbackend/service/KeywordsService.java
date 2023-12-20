@@ -11,7 +11,6 @@ public class KeywordsService {
 
     @Autowired
     private KeywordsMapper keywordsMapper;
-
     public List<String> getAllKeywords() {
         return keywordsMapper.getAllKeywords();
     }
