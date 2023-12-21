@@ -12,4 +12,9 @@
         VALUES (#{username}, #{password}, #{email}, #{phone}, #{campus}, #{loginStatus}, #{accountStatus}, #{balance}, #{payPassword}, #{regTime}, #{role})
     </insert>
 
+    <select id="getUserByUsername" resultType="user">
+        SELECT * FROM users
+        WHERE username = #{username}
+    </select>
+
 </mapper>

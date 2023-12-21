@@ -10,4 +10,5 @@ import java.util.List;
 public interface UserMapper {
     User getUserById(Integer userId);
     int insertUser(User user);
+    User getUserByUsername(@Param("username") String username);
 }

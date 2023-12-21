@@ -5,7 +5,7 @@ spring:
     username: root
     password: 123456
     #url中database为对应的数据库名称
-    url: jdbc:mysql://localhost:3306/ji_tickets?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/test_db1?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis-plus:
   configuration:
@@ -14,5 +14,8 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   type-aliases-package: cn.edu.tongji.springbackend.model
-
+file:
+  upload:
+    society-logo-dir: D:\软件工程项目\backend\upload_images\society_logo\
+    society-image-dir: D:\软件工程项目\backend\upload_images\society_image\
 

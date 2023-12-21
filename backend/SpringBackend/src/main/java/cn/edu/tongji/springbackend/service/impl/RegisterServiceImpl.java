@@ -1,5 +1,6 @@
 package cn.edu.tongji.springbackend.service.impl;
 
+import cn.edu.tongji.springbackend.config.FileStorageProperties;
 import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.GetStudentProfileResponse;
 import cn.edu.tongji.springbackend.dto.ModifyStuProfileReq;
@@ -10,21 +11,27 @@ import cn.edu.tongji.springbackend.mapper.StudentKeywordMapper;
 import cn.edu.tongji.springbackend.mapper.StudentMapper;
 import cn.edu.tongji.springbackend.mapper.UserMapper;
 import cn.edu.tongji.springbackend.model.*;
-import cn.edu.tongji.springbackend.service.UserService;
+import cn.edu.tongji.springbackend.service.RegisterService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class RegisterServiceImpl implements RegisterService {
     @Resource
     private UserMapper userMapper;
     @Resource
@@ -34,9 +41,12 @@ public class UserServiceImpl implements UserService {
     @Resource
     private SocietyMapper societyMapper;
     private static final Logger logger = LoggerFactory.getLogger(KeywordsController.class);
+    // 文件存储目录管理类
+    private FileStorageProperties fileStorageProperties;
+
     @Override
     @Transactional
-    public void registerStudent(RegStudentRequest registrationRequest) {
+    public int registerStudent(RegStudentRequest registrationRequest) {
 
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
@@ -89,11 +99,13 @@ public class UserServiceImpl implements UserService {
         for (StudentKeyword studentKeyword : studentKeywords) {
             studentKeywordMapper.insertStudentKeyword(studentKeyword);
         }
+
+        return user.getId();
     }
 
     // Add other methods as needed
     @Transactional
-    public void registerSociety(RegSocietyRequest registrationRequest) {
+    public int registerSociety(RegSocietyRequest registrationRequest) {
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
         user.setPassword(registrationRequest.getPassword());
@@ -136,16 +148,23 @@ public class UserServiceImpl implements UserService {
         societyMapper.insertSociety(society);
 
         // Process and save society admins, images, and keywords
-        processSocietyAdmins(user.getId(), registrationRequest.getSocAdmins());
+        processSocietyAdmins(user.getId(), registrationRequest.getSocAdminRegs());
         processSocietyImages(user.getId(), registrationRequest.getSocImageFiles());
         processSocietyKeywords(user.getId(), registrationRequest.getSocKeywords());
+
+        return user.getId();
     }
 
     // Helper methods for processing society admins, images, and keywords
-    private void processSocietyAdmins(Integer socId, List<SocietyAdmin> socAdmins) {
-        if (socAdmins != null) {
-            for (SocietyAdmin admin : socAdmins) {
+    private void processSocietyAdmins(Integer socId, List<SocietyAdminRegistration> socAdminRegs) {
+        if (socAdminRegs != null) {
+            for (SocietyAdminRegistration adminReg : socAdminRegs) {
+                SocietyAdmin admin = new SocietyAdmin();
                 admin.setSocId(socId);
+                admin.setSocAdminNo(adminReg.getSocAdminNo());
+                admin.setSocAdminName(adminReg.getSocAdminName());
+                admin.setSocAdminEmail(adminReg.getSocAdminEmail());
+                admin.setSocAdminPhone(adminReg.getSocAdminPhone());
                 societyMapper.insertSocietyAdmin(admin);
             }
         }
@@ -176,32 +195,66 @@ public class UserServiceImpl implements UserService {
 
     // Helper method to save uploaded logo
     private String saveLogo(MultipartFile socLogo) {
-        // Save the file and return the relative path
-        // You need to implement the logic to store the file on the server
-        // Example: fileStorageService.saveFile(socLogo);
-        return "path/to/logo";
+        try {
+            // Specify the directory where you want to store logos
+            String logoUploadDir = fileStorageProperties.getLogoUploadDir();
+            // Create the directory if it doesn't exist
+            Files.createDirectories(Paths.get(logoUploadDir));
+            // Get the original file name
+            String originalFileName = StringUtils.cleanPath(socLogo.getOriginalFilename());
+            // Generate a unique filename to avoid collisions
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+            // Create the file path
+            Path targetLocation = Paths.get(logoUploadDir, uniqueFileName);
+            // Copy the file to the target location
+            Files.copy(socLogo.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            // Return the relative path
+            return logoUploadDir + uniqueFileName;
+        } catch (IOException ex) {
+            throw new FileStorageException("Failed to store logo file", ex);
+        }
     }
 
     // Helper method to save uploaded images
     private String saveImage(MultipartFile socImage) {
-        // Save the file and return the relative path
-        // You need to implement the logic to store the file on the server
-        // Example: fileStorageService.saveFile(socImage);
-        return "path/to/image";
+        try {
+            // Specify the directory where you want to store images
+            String imageUploadDir = fileStorageProperties.getImageUploadDir();
+            // Create the directory if it doesn't exist
+            Files.createDirectories(Paths.get(imageUploadDir));
+            // Get the original file name
+            String originalFileName = StringUtils.cleanPath(socImage.getOriginalFilename());
+            // Generate a unique filename to avoid collisions
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+            // Create the file path
+            Path targetLocation = Paths.get(imageUploadDir, uniqueFileName);
+            // Copy the file to the target location
+            Files.copy(socImage.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            // Return the relative path
+            return imageUploadDir + uniqueFileName;
+        } catch (IOException ex) {
+            throw new FileStorageException("Failed to store image file", ex);
+        }
     }
 
     @Override
     public GetStudentProfileResponse getStudentProfile(String username) {
-        User user = userMapper.getUserByUsername(username);
+        //User user = userMapper.getUserByUsername(username);
 
-        if (user != null) {
+        //if (user != null) {
             //return studentMapper.getStudentByUserId(user.getId());
-        }
+        //}
         return null; // Return null if the user or student is not found
     }
 
     @Override
     public void modifyStudentProfile(String username, ModifyStuProfileReq modifyRequest) {
 
+    }
+}
+
+class FileStorageException extends RuntimeException {
+    public FileStorageException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
