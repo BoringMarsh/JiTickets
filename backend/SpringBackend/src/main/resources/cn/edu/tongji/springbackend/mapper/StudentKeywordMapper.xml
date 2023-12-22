@@ -3,12 +3,11 @@
 
 <!--namespace指向mapper.xml所对应的Mapper接口-->
 <mapper namespace="cn.edu.tongji.springbackend.mapper.StudentKeywordMapper">
-    <resultMap id="studentKeywordResultMap" type="studentKeyword">
-        <!-- Add result mappings for each field in the StudentKeyword class -->
-    </resultMap>
 
-    <select id="getStudentKeywords" resultMap="studentKeywordResultMap">
-        SELECT * FROM student_keyword WHERE stu_id = #{stuId}
+    <select id="getStudentKeywords" resultType="java.lang.String">
+        SELECT keyword
+        FROM student_keyword
+        WHERE student_id = #{stuId}
     </select>
 
     <insert id="insertStudentKeyword" parameterType="studentKeyword">
@@ -16,8 +15,8 @@
         VALUES (#{stuId}, #{keyword}, #{preferWeight})
     </insert>
 
-
-    <update id="updateStudentKeyword" parameterType="studentKeyword">
-        <!-- Update statement for student_keyword -->
-    </update>
+    <delete id="deleteKeywordsByStudentId">
+        DELETE FROM student_keyword
+        WHERE student_id = #{stuId}
+    </delete>
 </mapper>

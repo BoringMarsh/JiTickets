@@ -2,6 +2,7 @@ package cn.edu.tongji.springbackend.controller;
 
 import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.LoginException;
+import cn.edu.tongji.springbackend.service.ProfileService;
 import cn.edu.tongji.springbackend.service.LoginService;
 import cn.edu.tongji.springbackend.service.RegisterService;
 import org.slf4j.Logger;
@@ -21,6 +22,8 @@ public class UserController {
     private RegisterService registerService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private ProfileService profileService;
 
     @PostMapping("/register/student")
     public ResponseEntity<?> registerStudent(@RequestBody RegStudentRequest registrationRequest) {
@@ -47,6 +50,7 @@ public class UserController {
         }
     }
 
+    /*
     @GetMapping("/register/authentication/getUnauthSocieties")
     public ResponseEntity<Page<Society>> getUnauthSocieties(
             @RequestParam(defaultValue = "0") int page,
@@ -61,11 +65,11 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    */
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            // Attempt to log in
             LoginResponse loginResponse = loginService.login(loginRequest.getUsername(), loginRequest.getPassword());
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (LoginException e) {
@@ -80,6 +84,30 @@ public class UserController {
     @GetMapping("/profile/student/get")
     public ResponseEntity<?> getStudentProfile(@RequestParam String username) {
         try {
+            GetStudentProfileResponse studentProfile = profileService.getStudentProfile(username);
+            if (studentProfile != null) {
+                return new ResponseEntity<>(studentProfile, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to retrieve student profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/profile/student/modify")
+    public ResponseEntity<?> modifyStudentProfile(@RequestBody ModifyStuProfileReq modifyRequest) {
+        try {
+            profileService.modifyStudentProfile(modifyRequest);
+            return new ResponseEntity<>("Student profile updated successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to update student profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/profile/society/get")
+    public ResponseEntity<?> getSocietyProfile(@RequestParam String username) {
+        try {
             // Fetch student information using the provided username
             GetStudentProfileResponse studentProfile = registerService.getStudentProfile(username);
 
@@ -93,8 +121,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/profile/student/modify")
-    public ResponseEntity<?> modifyStudentProfile(@RequestParam String username, @RequestBody ModifyStuProfileReq modifyRequest) {
+    @PostMapping("/profile/society/modify")
+    public ResponseEntity<?> modifySocietyProfile(@RequestParam String username, @RequestBody ModifyStuProfileReq modifyRequest) {
         try {
             // Perform validation on updateRequest if needed
 

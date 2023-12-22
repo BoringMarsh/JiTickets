@@ -14,7 +14,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ModifyStuProfileReq {
-    private User user;
-    private Student student;
-    private List<String> studentKeyword;
+    private Integer userId;
+    private String email;
+    private String phone;
+    private String campus;
+    private String stuName;
+    private String stuYear;
+    private String stuSchool;
+    private String stuMajor;
+    private String stuNotes;
+    private List<String> stuKeywords;
 }
