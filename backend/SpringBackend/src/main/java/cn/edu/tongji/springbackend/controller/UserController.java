@@ -105,8 +105,40 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile/society/get")
-    public ResponseEntity<?> getSocietyProfile(@RequestParam String username) {
+    @GetMapping("/profile/society/info/get")
+    public ResponseEntity<?> getSocietyProfileInfo(@RequestParam String username) {
+        try {
+            // Fetch student information using the provided username
+            GetSocietyProfileResponse societyProfile = profileService.getSocietyProfileInfo(username);
+
+            if (societyProfile != null) {
+                return new ResponseEntity<>(societyProfile, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Society not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to retrieve society profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/profile/society/logo/get")
+    public ResponseEntity<?> getSocietyProfileLogo(@RequestParam String username) {
+        try {
+            // Fetch student information using the provided username
+            GetStudentProfileResponse studentProfile = registerService.getStudentProfile(username);
+
+            if (studentProfile != null) {
+                return new ResponseEntity<>(studentProfile, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to retrieve student profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/profile/society/images/get")
+    public ResponseEntity<?> getSocietyProfileImages(@RequestParam String username) {
         try {
             // Fetch student information using the provided username
             GetStudentProfileResponse studentProfile = registerService.getStudentProfile(username);

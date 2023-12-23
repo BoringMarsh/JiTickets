@@ -5,9 +5,7 @@ import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.LoginException;
 import cn.edu.tongji.springbackend.exceptions.NotFoundException;
-import cn.edu.tongji.springbackend.mapper.StudentKeywordMapper;
-import cn.edu.tongji.springbackend.mapper.StudentMapper;
-import cn.edu.tongji.springbackend.mapper.UserMapper;
+import cn.edu.tongji.springbackend.mapper.*;
 import cn.edu.tongji.springbackend.model.*;
 import cn.edu.tongji.springbackend.service.ProfileService;
 import jakarta.annotation.Resource;
@@ -28,6 +26,12 @@ public class ProfileServiceImpl implements ProfileService {
     private StudentMapper studentMapper;
     @Resource
     private StudentKeywordMapper studentKeywordMapper;
+    @Resource
+    private SocietyMapper societyMapper;
+    @Resource
+    private SocietyKeywordMapper societyKeywordMapper;
+    @Resource
+    private SocietyAdminMapper societyAdminMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(KeywordsController.class);
 
@@ -51,14 +55,12 @@ public class ProfileServiceImpl implements ProfileService {
         List<String> studentKeywords = studentKeywordMapper.getStudentKeywords(userId);
 
         // Create and return the response object
-        GetStudentProfileResponse res = new GetStudentProfileResponse(
+        return new GetStudentProfileResponse(
                 user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getCampus(),
                 user.getAccountStatus(), user.getBalance(), formattedDateTime, user.getRole(),
                 student.getStuName(), student.getStuYear(), student.getStuSchool(), student.getStuMajor(),
                 student.getStuNotes(), studentKeywords
         );
-
-        return res;
     }
 
     @Override
@@ -100,4 +102,37 @@ public class ProfileServiceImpl implements ProfileService {
         // Update the student profile in the database
         studentMapper.updateStudent(student);
     }
+
+    @Override
+    public GetSocietyProfileResponse getSocietyProfileInfo(String username) {
+
+        User user = userMapper.getUserByUsername(username);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        int userId = user.getId();
+        // Formatting LocalDateTime to String
+        LocalDateTime localDateTime = user.getRegTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = localDateTime.format(formatter);
+
+        Society society = societyMapper.getSocietyById(userId);
+        if (society == null) {
+            throw new NotFoundException("Society not found");
+        }
+
+        List<String> societyKeywords = societyKeywordMapper.getSocietyKeywords(userId);
+        List<SocietyAdmin> societyAdmins = societyAdminMapper.getSocietyAdmins(userId);
+
+        // Create and return the response object
+        return new GetSocietyProfileResponse(
+                user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getCampus(),
+                user.getAccountStatus(), user.getBalance(), formattedDateTime, user.getRole(),
+                society.getSocName(), society.getSocIntro(), society.getSocType(),
+                societyKeywords, societyAdmins
+        );
+    }
+
+
 }
+

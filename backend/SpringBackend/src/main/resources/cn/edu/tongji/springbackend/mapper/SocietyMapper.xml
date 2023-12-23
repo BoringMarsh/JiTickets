@@ -3,6 +3,13 @@
 
 <!--namespace指向mapper.xml所对应的Mapper接口-->
 <mapper namespace="cn.edu.tongji.springbackend.mapper.SocietyMapper">
+    <resultMap id="societyResultMap" type="society">
+        <!-- Add result mappings for each field in the Student class -->
+    </resultMap>
+
+    <select id="getSocietyById" resultMap="societyResultMap">
+        SELECT * FROM society WHERE soc_id = #{socId}
+    </select>
 
     <insert id="insertSociety" parameterType="Society">
         INSERT INTO society (soc_id, soc_name, soc_intro, soc_type, soc_logo)

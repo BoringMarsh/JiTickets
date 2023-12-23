@@ -1,6 +1,6 @@
 package cn.edu.tongji.springbackend.mapper;
 
-import cn.edu.tongji.springbackend.model.*;
+import cn.edu.tongji.springbackend.model.SocietyKeyword;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -9,15 +9,11 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface SocietyMapper {
+public interface SocietyKeywordMapper {
 
-    Society getSocietyById(Integer socId);
-
-    void insertSociety(Society society);
-
-    void insertSocietyAdmin(SocietyAdmin societyAdmin);
-
-    void insertSocietyImage(SocietyImage societyImage);
+    List<String> getSocietyKeywords(Integer socId);
 
     void insertSocietyKeyword(SocietyKeyword societyKeyword);
+
+    void deleteKeywordsBySocietyId(Integer socId);
 }
