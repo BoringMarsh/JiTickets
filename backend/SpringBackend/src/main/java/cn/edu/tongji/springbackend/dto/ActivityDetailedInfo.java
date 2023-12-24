@@ -1,6 +1,7 @@
 package cn.edu.tongji.springbackend.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +17,16 @@ public class ActivityDetailedInfo {
     private String actIntro;
     private String actLocation;
     private Double ticketPrice;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime uploadTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regStartTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regEndTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime actTime;
+
     private Integer actCapability;
     private Integer actLeft;
     private Double actRating;

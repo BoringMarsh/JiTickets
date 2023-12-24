@@ -10,11 +10,15 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddBrowseRequest {
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime broTimeStart;
+public class IndentShortInfo {
+    private Integer indId;
+    private Double indPrice;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime indCreateTime;
+
+    private Integer indStatus;
+    private Double indRating;
     private Integer actId;
-    private Integer browserId;
-    private Boolean whetherBuy;
+    private String actName;
 }

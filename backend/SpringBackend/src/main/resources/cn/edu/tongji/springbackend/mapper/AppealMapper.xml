@@ -13,11 +13,11 @@
 
     <select id="getByPage" resultType="appeal">
         SELECT * FROM appeal
-        LIMIT #{pageSize} OFFSET #{pageSize * pageNum};
+        LIMIT #{pageSize} OFFSET #{offset};
     </select>
 
     <insert id="add" parameterType="appeal" useGeneratedKeys="true" keyProperty="appId">
-        INSERT INTO appeal(app_matters, app_content, user_id, act_id, cmt_id, complainant_id)
-        VALUES (#{appMatters}, #{appContent}, #{userId}, #{actId}, #{cmtId}, #{complainantId});
+        INSERT INTO appeal(app_time, app_matters, app_content, user_id, act_id, cmt_id, complainant_id)
+        VALUES (#{appTime}, #{appMatters}, #{appContent}, #{userId}, #{actId}, #{cmtId}, #{complainantId});
     </insert>
 </mapper>

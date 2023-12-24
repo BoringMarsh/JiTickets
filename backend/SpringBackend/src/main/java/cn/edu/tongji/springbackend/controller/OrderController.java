@@ -16,17 +16,6 @@ public class OrderController {
     @Resource
     private OrderService orderService;
 
-    @GetMapping("/appeal/{id}")
-    public ResponseEntity<?> getAppeal(@PathVariable("id") int id) {
-        try {
-            AppealDetailedInfo appealDetailedInfo = orderService.getAppeal(id);
-            return new ResponseEntity<>(appealDetailedInfo, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("get appeal failed", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("/appeal/page/{page}")
     public ResponseEntity<?> getAppealPage(@PathVariable("page") int page) {
         try {
@@ -35,6 +24,17 @@ public class OrderController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("get appeal page " + page + " failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/appeal/{appId}")
+    public ResponseEntity<?> getAppeal(@PathVariable("appId") int appId) {
+        try {
+            AppealDetailedInfo appealDetailedInfo = orderService.getAppeal(appId);
+            return new ResponseEntity<>(appealDetailedInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("get appeal failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

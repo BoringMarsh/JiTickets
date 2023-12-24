@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ActivityMapper {
     int getCount();
-    Activity getById(@Param("id") int id);
-    List<Activity> getByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+    Activity getByActId(@Param("actId") int actId);
+    List<Activity> getByPage(@Param("pageSize") int pageSize, @Param("offset") int offset);
+    int update(Activity activity);
 }

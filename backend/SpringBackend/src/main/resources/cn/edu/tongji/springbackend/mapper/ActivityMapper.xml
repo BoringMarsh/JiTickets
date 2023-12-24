@@ -7,14 +7,57 @@
         FROM activity
     </select>
 
-    <select id="getById" resultType="activity">
+    <select id="getByActId" resultType="activity">
         SELECT * FROM activity
-        WHERE act_id = #{id};
+        WHERE act_id = #{actId};
     </select>
 
     <select id="getByPage" resultType="activity">
         SELECT * FROM activity
         ORDER BY upload_time DESC
-        LIMIT #{pageSize} OFFSET #{pageSize * pageNum};
+        LIMIT #{pageSize} OFFSET #{offset};
     </select>
+
+    <update id="update" parameterType="activity">
+        UPDATE activity
+        <set>
+            <if test="actName != null and actIntro != ''">
+                act_name = #{actName},
+            </if>
+            <if test="actIntro != null and actIntro != ''">
+                act_intro = #{actIntro},
+            </if>
+            <if test="actLocation != null and actLocation != ''">
+                act_location = #{actLocation},
+            </if>
+            <if test="ticketPrice != null">
+                ticket_price = #{ticketPrice},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime},
+            </if>
+            <if test="regStartTime != null">
+                reg_start_time = #{regStartTime},
+            </if>
+            <if test="regEndTime != null">
+                reg_end_time = #{regEndTime},
+            </if>
+            <if test="actTime != null">
+                act_time = #{actTime},
+            </if>
+            <if test="actCapacity != null">
+                act_capacity = #{actCapacity},
+            </if>
+            <if test="actLeft != null">
+                act_left = #{actLeft},
+            </if>
+            <if test="actRating != null">
+                act_rating = #{actRating},
+            </if>
+            <if test="ratingNum != null">
+                rating_num = #{ratingNum}
+            </if>
+        </set>
+        WHERE act_id = #{actId};
+    </update>
 </mapper>

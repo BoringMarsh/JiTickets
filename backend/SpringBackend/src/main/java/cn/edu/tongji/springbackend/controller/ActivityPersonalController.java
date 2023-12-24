@@ -1,6 +1,7 @@
 package cn.edu.tongji.springbackend.controller;
 
 import cn.edu.tongji.springbackend.dto.*;
+import cn.edu.tongji.springbackend.exceptions.ActivityFullException;
 import cn.edu.tongji.springbackend.service.ActivityPersonalService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/activity_personal")
+@RequestMapping("/api/activity-personal")
 public class ActivityPersonalController {
     @Resource
     private ActivityPersonalService activityPersonalService;
@@ -18,7 +19,7 @@ public class ActivityPersonalController {
     @GetMapping("/activity/page/{page}")
     public ResponseEntity<?> getActivityPage(@PathVariable("page") int page) {
         try {
-            List<ActivityShortInfo> activityShortInfos = activityPersonalService.getActivityPage(page);
+            GetActivityPageResponse activityShortInfos = activityPersonalService.getActivityPage(page);
             return new ResponseEntity<>(activityShortInfos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -26,10 +27,10 @@ public class ActivityPersonalController {
         }
     }
 
-    @GetMapping("/activity/{id}")
-    public ResponseEntity<?> getActivity(@PathVariable("id") int id) {
+    @GetMapping("/activity/{actId}")
+    public ResponseEntity<?> getActivity(@PathVariable("actId") int actId) {
         try {
-            ActivityDetailedInfo activityDetailedInfo = activityPersonalService.getActivity(id);
+            ActivityDetailedInfo activityDetailedInfo = activityPersonalService.getActivity(actId);
             return new ResponseEntity<>(activityDetailedInfo, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,10 +75,32 @@ public class ActivityPersonalController {
     public ResponseEntity<?> deleteFavour(@RequestBody FavourRequest favourRequest) {
         try {
             activityPersonalService.deleteFavour(favourRequest);
-            return new ResponseEntity<>("successfully delete favour", HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("delete favour failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/indent/page")
+    public ResponseEntity<?> getIndentPage(@RequestBody GetIndentPageRequest getIndentPageRequest) {
+        try {
+            GetIndentPageResponse getAppealPageResponse = activityPersonalService.getIndentPage(getIndentPageRequest);
+            return new ResponseEntity<>(getAppealPageResponse, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("get indent page failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/indent/{indId}")
+    public ResponseEntity<?> getIndent(@PathVariable("indId") int indId) {
+        try {
+            IndentDetailedInfo indentDetailedInfo = activityPersonalService.getIndent(indId);
+            return new ResponseEntity<>(indentDetailedInfo, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("get indent failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,6 +109,8 @@ public class ActivityPersonalController {
         try {
             activityPersonalService.addIndent(addIndentRequest);
             return new ResponseEntity<>("successfully add indent", HttpStatus.OK);
+        } catch (ActivityFullException e) {
+            return new ResponseEntity<>("add indent failed: " + e.getMessage(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("add indent failed", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -99,11 +124,11 @@ public class ActivityPersonalController {
             return new ResponseEntity<>("successfully cancel indent", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("add indent failed", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("cancel indent failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @PutMapping("/indent/write_off/{indId}")
+    @PutMapping("/indent/write-off/{indId}")
     public ResponseEntity<?> writeOffIndent(@PathVariable("indId") int indId) {
         try {
             activityPersonalService.writeOffIndent(indId);
@@ -122,17 +147,6 @@ public class ActivityPersonalController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("change indent notes failed", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/indent/rating")
-    public ResponseEntity<?> changeIndentRating(@RequestBody ChangeIndentRatingRequest changeIndentRatingRequest) {
-        try {
-            activityPersonalService.changeIndentRating(changeIndentRatingRequest);
-            return new ResponseEntity<>("successfully change indent rating", HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("change indent rating failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

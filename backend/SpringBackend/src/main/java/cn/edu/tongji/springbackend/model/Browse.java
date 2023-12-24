@@ -11,5 +11,5 @@ public class Browse {
     private LocalDateTime broTimeStart;
     private Integer actId;
     private Integer browserId;
-    private Integer whetherBuy;
+    private Boolean whetherBuy;
 }

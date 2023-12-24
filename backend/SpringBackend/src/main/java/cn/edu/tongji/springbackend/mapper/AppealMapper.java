@@ -12,6 +12,6 @@ import java.util.List;
 public interface AppealMapper {
     Appeal getById(@Param("appId") int appId);
     int getCount();
-    List<Appeal> getByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+    List<Appeal> getByPage(@Param("pageSize") int pageSize, @Param("offset") int offset);
     int add(Appeal appeal);
 }

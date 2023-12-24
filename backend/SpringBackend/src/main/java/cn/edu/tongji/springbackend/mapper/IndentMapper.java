@@ -10,8 +10,15 @@ import java.util.List;
 @Mapper
 @Repository
 public interface IndentMapper {
-    List<Indent> getByStuId(@Param("stuId") int stuId);
+    Indent getByIndId(@Param("indId") int indId);
     List<Indent> getByStuIdIndStatus(@Param("stuId") int stuId, @Param("indStatus") int indStatus);
+    int stuGetCount(@Param("stuId") int stuId);
+    List<Indent> stuGetByPage(
+            @Param("stuId") int stuId,
+            @Param("pageSize") int pageSize,
+            @Param("offset") int offset
+    );
     int add(Indent indent);
     int update(Indent indent);
+    int getActIdByIndId(@Param("indId") int indId);
 }

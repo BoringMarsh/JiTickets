@@ -17,6 +17,7 @@ public class Indent {
     private String indNotes;
     private Integer indStatus;
     private Double indRating;
+    private Integer actId;
     private Integer stuId;
     private Integer socId;
     private LocalDateTime indRtime;

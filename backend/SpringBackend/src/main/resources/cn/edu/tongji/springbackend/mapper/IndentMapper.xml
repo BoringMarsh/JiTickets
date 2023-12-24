@@ -2,10 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.IndentMapper">
-    <select id="getByStuId" resultType="indent">
+    <select id="getByIndId" resultType="indent">
         SELECT * FROM indent
-        WHERE stu_id = #{stuId}
-        ORDER BY ind_create_time DESC;
+        WHERE ind_id = #{indId};
     </select>
 
     <select id="getByStuIdIndStatus" resultType="indent">
@@ -14,9 +13,21 @@
         ORDER BY ind_create_time DESC;
     </select>
 
+    <select id="stuGetCount" resultType="int">
+        SELECT COUNT(*) FROM indent
+        WHERE stu_id = #{stuId};
+    </select>
+
+    <select id="stuGetByPage" resultType="indent">
+        SELECT * FROM indent
+        WHERE stu_id = #{stuId}
+        ORDER BY ind_create_time DESC
+        LIMIT #{pageSize} OFFSET #{offset};
+    </select>
+
     <insert id="add" parameterType="indent" useGeneratedKeys="true" keyProperty="indId">
-        INSERT INTO indent(ind_price, ind_create_time, ind_verify_code, ind_name, ind_stu_no, ind_notes, ind_status, stu_id, soc_id)
-        VALUES (#{indPrice}, #{indCreateTime}, #{indVerifyCode}, #{indName}, #{indStuNo}, #{indNotes}, #{indStatus}, #{stuId}, #{socId});
+        INSERT INTO indent(ind_price, ind_create_time, ind_verify_code, ind_name, ind_stu_no, ind_notes, ind_status, act_id, stu_id, soc_id)
+        VALUES (#{indPrice}, #{indCreateTime}, #{indVerifyCode}, #{indName}, #{indStuNo}, #{indNotes}, #{indStatus}, #{actId}, #{stuId}, #{socId});
     </insert>
 
     <update id="update" parameterType="indent">
@@ -24,6 +35,9 @@
         <set>
             <if test="indStatus != null">
                 ind_status = #{indStatus},
+            </if>
+            <if test="indNotes != null and indNotes != ''">
+                ind_notes = #{indNotes}
             </if>
             <if test="indRating != null">
                 ind_rating = #{indRating},
@@ -40,4 +54,9 @@
         </set>
         WHERE ind_id = #{indId};
     </update>
+
+    <select id="getActIdByIndId" resultType="int">
+        SELECT act_id FROM indent
+        WHERE ind_id = #{indId};
+    </select>
 </mapper>

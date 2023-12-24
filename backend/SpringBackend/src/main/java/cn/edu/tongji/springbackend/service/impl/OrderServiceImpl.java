@@ -4,10 +4,8 @@ import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.mapper.AppealImageMapper;
 import cn.edu.tongji.springbackend.mapper.AppealMapper;
 import cn.edu.tongji.springbackend.mapper.UserMapper;
-import cn.edu.tongji.springbackend.model.ActivityImage;
 import cn.edu.tongji.springbackend.model.Appeal;
 import cn.edu.tongji.springbackend.model.AppealImage;
-import cn.edu.tongji.springbackend.model.User;
 import cn.edu.tongji.springbackend.service.OrderService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -28,12 +26,17 @@ public class OrderServiceImpl implements OrderService {
     public GetAppealPageResponse getAppealPage(int page) {
         final int pageSize = 30;
         final int totalPage = (int) Math.ceil((double) appealMapper.getCount() / pageSize);
+
+        if (totalPage == 0)
+            return new GetAppealPageResponse(0, 0, new ArrayList<>());
+
         page = (page > totalPage) ? totalPage - 1 : page - 1;
         List<AppealShortInfo> appealShortInfos = new ArrayList<>();
 
-        for (Appeal appeal : appealMapper.getByPage(page, pageSize)) {
+        for (Appeal appeal : appealMapper.getByPage(pageSize, page * pageSize)) {
             appealShortInfos.add(new AppealShortInfo(
                     appeal.getAppId(),
+                    appeal.getAppTime(),
                     appeal.getAppMatters(),
                     appeal.getAppContent(),
                     appeal.getComplainantId()
@@ -41,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return new GetAppealPageResponse(
-                page,
+                page + 1,
                 totalPage,
                 appealShortInfos
         );
@@ -58,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
 
         return new AppealDetailedInfo(
                 appeal.getAppId(),
+                appeal.getAppTime(),
                 appeal.getAppMatters(),
                 appeal.getAppContent(),
                 appeal.getUserId(),
@@ -71,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void addAppeal(AddAppealRequest addAppealRequest) {
         appealMapper.add(Appeal.builder()
+                .appTime(addAppealRequest.getAppTime())
                 .appMatters(addAppealRequest.getAppMatters())
                 .appContent(addAppealRequest.getAppContent())
                 .userId(addAppealRequest.getUserId())
