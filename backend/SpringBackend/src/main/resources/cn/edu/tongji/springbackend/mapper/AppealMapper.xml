@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.edu.tongji.springbackend.mapper.AppealMapper">
+    <select id="getById" resultType="appeal">
+        SELECT * FROM appeal
+        WHERE app_id = #{appId};
+    </select>
+
+    <select id="getCount" resultType="int">
+        SELECT COUNT(*) FROM appeal;
+    </select>
+
+    <select id="getByPage" resultType="appeal">
+        SELECT * FROM appeal
+        LIMIT #{pageSize} OFFSET #{offset};
+    </select>
+
+    <insert id="add" parameterType="appeal" useGeneratedKeys="true" keyProperty="appId">
+        INSERT INTO appeal(app_time, app_matters, app_content, user_id, act_id, cmt_id, complainant_id)
+        VALUES (#{appTime}, #{appMatters}, #{appContent}, #{userId}, #{actId}, #{cmtId}, #{complainantId});
+    </insert>
+</mapper>

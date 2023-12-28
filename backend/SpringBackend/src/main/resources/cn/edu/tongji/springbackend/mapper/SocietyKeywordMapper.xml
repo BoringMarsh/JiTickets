@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.SocietyKeywordMapper">
+
+    <select id="getSocietyKeywords" resultType="java.lang.String">
+        SELECT keyword
+        FROM society_keyword
+        WHERE society_id = #{socId}
+    </select>
+
+    <insert id="insertSocietyKeyword" parameterType="societyKeyword">
+        INSERT INTO society_keyword (soc_id, keyword, prefer_weight)
+        VALUES (#{socId}, #{keyword}, #{preferWeight})
+    </insert>
+
+    <delete id="deleteKeywordsBySocietyId">
+        DELETE FROM society_keyword
+        WHERE society_id = #{socId}
+    </delete>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.SocietyMapper">
+    <resultMap id="societyResultMap" type="society">
+        <!-- Add result mappings for each field in the Student class -->
+    </resultMap>
+
+    <select id="getSocietyById" resultMap="societyResultMap">
+        SELECT * FROM society WHERE soc_id = #{socId}
+    </select>
+
+    <insert id="insertSociety" parameterType="Society">
+        INSERT INTO society (soc_id, soc_name, soc_intro, soc_type, soc_logo)
+        VALUES (#{socId}, #{socName}, #{socIntro}, #{socType}, #{socLogo})
+    </insert>
+
+    <insert id="insertSocietyAdmin" parameterType="SocietyAdmin">
+        INSERT INTO society_admin (soc_id, soc_admin_no, soc_admin_name, soc_admin_phone, soc_admin_email)
+        VALUES (#{socId}, #{socAdminNo}, #{socAdminName}, #{socAdminPhone}, #{socAdminEmail})
+    </insert>
+
+    <insert id="insertSocietyImage" parameterType="SocietyImage">
+        INSERT INTO society_image (soc_id, soc_image)
+        VALUES (#{socId}, #{socImage})
+    </insert>
+
+    <insert id="insertSocietyKeyword" parameterType="SocietyKeyword">
+        INSERT INTO society_keyword (soc_id, keyword)
+        VALUES (#{socId}, #{keyword})
+    </insert>
+
+</mapper>

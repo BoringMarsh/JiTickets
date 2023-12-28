@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.edu.tongji.springbackend.mapper.FavourMapper">
+    <select id="getById" resultType="favour">
+        SELECT * FROM favour
+        WHERE stu_id = #{stuId};
+    </select>
+
+    <insert id="add" parameterType="favour">
+        INSERT INTO favour
+        VALUES (#{actId}, #{stuId});
+    </insert>
+
+    <delete id="delete" parameterType="favour">
+        DELETE FROM favour
+        WHERE act_id = #{actId} AND stu_id = #{stuId};
+    </delete>
+</mapper>

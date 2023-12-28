@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace指向mapper.xml所对应的Mapper接口-->
+<mapper namespace="cn.edu.tongji.springbackend.mapper.StudentKeywordMapper">
+
+    <select id="getStudentKeywords" resultType="java.lang.String">
+        SELECT keyword
+        FROM student_keyword
+        WHERE student_id = #{stuId}
+    </select>
+
+    <insert id="insertStudentKeyword" parameterType="studentKeyword">
+        INSERT INTO student_keyword (stu_id, keyword, prefer_weight)
+        VALUES (#{stuId}, #{keyword}, #{preferWeight})
+    </insert>
+
+    <delete id="deleteKeywordsByStudentId">
+        DELETE FROM student_keyword
+        WHERE student_id = #{stuId}
+    </delete>
+</mapper>
