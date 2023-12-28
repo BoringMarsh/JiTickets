@@ -16,7 +16,7 @@ import LoginPage from '../src/components/LoginPage.vue';
 import IDLoginPage from '../src/components/IDLoginPage.vue'
 import PhoneLoginPage from '../src/components/PhoneLoginPage.vue'
 import FindPasswordPage from '../src/components/FindPasswordPage.vue'
-import StoreRegister from '@/components/StoreRegister.vue';
+import SocietyRegister from '@/components/SocietyRegister.vue';
 import UserRegister from '@/components/UserRegister.vue';
 import CustomerRegister from '@/components/CustomerRegisterPage.vue';
 import StudentRegister from '@/components/StudentRegisterPage.vue';
@@ -197,9 +197,9 @@ const router = createRouter({
             component: FindPasswordPage
         },
         {
-            path: '/storeregister',
-            name: 'storeregister',
-            component: StoreRegister
+            path: '/societyregister',
+            name: 'societyregister',
+            component: SocietyRegister
         },
         {
             path: '/userregister',

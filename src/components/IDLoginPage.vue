@@ -1,7 +1,7 @@
 <template>
     <div>
-      <h1 class="header">通过您的ID登录</h1>
-      <div id="hiddenContainer1" style="display:none;"></div> <!-- 隐藏的地图容器 -->
+      <!-- <h1 class="header">通过您的ID登录</h1>
+      <div id="hiddenContainer1" style="display:none;"></div>  -->
     <div>
     <el-form label-width="100px" style="max-width: 460px;position: relative;margin: auto;">
       <el-form-item label="账号ID" >
@@ -43,16 +43,19 @@ import { useRouter } from 'vue-router';
   let geoc: BMapGL.Geocoder;
 
   const login_id = async ()=> {
-          axios.post('/api/login',  JSON.stringify({ 
-          user_ID_phonenumber:loginUsername.value,
-          user_password:loginPassword.value,
-          login_type:"0" 
+          axios.post('/api/user/login',  JSON.stringify({ 
+          username:loginUsername.value,
+          password:loginPassword.value,
+          //login_type:"0" 
         }), {
           headers: {
               'Content-Type': 'application/json'
-          }
+          },
+          // baseURL: 'http://127.0.0.1:4523/m1/3653807-0-default'
           })
           .then(response => {
+            // console.log('Request URL:', response.config.baseURL + response.config.url);
+            console.log("username",loginUsername.value);
             console.log(response.data);
             if(response.data.message==='该用户已经被封禁') {
                 console.log('blocked.');
@@ -66,7 +69,7 @@ import { useRouter } from 'vue-router';
                 /*登录成功后编辑此处跳转界面*/
                 /*------------------------*/
               
-                if (response.data.user_type=='1'){
+                if (response.data.role=='1'){
                   sessionStorage.removeItem("sto_id");
                   sessionStorage.removeItem("cus_id");
                   sessionStorage.removeItem("user_type");
@@ -76,7 +79,7 @@ import { useRouter } from 'vue-router';
                       path:'/store'
                   });
                 }
-                else if (response.data.user_type=='0'){
+                else if (response.data.role=='0'){
 
                   sessionStorage.removeItem("sto_id");
                   sessionStorage.removeItem("cus_id");
@@ -86,28 +89,30 @@ import { useRouter } from 'vue-router';
                   console.log("loginUsername.value:"+loginUsername.value)
                   /*获取用户账号*/
                   user_id.value = response.data.user_ID;
-                  
+                  router.push({
+                      path:'/home'
+                  });
                   
                   /*获取用户位置*/
-                  axios.get('/api/getinformation/user', { params: {user_ID: response.data.user_ID } })
-                  .then((res) => {
-                      user_address.value = res.data.user_address;
-                      console.log(user_address.value);
-                  })
-                  .catch(() => {
-                      console.log('用户地址请求失败')
-                  });
+                  // axios.get('/api/getinformation/user', { params: {user_ID: response.data.user_ID } })
+                  // .then((res) => {
+                  //     user_address.value = res.data.user_address;
+                  //     console.log(user_address.value);
+                  // })
+                  // .catch(() => {
+                  //     console.log('用户地址请求失败')
+                  // });
 
                   // 确保 fetchLocationData 完成后再进行页面跳转
-                  fetchLocationData()
-                    .then(() => {
-                      router.push({
-                        path: '/home',
-                      });
-                    })
-                    .catch((error) => {
-                      console.error('Fetch location data failed:', error);
-                    });
+                  // fetchLocationData()
+                  //   .then(() => {
+                  //     router.push({
+                  //       path: '/home',
+                  //     });
+                  //   })
+                  //   .catch((error) => {
+                  //     console.error('Fetch location data failed:', error);
+                  //   });
                 }
               }
               else {
