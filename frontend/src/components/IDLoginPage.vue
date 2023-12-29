@@ -70,22 +70,22 @@ import { useRouter } from 'vue-router';
                 /*------------------------*/
               
                 if (response.data.role=='1'){
-                  sessionStorage.removeItem("sto_id");
-                  sessionStorage.removeItem("cus_id");
-                  sessionStorage.removeItem("user_type");
-                  sessionStorage.setItem("sto_id", loginUsername.value);
-                  sessionStorage.setItem("user_type", response.data.user_type);
+                  //sessionStorage.removeItem("soc_id");
+                  sessionStorage.removeItem("username");
+                  sessionStorage.removeItem("user_role");
+                  sessionStorage.setItem("username", loginUsername.value);
+                  sessionStorage.setItem("user_role", response.data.role);
                     router.push({
                       path:'/store'
                   });
                 }
                 else if (response.data.role=='0'){
 
-                  sessionStorage.removeItem("sto_id");
-                  sessionStorage.removeItem("cus_id");
-                  sessionStorage.removeItem("user_type");
-                  sessionStorage.setItem("cus_id", loginUsername.value);
-                  sessionStorage.setItem("user_type", response.data.user_type);
+                  //sessionStorage.removeItem("sto_id");
+                  sessionStorage.removeItem("username");
+                  sessionStorage.removeItem("user_role");
+                  sessionStorage.setItem("username", loginUsername.value);
+                  sessionStorage.setItem("user_role", response.data.role);
                   console.log("loginUsername.value:"+loginUsername.value)
                   /*获取用户账号*/
                   user_id.value = response.data.user_ID;
@@ -114,6 +114,7 @@ import { useRouter } from 'vue-router';
                   //     console.error('Fetch location data failed:', error);
                   //   });
                 }
+
               }
               else {
                 ElMessageBox.alert(response.data.message, '登录失败', {
