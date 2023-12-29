@@ -1,10 +1,10 @@
 <template>
-    <div :style="`background: url(${require('../assets/register.jpg')}) no-repeat center center; background-size: cover; height: 100vh; padding: 5% 0;`">
+    <div :style="`background: url(${require('../assets/register.jpg')}) no-repeat center center; background-size: cover; height: 120vh; padding: 5% 0;`">
   
   
     <!-- 添加了一个半透明背景层，确保文字清晰可见 -->
     <div style="background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; padding: 20px;">
-      <h1 class="header" style="text-align: center; color: #333;">用户注册</h1>
+      <h1 class="header" style="text-align: center; color: #333;">学生注册</h1>
   
       <el-form :model="form" 
                @submit.prevent="register"
@@ -13,20 +13,20 @@
                label-position="right">
   
         <!-- ...其他表单项内容保持不变... -->
-        <el-form-item label="学号" prop="username">
+        <el-form-item label="学号" prop="username" required>
           <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="user_password">
+        <el-form-item label="密码" prop="user_password" required>
           <el-input type="password" v-model="form.user_password"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="confirm_password" :validate-status="confirmStatus" :error="confirmError">
           <el-input type="password" v-model="form.confirm_password" @blur="validateConfirm"></el-input>
         </el-form-item>
-        <el-form-item label="电子邮箱" prop="user_email">
-          <el-input v-model="form.user_email"></el-input>
+        <el-form-item label="电子邮箱" prop="user_email" :validate-status="emailStatus" :error="emailError">
+          <el-input v-model="form.user_email" @blur="validateEmail"></el-input>
         </el-form-item>
         <el-form-item label="电话号码" prop="user_phone" :validate-status="phoneStatus" :error="phoneError">
-        <el-input v-model="form.user_phone" @blur="validatePhone"></el-input>
+          <el-input v-model="form.user_phone" @blur="validatePhone"></el-input>
         </el-form-item>
         <el-form-item label="校区" prop="user_campus">
           <el-select v-model="form.user_campus" placeholder="请选择校区">
@@ -34,15 +34,12 @@
             <el-option v-for="option in campusOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="支付密码" prop="pay_password">
+        <el-form-item label="支付密码" prop="pay_password" required>
           <el-input type="password" v-model="form.pay_password"></el-input>
         </el-form-item>
         <el-form-item label="真实姓名" prop="stu_name">
           <el-input v-model="form.stu_name"></el-input>
         </el-form-item>   
-        <el-form-item label="所在年级" prop="stu_year">
-          <el-input v-model="form.stu_year"></el-input>
-        </el-form-item>
         <el-form-item label="所在年级" prop="stu_year">
           <el-select v-model="form.stu_year" placeholder="请选择年级">
             <!-- 遍历年级选项，options 是一个数组，包含每个年级的信息 -->
@@ -121,35 +118,35 @@
 
   const confirmStatus = ref('');
   const confirmError = ref('');
+  const emailStatus = ref('');
+  const emailError = ref('');
   const phoneStatus = ref('');
   const phoneError = ref('');
+  const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
   const phoneReg = /^1[3-9]\d{9}$/;   //正则表达式，暂时先检测中国号码。。。。
   const stu_keyword = ref([]);
   const keywords = ref([]);
 
   // 校区选项数组，每个选项包含 label（显示文本） 和 value（对应值）
   const campusOptions = ref([
-    { label: '嘉定校区', value: 'campus1' },
-    { label: '四平路校区', value: 'campus2' },
-    { label: '沪西校区', value: 'campus3' },
-    { label: '沪北校区', value: 'campus4' },
-    { label: '彰武路校区', value: 'campus5' },
-    { label: '张江校区', value: 'campus6' },
-    { label: '临港校区', value: 'campus7' },
+    { label: '嘉定校区', value: '嘉定校区' },
+    { label: '四平路校区', value: '四平路校区' },
+    { label: '沪西校区', value: '沪西校区' },
+    { label: '沪北校区', value: '沪北校区' },
+    { label: '其它校区', value: '其它校区' },
     // 添加更多校区选项...
-  ]);
+    ]);
 
     // 年级选项数组，每个选项包含 label（显示文本） 和 value（对应值）
     const yearOptions = ref([
-    { label: '本科2023级', value: 'year1' },
-    { label: '本科2022级', value: 'year2' },
-    { label: '本科2021级', value: 'year3' },
-    { label: '本科2020级', value: 'year4' },
-    { label: '本科2019级', value: 'year5' },
-    { label: '硕士研究生', value: 'year6' },
-    { label: '博士研究生', value: 'year7' },
-    // 添加更多选项...
-  ]);
+    { label: '2023本', value: '2023本' },
+    { label: '2022本', value: '2022本' },
+    { label: '2021本', value: '2021本' },
+    { label: '2020本', value: '2020本' },
+    { label: '硕士研究生', value: '硕士研究生' },
+    { label: '博士研究生', value: '博士研究生' },
+     // 添加更多选项...
+     ]);
 
   // 学院和专业数据
   const schoolAndMajorData = [
@@ -215,6 +212,16 @@
     }
   };
 
+  const validateEmail = () => {
+    if (!emailReg.test(form.user_email)) {
+      emailStatus.value = 'error';
+      emailError.value = '邮箱格式不正确';
+    } else {
+      emailStatus.value = 'success';
+      emailError.value = '';
+    }
+  };
+
   const validatePhone = () => {
     if (!phoneReg.test(form.user_phone)) {
       phoneStatus.value = 'error';
@@ -271,7 +278,7 @@
 
       const response = await axios.post('/api/user/register/student', registerForm);
 
-      console.log(response.data);
+      console.log(response);
 
       if (response.status === 200) {
         const data = response.data;

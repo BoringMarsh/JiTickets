@@ -24,12 +24,12 @@
   </div>
   <div class="total-layout">
     <div class="container">
-      <div class="tab">
+      <!-- <div class="tab">
         <el-radio-group v-model="label_default" size="large">
           <el-radio-button @click="selectTab(0)" label="ID登录"/>
           <el-radio-button @click="selectTab(1)" label="手机号码登录"/>
         </el-radio-group>
-      </div>
+      </div> -->
 
       <div class="component">
         <component :is="selectedTab"></component>
@@ -37,7 +37,7 @@
 
       <div class="actions">
         <el-button @click="toRegister">没有账号？立即注册</el-button>
-        <el-button @click="toFindPassword">找回密码</el-button>
+        <!-- <el-button @click="toFindPassword">找回密码</el-button> -->
         <el-button type="primary" @click="dialogVisible=true">管理员登录</el-button>
       </div>
     </div>
@@ -100,7 +100,7 @@ const handleRoleSelection = () => {
   if (selectedRegRole.value === 'student') {
     router.push({ name: 'studentregister' });
   } else if (selectedRegRole.value === 'admin') {
-    router.push({ name: 'userregister' });
+    router.push({ name: 'societyregister' });
   }
 };
 
