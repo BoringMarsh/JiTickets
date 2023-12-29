@@ -27,13 +27,13 @@
           <div v-if="displayUserType === '顾客'" style="display: flex; align-items: center;">
             <img src="../assets/icons8-user-64.png" alt="顾客图标" style="margin-left: 20px;">
             <div style="font-size: 24px; margin-left: 15px;">
-              {{ greeting }}，尊敬的顾客 {{ userInfo.cus_nickname }}
+              {{ greeting }}，亲爱的{{ userInfo.stuName }}同学
             </div>
           </div>
           <div v-else-if="displayUserType === '商户'"  style="display: flex; align-items: center;">
             <img src="../assets/icons8-user-64.png" alt="商家图标" style="margin-left: 20px;">
             <div style="font-size: 24px; margin-left: 15px;">
-              {{ greeting }}，尊敬的 {{ userInfo.sto_name }} 店主
+              {{ greeting }}，亲爱的 {{ userInfo.socName }} 社团
             </div>
           </div>
         </el-row>
@@ -54,7 +54,7 @@
             </span>
           </el-col>
           <el-col :span="9">
-            <span class="value">{{ userInfo.user_ID }}</span>
+            <span class="value">{{ userInfo.username }}</span>
           </el-col>
           <el-col :span="3">
             <span class="label">
@@ -63,7 +63,7 @@
             </span>
           </el-col>
           <el-col :span="9">
-            <span class="value">{{ userInfo.user_phone }}</span>
+            <span class="value">{{ userInfo.phone }}</span>
           </el-col>
         </el-row>
         <br>
@@ -76,7 +76,7 @@
           </el-col>
           <el-col :span="3">
             <span class="value" v-if="showBalance">
-              ¥ {{ userInfo.user_balance }}
+              ¥ {{ userInfo.balance }}
             </span>
             <span class="value" v-else>
               ¥ ******
@@ -93,21 +93,21 @@
         <br><br>
         <!-- 基本信息或商户信息 -->
         <div style="border-bottom: 1px solid gray; padding: 10px;">
-          <div v-if="displayUserType === '顾客'" style="display: flex; align-items: center;">
+          <div v-if="displayUserType === '学生'" style="display: flex; align-items: center;">
             <img src="../assets/icons8-information-64.png" alt="基本信息">
             <h3 style="margin-left: 10px;">基本信息</h3>
           </div>
-          <div v-if="displayUserType === '商户'" style="display: flex; align-items: center;">
-            <img src="../assets/icons8-store-64.png" alt="商户信息">
-            <h3 style="margin-left: 10px;">商户信息</h3>
+          <div v-if="displayUserType === '社团'" style="display: flex; align-items: center;">
+            <img src="../assets/icons8-store-64.png" alt="社团信息">
+            <h3 style="margin-left: 10px;">社团信息</h3>
           </div>
-          <div v-if="displayUserType === '顾客'" style="float: right;"><i class="el-icon-user"></i></div>
-          <div v-else-if="displayUserType === '商户'" style="float: right;"><i class="el-icon-s-shop"></i></div>
+          <div v-if="displayUserType === '学生'" style="float: right;"><i class="el-icon-user"></i></div>
+          <div v-else-if="displayUserType === '社团'" style="float: right;"><i class="el-icon-s-shop"></i></div>
           <div style="clear: both;"></div>
         </div>
         <br><br>
         <!-- 根据 displayUserType 显示相应的字段 -->
-        <div v-if="displayUserType === '顾客'">
+        <div v-if="displayUserType === '学生'">
           <!-- 显示顾客相关的表单项 -->
           <el-row :gutter="25">
             <el-col :span="3">
@@ -126,11 +126,77 @@
               </span>
             </el-col>
             <el-col :span="9">
-              <span class="value">{{ userInfo.user_regTime }}</span>
+              <span class="value">{{ userInfo.regTime }}</span>
             </el-col>
           </el-row>
           <br>
+
           <el-row :gutter="25">
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-status-48.png')" alt="用户状态图标" style="height: 1.1em; margin-right: 1px;">
+                学号：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ username }}</span>
+            </el-col>
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-time-64.png')" alt="注册时间图标" style="height: 1.1em; margin-right: 1px;">
+                邮箱：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.email }}</span>
+            </el-col>
+          </el-row>
+          <br>
+
+          <el-row :gutter="25">
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-status-48.png')" alt="用户状态图标" style="height: 1.1em; margin-right: 1px;">
+                校区：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.campus }}</span>
+            </el-col>
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-time-64.png')" alt="注册时间图标" style="height: 1.1em; margin-right: 1px;">
+                年级：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.stuYear }}</span>
+            </el-col>
+          </el-row>
+          <br>
+
+          <el-row :gutter="25">
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-status-48.png')" alt="用户状态图标" style="height: 1.1em; margin-right: 1px;">
+                学院：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.stuSchool }}</span>
+            </el-col>
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-time-64.png')" alt="注册时间图标" style="height: 1.1em; margin-right: 1px;">
+                专业：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.stuMajor }}</span>
+            </el-col>
+          </el-row>
+          <br>
+          <!-- <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-address-50.png')" alt="注册地址图标" style="height: 1.1em; margin-right: 1px;">
@@ -141,18 +207,18 @@
               <span class="value">{{ userInfo.user_address }}</span>
             </el-col>
           </el-row>
-          <br>
+          <br> -->
           <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-like-50.png')" alt="商品喜好图标" style="height: 1.1em; margin-right: 1px;">
-                商品喜好：
+                喜好：
               </span>
             </el-col>
             <el-col :span="15">
-              <el-select v-model="userInfo.cus_loves" multiple disabled>
+              <el-select v-model="userInfo.stuKeywords" multiple disabled>
                 <el-option
-                  v-for="(item, index) in userInfo.cus_loves"
+                  v-for="(item, index) in userInfo.stuKeywords"
                   :key="index"
                   :label="item"
                   :value="item"
@@ -165,21 +231,22 @@
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-note-64.png')" alt="备注图标" style="height: 1.1em; margin-right: 1px;">
-                备注信息：
+                个人简介：
               </span>
             </el-col>
             <el-col :span="21">
-              <span class="value">{{ userInfo.cus_notes }}</span>
+              <span class="value">{{ userInfo.stuNotes }}</span>
             </el-col>
           </el-row>
         </div>
-        <div v-else-if="displayUserType === '商户'">
+
+        <div v-else-if="displayUserType === '社团'">
           <!-- 显示商户相关的表单项 -->
           <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-status-48.png')" alt="商户状态图标" style="height: 1.1em; margin-right: 1px;">
-                商户状态：
+                社团状态：
               </span>
             </el-col>
             <el-col :span="9">
@@ -192,11 +259,11 @@
               </span>
             </el-col>
             <el-col :span="9">
-              <span class="value">{{ userInfo.user_regTime }}</span>
+              <span class="value">{{ userInfo.regTime }}</span>
             </el-col>
           </el-row>
           <br>
-          <el-row :gutter="25">
+          <!-- <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-address-50.png')" alt="商户注册地址图标" style="height: 1.1em; margin-right: 1px;">
@@ -206,19 +273,51 @@
             <el-col :span="21">
               <span class="value">{{ userInfo.user_address }}</span>
             </el-col>
+          </el-row> 
+          <br>-->
+          <el-row :gutter="25">
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-status-48.png')" alt="用户状态图标" style="height: 1.1em; margin-right: 1px;">
+                社团号：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ username }}</span>
+            </el-col>
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-time-64.png')" alt="注册时间图标" style="height: 1.1em; margin-right: 1px;">
+                邮箱：
+              </span>
+            </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.email }}</span>
+            </el-col>
           </el-row>
           <br>
+
+          <el-row :gutter="25">
+            <el-col :span="3">
+              <span class="label">
+                <img :src="require('../assets/icons8-status-48.png')" alt="用户状态图标" style="height: 1.1em; margin-right: 1px;">
+                校区：
+              </span>
+            </el-col>
+          </el-row>
+          <br>
+
           <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-goal-64.png')" alt="主营类型图标" style="height: 1.1em; margin-right: 1px;">
-                主营类型：
+                社团类型：
               </span>
             </el-col>
             <el-col :span="15">
-              <el-select v-model="userInfo.categories" multiple disabled>
+              <el-select v-model="userInfo.socType" multiple disabled>
                 <el-option
-                  v-for="(item, index) in userInfo.categories"
+                  v-for="(item, index) in userInfo.socType"
                   :key="index"
                   :label="item"
                   :value="item"
@@ -231,11 +330,11 @@
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-information-64.png')" alt="商户简介图标" style="height: 1.1em; margin-right: 1px;">
-                商户简介：
+                社团简介：
               </span>
             </el-col>
             <el-col :span="21">
-              <span class="value">{{ userInfo.sto_introduction }}</span>
+              <span class="value">{{ userInfo.socIntro }}</span>
             </el-col>
           </el-row>
           <br><br>
@@ -243,7 +342,7 @@
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-license-64.png')" alt="营业执照图标" style="height: 1.1em; margin-right: 1px;">
-                营业执照：
+                社团LOGO：
               </span>
             </el-col>
             <el-col :span="21">
@@ -255,7 +354,7 @@
             <el-col :span="3">
               <span class="label">
                 <img :src="require('../assets/icons8-image-64.png')" alt="商户图片图标" style="height: 1.1em; margin-right: 1px;">
-                商户图片：
+                社团图片：
               </span>
             </el-col>
             <el-col :span="9">
@@ -302,7 +401,8 @@ const route = useRoute();
 const userInfo = ref({});
 const image=ref('')
 const storePictures = ref([]);
-const user_ID = ref('');
+const username = ref('');
+const user_role = ref('');
 const flag=route.query.flag;
 //const alipayBase = 'http://localhost:3000';
 const alipayBase = 'http://localhost:3000';
@@ -338,13 +438,13 @@ const confirmRecharge = () => {
     orderId: orderId,
     price: recharge_amount.value,
     name: '充值',
-    cus_id: user_ID.value,
+    cus_id: username.value,
   })
   .then((res) => {
     window.location.href = res.data.data.paymentUrl;
   });
   axios.post('/api/balance/setBalance', {
-    cus_id: user_ID.value,
+    cus_id: username.value,
     balance: parseFloat(userInfo.value.user_balance) + parseFloat(recharge_amount.value),
   })
   .then((res) => {    
@@ -374,7 +474,7 @@ const confirmWithdraw = () => {
   .then((res) => {
       if (res.data.success) {
         axios.post('/api/balance/setBalance', {
-          cus_id: user_ID.value,
+          cus_id: username.value,
           balance: parseFloat(userInfo.value.user_balance) - parseFloat(withdraw_amount.value),
         })
         .then((res) => {    
@@ -415,77 +515,82 @@ onMounted(async () => {
   setGreeting();
   console.log('123');
    //user_ID.value = route.query.id as string;
-   if(sessionStorage.getItem('sto_id')!=null){
-     user_ID.value = sessionStorage.getItem('sto_id') as string;
+  //  if(sessionStorage.getItem('sto_id')!=null){
+  //   username.value = sessionStorage.getItem('sto_id') as string;
+  // }
+  console.log(sessionStorage)
+  if(sessionStorage.getItem('username')!=null){
+    username.value = sessionStorage.getItem('username') as string;
   }
-  if(sessionStorage.getItem('cus_id')!=null){
-     user_ID.value = sessionStorage.getItem('cus_id') as string;
+  if(sessionStorage.getItem('user_role')!=null){
+    user_role.value = sessionStorage.getItem('user_role') as string;
   }
-
+  console.log("这是ID"+username.value)
   if(flag!=null)
-    user_ID.value=route.query.id as string;
-  console.log("这是ID"+user_ID.value)
-  console.log("这是ID"+user_ID.value);
+    username.value=route.query.id as string;
+  console.log("这是ID"+username.value)
   try {
-    console.log(userInfo.value.cus_notes);
-    const response = await axios.get('/api/getinformation/user', { params: {user_ID:user_ID.value } });
-    if (response.status === 200) {
-      userInfo.value = response.data;
+    // console.log(userInfo.value.cus_notes);
+    // const response = await axios.get('/api/user/profile/student/get', { params: {username:username.value } });
+    // if (response.status === 200) {
+    //   userInfo.value = response.data;
+    // } else {
+    //   console.error(`Error: HTTP status code ${response.status}`);
+    // }
 
-      
-    } else {
-      console.error(`Error: HTTP status code ${response.status}`);
-    }
-
-    console.log('##'+userInfo.value.user_type)
-    if (userInfo.value.user_type === '0') {
-      const customerResponse = await axios.get('/api/getinformation/customer', { params: { cus_ID: user_ID.value } });
-      if (customerResponse.status === 200) {
-          Object.assign(userInfo.value, customerResponse.data);
-          console.log(userInfo.value.cus_notes);
+    // console.log('##'+userInfo.value.role)
+    if (user_role.value === '0') {
+      const studentResponse = await axios.get('/api/user/profile/student/get', { params: { username: username.value } });
+      if (studentResponse.status === 200) {
+          // Object.assign(userInfo.value, studentResponse.data);
+          // console.log(userInfo.value.cus_notes);
+          userInfo.value = studentResponse.data;
+          console.log(userInfo.value);
       } else {
-          console.error(`Error: HTTP status code ${customerResponse.status}`);
+          console.error(`Error: HTTP status code ${studentResponse.status}`);
       }
-    } else if (userInfo.value.user_type === '1') {
-      const storeResponse = await axios.get('/api/getinformation/store', { params: { sto_ID: user_ID.value } });
-      image.value='http://localhost:5000\\'+storeResponse.data.sto_licenseImg;
-      if (storeResponse.status === 200) {
-          Object.assign(userInfo.value, storeResponse.data);
-          const storePicResponse = await axios.get('/api/getinformation/storeimg', { params: { sto_ID: user_ID.value } });
-          storePictures.value = storePicResponse.data.imageURL.map(pic => 'http://localhost:5000\\' + pic);
+    } else if (user_role.value === '1') {
+      const societyResponse = await axios.get('/api/user/profile/society/info/get', { params: { username: username.value } });
+      image.value='http://localhost:5000\\'+societyResponse.data.soc_logo;
+      if (societyResponse.status === 200) {
+          // Object.assign(userInfo.value, societyResponse.data);
+          userInfo.value = societyResponse.data;
+          //const socPicResponse = await axios.get('/api/getinformation/storeimg', { params: { username: username.value } });
+          //storePictures.value = socPicResponse.data.imageURL.map(pic => 'http://localhost:5000\\' + pic);
+          console.log(userInfo.value);
       } else {
-          console.error(`Error: HTTP status code ${storeResponse.status}`);
+          console.error(`Error: HTTP status code ${societyResponse.status}`);
       }
     }
   } catch (error) {
-    console.log(userInfo.value.cus_notes);
+    //console.log(userInfo.value.cus_notes);
     console.error(error);
   }
-  console.log(userInfo.value.cus_notes);
+  //console.log(userInfo.value.cus_notes);
 });
 
   const displayUserType = computed(() => {
-  return userInfo.value.user_type === '0' ? '顾客' : '商户';
+  return user_role.value === '0' ? '学生' : '社团';
   });
 
   const displayUserState = computed(() => {
-  return userInfo.value.cus_state === '0' ? '封禁' : '正常';
+  return userInfo.value.accountStatus === '0' ? '封禁' : '正常';
   });
 
   const displayStoreState = computed(() => {
-  return userInfo.value.sto_state === '0' ? '封禁' : '正常';
+  return userInfo.value.accountStatus === '0' ? '封禁' : '正常';
 });
 
 const router = useRouter();
 
 const goBack = () => {
-    const userType = sessionStorage.getItem("user_type");
+    const userRole = sessionStorage.getItem("user_role");
     if(flag!=null){
       router.push('/administrator')
     }
-    else if (userType === '1') {
+    else if (userRole === '1') {
       router.push({ path: '/store' });
-    } else if (userType === '0') {
+    } else if (userRole === '0') {
       router.push({ path: '/home' });
     } else {
       console.error("Invalid user type");
@@ -494,17 +599,17 @@ const goBack = () => {
 const modifyUserInfo = () => {
   
 if(flag!=null){
-  if (userInfo.value.user_type === '0') {
-    router.push({ name: 'ModifyCustomerInfoPage' ,query:{id:user_ID.value,flag:1}});
+  if (user_role.value === '0') {
+    router.push({ name: 'ModifyStudentInfoPage' ,query:{id:username.value,flag:1}});
   } else {
-    router.push({ name: 'ModifyStoreInfoPage' ,query:{id:user_ID.value,flag:1}});
+    router.push({ name: 'ModifySocietyInfoPage' ,query:{id:username.value,flag:1}});
   }
 }
 else{
-  if (userInfo.value.user_type === '0') {
-    router.push({ name: 'ModifyCustomerInfoPage' });
+  if (user_role.value === '0') {
+    router.push({ name: 'ModifyStudentInfoPage' });
   } else {
-    router.push({ name: 'ModifyStoreInfoPage'});
+    router.push({ name: 'ModifySocietyInfoPage'});
   }
 }
 };

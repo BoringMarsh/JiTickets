@@ -129,27 +129,24 @@
 
   // 校区选项数组，每个选项包含 label（显示文本） 和 value（对应值）
   const campusOptions = ref([
-    { label: '嘉定校区', value: 'campus1' },
-    { label: '四平路校区', value: 'campus2' },
-    { label: '沪西校区', value: 'campus3' },
-    { label: '沪北校区', value: 'campus4' },
-    { label: '彰武路校区', value: 'campus5' },
-    { label: '张江校区', value: 'campus6' },
-    { label: '临港校区', value: 'campus7' },
+    { label: '嘉定校区', value: '嘉定校区' },
+    { label: '四平路校区', value: '四平路校区' },
+    { label: '沪西校区', value: '沪西校区' },
+    { label: '沪北校区', value: '沪北校区' },
+    { label: '其它校区', value: '其它校区' },
     // 添加更多校区选项...
-  ]);
+    ]);
 
     // 年级选项数组，每个选项包含 label（显示文本） 和 value（对应值）
     const yearOptions = ref([
-    { label: '本科2023级', value: 'year1' },
-    { label: '本科2022级', value: 'year2' },
-    { label: '本科2021级', value: 'year3' },
-    { label: '本科2020级', value: 'year4' },
-    { label: '本科2019级', value: 'year5' },
-    { label: '硕士研究生', value: 'year6' },
-    { label: '博士研究生', value: 'year7' },
-    // 添加更多选项...
-  ]);
+    { label: '2023本', value: '2023本' },
+    { label: '2022本', value: '2022本' },
+    { label: '2021本', value: '2021本' },
+    { label: '2020本', value: '2020本' },
+    { label: '硕士研究生', value: '硕士研究生' },
+    { label: '博士研究生', value: '博士研究生' },
+     // 添加更多选项...
+     ]);
 
   // 学院和专业数据
   const schoolAndMajorData = [

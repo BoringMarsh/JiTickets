@@ -30,7 +30,7 @@
     <el-header height="80px">
       <div>
         <img src="StoreLogo.jpg" alt="" style="width: 150px; padding-right: 10px;"/>
-        <span>商户系统</span>
+        <span>社团系统</span>
       </div>
       <!-- <el-button type="info"  @click="dialogVisible = true">发布公告</el-button> -->
       <el-button type="danger" style="background-color:#c45656;"  @click="logout">退出登录</el-button>
@@ -62,7 +62,7 @@
             <span>商家信息</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="viewUserInfo" index="1-1">商户信息</el-menu-item>
+            <el-menu-item @click="viewUserInfo" index="1-1">社团信息</el-menu-item>
             <el-menu-item @click="modifyStoreInfo" index="1-2">修改信息</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
@@ -225,7 +225,7 @@
 
   const modifyStoreInfo=()=>{
     router.push({
-      path:'/ModifyStoreInfoPage',
+      path:'/ModifySocietyInfoPage',
       query:{
         id:sto_id.value
       }
