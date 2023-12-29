@@ -70,11 +70,11 @@ import { useRouter } from 'vue-router';
                 /*------------------------*/
               
                 if (response.data.role=='1'){
-                  sessionStorage.removeItem("sto_id");
-                  sessionStorage.removeItem("cus_id");
-                  sessionStorage.removeItem("user_type");
-                  sessionStorage.setItem("sto_id", loginUsername.value);
-                  sessionStorage.setItem("user_type", response.data.user_type);
+                  //sessionStorage.removeItem("soc_id");
+                  sessionStorage.removeItem("username");
+                  sessionStorage.removeItem("user_role");
+                  sessionStorage.setItem("username", loginUsername.value);
+                  sessionStorage.setItem("user_role", response.data.role);
                     router.push({
                       path:'/store'
                   });
