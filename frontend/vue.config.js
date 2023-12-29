@@ -18,7 +18,7 @@ module.exports = defineConfig({
             '/api': {
                 //target: "http://localhost:5000",
                 //target: "http://127.0.0.1:4523/m1/3026709-0-default",
-                target: "http://localhost:8084",
+                target: "http://127.0.0.1:4523/m1/3653807-0-default",
                 changeOrigin: true,
             },
             '/commodity_image': {

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import DetailPage from '../src/components/StoreSystem/DetailPage.vue'; // 导入相应的路由组件
 import ViewPage from '../src/components/StoreSystem/ViewPage.vue'; // 导入相应的路由组件
 import UploadCommodityPage from '../src/components/StoreSystem/UploadCommodityPage.vue'; // 导入相应的路由组件
-import StorePage from '../src/components/StoreSystem/StorePage.vue'
+import SocietyPage from '../src/components/StoreSystem/SocietyPage.vue'
 import AdministratorPage from '../src/components/AdministratorSystem/AdministratorPage.vue';
 import UpdateCommodityPageVue from '@/components/StoreSystem/UpdateCommodityPage.vue';
 import VerificationPage from '@/components/StoreSystem/VerificationPage.vue';
@@ -16,13 +16,13 @@ import LoginPage from '../src/components/LoginPage.vue';
 import IDLoginPage from '../src/components/IDLoginPage.vue'
 import PhoneLoginPage from '../src/components/PhoneLoginPage.vue'
 import FindPasswordPage from '../src/components/FindPasswordPage.vue'
-import StoreRegister from '@/components/StoreRegister.vue';
+import SocietyRegister from '@/components/SocietyRegister.vue';
 import UserRegister from '@/components/UserRegister.vue';
 import CustomerRegister from '@/components/CustomerRegisterPage.vue';
 import StudentRegister from '@/components/StudentRegisterPage.vue';
 import UserInfo from '@/components/UserInfoPage.vue'
-import ModifyCustomerInfo from '@/components/ModifyCustomerInfoPage.vue';
-import ModifyStoreInfo from '@/components/ModifyStoreInfoPage.vue';
+import ModifyStudentInfo from '@/components/ModifyStudentInfoPage.vue';
+import ModifySocietyInfo from '@/components/ModifySocietyInfoPage.vue';
 import ChatPage from '@/components/ChatPage.vue';
 import MiddleTestPage from '@/components/MiddleTestPage.vue';
 import SearchPage from '../src/components/cusSystem/homepages/SearchPage.vue';
@@ -113,9 +113,9 @@ const router = createRouter({
             component: storeDetaillPage
         },
         {
-            path: '/store',
+            path: '/society',
             redirect: '/detail',
-            component: StorePage,
+            component: SocietyPage,
             children: [
                 {
                     path: '/detail',
@@ -197,9 +197,9 @@ const router = createRouter({
             component: FindPasswordPage
         },
         {
-            path: '/storeregister',
-            name: 'storeregister',
-            component: StoreRegister
+            path: '/societyregister',
+            name: 'societyregister',
+            component: SocietyRegister
         },
         {
             path: '/userregister',
@@ -222,14 +222,14 @@ const router = createRouter({
             component: UserInfo
         },
         {
-            path: '/ModifyCustomerInfoPage',
-            name: 'ModifyCustomerInfoPage',
-            component: ModifyCustomerInfo
+            path: '/ModifyStudentInfoPage',
+            name: 'ModifyStudentInfoPage',
+            component: ModifyStudentInfo
         },
         {
-            path: '/ModifyStoreInfoPage',
-            name: 'ModifyStoreInfoPage',
-            component: ModifyStoreInfo
+            path: '/ModifySocietyInfoPage',
+            name: 'ModifySocietyInfoPage',
+            component: ModifySocietyInfo
         },
         {
             path: '/ChatPage',
