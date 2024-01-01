@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="dialogVisible" title="管理员登录" width="30%" draggable>
+    <el-dialog v-model="dialogVisible_sysAdmin" title="管理员登录" width="30%" draggable>
     <el-input
     v-model="text"
     class="w-50 m-2"
@@ -11,8 +11,8 @@
   />
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible=false">取消</el-button>
-        <el-button type="danger" @click="dialogVisible=true,router.push('/administrator')">
+        <el-button @click="dialogVisible_sysAdmin=false">取消</el-button>
+        <el-button type="danger" @click="dialogVisible_sysAdmin=true,router.push('/administrator')">
           登录
         </el-button>
       </span>
@@ -38,7 +38,7 @@
       <div class="actions">
         <el-button @click="toRegister">没有账号？立即注册</el-button>
         <!-- <el-button @click="toFindPassword">找回密码</el-button> -->
-        <el-button type="primary" @click="dialogVisible=true">管理员登录</el-button>
+        <el-button type="primary" @click="dialogVisible_sysAdmin=true">管理员登录</el-button>
       </div>
     </div>
   </div>
@@ -66,6 +66,7 @@ import IDlogin from '../components/IDLoginPage.vue'
 import phonelogin from '../components/PhoneLoginPage.vue'
 
 const dialogVisible=ref(false);
+const dialogVisible_sysAdmin=ref(false);
 const text=ref('');
 const router=useRouter()
 const label_default=ref('ID登录')

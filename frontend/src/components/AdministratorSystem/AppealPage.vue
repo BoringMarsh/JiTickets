@@ -1,127 +1,128 @@
 <template>
 
   <el-card>
-
     <el-row :gutter="20">
       <el-col :span="3"><el-tag>按申诉时间排序方式：</el-tag></el-col>
       <el-radio-group v-model="tableLayout">
         <el-radio-button label="升序" @click="order=0,getVerificationsList()"/>
         <el-radio-button label="降序" @click="order=1,getVerificationsList()"/>
       </el-radio-group>
+
       <el-col  v-for="(item,index) in verificationsList" :key="index">
-      <el-card>
-        {{ "申诉ID : "+item.APP_ID }}
-        <el-row :gutter="20" >
-            <el-col :span="5" v-for="(itemm,idx) in item.SCT_IMAGE" :key="idx"><el-image style="width: 200px; height: 100px" :src="itemm" fit="fill" :preview-src-list="[itemm]" /></el-col>
-            <el-col :span="19">
-              <el-descriptions
-          class="margin-top"
-          :column="3"
-          size="large"
-          border
-      >
-          <template #extra>
-          </template>
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <location />
-              </el-icon>
-              申诉时间
-              </div>
-          </template>
-          {{item.APP_TIME}}
-          </el-descriptions-item>
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <user />
-              </el-icon>
-              申诉者ID
-              </div>
-          </template>
-          
-          <el-tag size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.APP_USERID,flag:1}})">{{ item.APP_USERID }}</el-tag>
-          </el-descriptions-item>
-
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <tickets />
-              </el-icon>
-              申诉事项
-              </div>
-          </template>
-          <el-tag size="small" type="danger">{{item.APP_MATTERS}}</el-tag>
-          </el-descriptions-item>
-
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <iphone />
-              </el-icon>
-              申诉商品ID
-              </div>
-          </template>
-          <el-tag v-if="item.COM_ID=='无'" >{{'无'}}</el-tag>
-          <el-tag v-else size="small" @click="router.push({path: '/indDetail',query:{com_id:item.COM_ID}});">{{item.COM_ID}}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <location />
-              </el-icon>
-              申诉对象ID
-              </div>
-          </template>
-          <el-tag v-if="item.USER_ID=='无'" >{{'无'}}</el-tag>
-          <el-tag v-else size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.USER_ID,flag:1}})">{{item.USER_ID}}</el-tag>
-          </el-descriptions-item>
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <location />
-              </el-icon>
-              申诉评论ID
-              </div>
-          </template>
-          {{ item.CMT_ID }}
-            <el-tooltip
-                effect="dark"
-                :content="item.CMT_CONTENT"
-                placement="top"
-                v-if="item.CMT_ID!='无'"
-            >
-                <el-icon style="margin-left: 4px" :size="12">
-                <Warning />
+      
+        <el-card>
+          {{ "申诉ID : "+item.APP_ID }}
+          <el-row :gutter="20" >
+              <el-col :span="5" v-for="(itemm,idx) in item.SCT_IMAGE" :key="idx"><el-image style="width: 200px; height: 100px" :src="itemm" fit="fill" :preview-src-list="[itemm]" /></el-col>
+              <el-col :span="19">
+                <el-descriptions
+            class="margin-top"
+            :column="3"
+            size="large"
+            border
+        >
+            <template #extra>
+            </template>
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <location />
                 </el-icon>
-            </el-tooltip>
-          </el-descriptions-item>
+                申诉时间
+                </div>
+            </template>
+            {{item.APP_TIME}}
+            </el-descriptions-item>
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <user />
+                </el-icon>
+                申诉者ID
+                </div>
+            </template>
+            
+            <el-tag size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.APP_USERID,flag:1}})">{{ item.APP_USERID }}</el-tag>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <tickets />
+                </el-icon>
+                申诉事项
+                </div>
+            </template>
+            <el-tag size="small" type="danger">{{item.APP_MATTERS}}</el-tag>
+            </el-descriptions-item>
+
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <iphone />
+                </el-icon>
+                申诉活动ID
+                </div>
+            </template>
+            <el-tag v-if="item.COM_ID=='无'" >{{'无'}}</el-tag>
+            <el-tag v-else size="small" @click="router.push({path: '/indDetail',query:{com_id:item.COM_ID}});">{{item.COM_ID}}</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <location />
+                </el-icon>
+                申诉对象ID
+                </div>
+            </template>
+            <el-tag v-if="item.USER_ID=='无'" >{{'无'}}</el-tag>
+            <el-tag v-else size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.USER_ID,flag:1}})">{{item.USER_ID}}</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <location />
+                </el-icon>
+                申诉评论ID
+                </div>
+            </template>
+            {{ item.CMT_ID }}
+              <el-tooltip
+                  effect="dark"
+                  :content="item.CMT_CONTENT"
+                  placement="top"
+                  v-if="item.CMT_ID!='无'"
+              >
+                  <el-icon style="margin-left: 4px" :size="12">
+                  <Warning />
+                  </el-icon>
+              </el-tooltip>
+            </el-descriptions-item>
 
 
-          <el-descriptions-item>
-          <template #label>
-              <div class="cell-item">
-              <el-icon :style="iconStyle">
-                  <location />
-              </el-icon>
-              申诉内容
-              </div>
-          </template>
-          {{item.APP_CONTENT}}
-          </el-descriptions-item>
-      </el-descriptions>
-            </el-col>
-        </el-row>
+            <el-descriptions-item>
+            <template #label>
+                <div class="cell-item">
+                <el-icon :style="iconStyle">
+                    <location />
+                </el-icon>
+                申诉内容
+                </div>
+            </template>
+            {{item.APP_CONTENT}}
+            </el-descriptions-item>
+        </el-descriptions>
+              </el-col>
+          </el-row>
           
 
-      </el-card>
+        </el-card>
       </el-col>
     </el-row>
 
@@ -153,7 +154,62 @@ const sto_id=sessionStorage.getItem('sto_id') as string;
 const query=ref('');
 const loading=ref(false);
 const tableLayout = ref('升序')
+
+// const appealList=ref([
+//   {
+//     "appId": 1,
+//     "appTime": "yyyy-MM-dd HH:mm:ss",
+//     "appMatters": "申诉事项", // 申诉事项
+//     "appContent": "申诉内容",
+//     "complainantId": 520
+//   },
+//   {
+//     "appId": 2,
+//     "appTime": "yyyy-MM-dd HH:mm:ss",
+//     "appMatters": "申诉事项2", // 申诉事项
+//     "appContent": "申诉内容2",
+//     "complainantId": 521
+//   },
+//   {
+//     "appId": 3,
+//     "appTime": "yyyy-MM-dd HH:mm:ss",
+//     "appMatters": "申诉事项3", // 申诉事项
+//     "appContent": "申诉内容3",
+//     "complainantId": 522
+//   },
+// ])
+
 const verificationsList=ref([
+  {
+    "APP_ID": 1,
+    "APP_TIME": "2023-08-25 16:11:24",
+    "SCT_IMAGE": [
+      "appeal_image\\1_1.jpg",
+      "appeal_image\\1_2.jpg"
+    ],
+    "USER_ID": "1000001",
+    "COM_ID": "261",
+    "CMT_ID": "-1",
+    "CMT_CONTENT": "null",
+    "APP_USERID": "1000000",
+    "APP_MATTERS": "1",
+    "APP_CONTENT": "奸商啊啊啊啊"
+  },
+  {
+    "APP_ID": 1,
+    "APP_TIME": "2023-08-25 16:11:24",
+    "SCT_IMAGE": [
+      "appeal_image\\1_1.jpg",
+      "appeal_image\\1_2.jpg"
+    ],
+    "USER_ID": "1000001",
+    "COM_ID": "261",
+    "CMT_ID": "-1",
+    "CMT_CONTENT": "null",
+    "APP_USERID": "1000000",
+    "APP_MATTERS": "1",
+    "APP_CONTENT": "奸商啊啊啊啊"
+  },
   {
     "APP_ID": 1,
     "APP_TIME": "2023-08-25 16:11:24",
@@ -179,43 +235,83 @@ const pagesize=ref(6);
 const order=ref(0);
 const phone=ref('');
 const state=ref(0);
-const getVerificationsList=async()=>{
-loading.value=Boolean(true);
-verificationsList.value.length=0;
-console.log(sto_id);
-var Phone=phone.value;
-if(Phone.length==0)
-  Phone="null";
-axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
-  .then(response=>{
-    console.log(pagesize.value*(pagenum.value-1)+1);
-    console.log(pagesize.value*pagenum.value);
-    console.log(state.value);
-    verificationsList.value=JSON.parse(JSON.stringify(response.data));
-    for(var i=0;i<verificationsList.value.length;++i){
-      if(verificationsList.value[i].CMT_ID=="-1")
-        verificationsList.value[i].CMT_ID='无'
-      if(verificationsList.value[i].COM_ID=='-1')
-        verificationsList.value[i].COM_ID='无'
-      if(verificationsList.value[i].USER_ID=='-1')
-        verificationsList.value[i].USER_ID='无'
-      if(verificationsList.value[i].APP_MATTERS=='1')
-        verificationsList.value[i].APP_MATTERS='商品信息不实'
-      if(verificationsList.value[i].APP_MATTERS=='2')
-        verificationsList.value[i].APP_MATTERS='食品安全问题'
-      if(verificationsList.value[i].APP_MATTERS=='3')
-        verificationsList.value[i].APP_MATTERS='商家资质不全'
-      if(verificationsList.value[i].APP_MATTERS=='4')
-        verificationsList.value[i].APP_MATTERS='恶意评论'
-      if(verificationsList.value[i].APP_MATTERS=='5')
-        verificationsList.value[i].APP_MATTERS='多次退款刷单'
-      if(verificationsList.value[i].APP_MATTERS=='6')
-        verificationsList.value[i].APP_MATTERS='多次恶意评论'
-    }
 
-    console.log(verificationsList.value);
-    loading.value=Boolean(false);
-  })
+const getVerificationsList2=async()=>{
+  loading.value=Boolean(true);
+  verificationsList.value.length=0;
+  console.log(sto_id);
+  var Phone=phone.value;
+  if(Phone.length==0)
+    Phone="null";
+  axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
+    .then(response=>{
+      console.log(pagesize.value*(pagenum.value-1)+1);
+      console.log(pagesize.value*pagenum.value);
+      console.log(state.value);
+      verificationsList.value=JSON.parse(JSON.stringify(response.data));
+      for(var i=0;i<verificationsList.value.length;++i){
+        if(verificationsList.value[i].CMT_ID=="-1")
+          verificationsList.value[i].CMT_ID='无'
+        if(verificationsList.value[i].COM_ID=='-1')
+          verificationsList.value[i].COM_ID='无'
+        if(verificationsList.value[i].USER_ID=='-1')
+          verificationsList.value[i].USER_ID='无'
+        if(verificationsList.value[i].APP_MATTERS=='1')
+          verificationsList.value[i].APP_MATTERS='商品信息不实'
+        if(verificationsList.value[i].APP_MATTERS=='2')
+          verificationsList.value[i].APP_MATTERS='食品安全问题'
+        if(verificationsList.value[i].APP_MATTERS=='3')
+          verificationsList.value[i].APP_MATTERS='商家资质不全'
+        if(verificationsList.value[i].APP_MATTERS=='4')
+          verificationsList.value[i].APP_MATTERS='恶意评论'
+        if(verificationsList.value[i].APP_MATTERS=='5')
+          verificationsList.value[i].APP_MATTERS='多次退款刷单'
+        if(verificationsList.value[i].APP_MATTERS=='6')
+          verificationsList.value[i].APP_MATTERS='多次恶意评论'
+      }
+
+      console.log(verificationsList.value);
+      loading.value=Boolean(false);
+    })
+}
+
+const getVerificationsList=async()=>{
+  loading.value=Boolean(true);
+  verificationsList.value.length=0;
+  console.log(sto_id);
+  var Phone=phone.value;
+  if(Phone.length==0)
+    Phone="null";
+  axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
+    .then(response=>{
+      console.log(pagesize.value*(pagenum.value-1)+1);
+      console.log(pagesize.value*pagenum.value);
+      console.log(state.value);
+      verificationsList.value=JSON.parse(JSON.stringify(response.data));
+      for(var i=0;i<verificationsList.value.length;++i){
+        if(verificationsList.value[i].CMT_ID=="-1")
+          verificationsList.value[i].CMT_ID='无'
+        if(verificationsList.value[i].COM_ID=='-1')
+          verificationsList.value[i].COM_ID='无'
+        if(verificationsList.value[i].USER_ID=='-1')
+          verificationsList.value[i].USER_ID='无'
+        if(verificationsList.value[i].APP_MATTERS=='1')
+          verificationsList.value[i].APP_MATTERS='商品信息不实'
+        if(verificationsList.value[i].APP_MATTERS=='2')
+          verificationsList.value[i].APP_MATTERS='食品安全问题'
+        if(verificationsList.value[i].APP_MATTERS=='3')
+          verificationsList.value[i].APP_MATTERS='商家资质不全'
+        if(verificationsList.value[i].APP_MATTERS=='4')
+          verificationsList.value[i].APP_MATTERS='恶意评论'
+        if(verificationsList.value[i].APP_MATTERS=='5')
+          verificationsList.value[i].APP_MATTERS='多次退款刷单'
+        if(verificationsList.value[i].APP_MATTERS=='6')
+          verificationsList.value[i].APP_MATTERS='多次恶意评论'
+      }
+
+      console.log(verificationsList.value);
+      loading.value=Boolean(false);
+    })
 }
 
 
@@ -325,3 +421,5 @@ return {
   margin-left: 4px;
 }
 </style>
+
+<!-- 需要后端新增一个接口：返回所有申诉详情 -->

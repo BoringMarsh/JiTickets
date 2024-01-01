@@ -40,7 +40,7 @@
             <span>管理信息</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="router.push({path:'/operate',query:{type:1}}),view=true" index="1-1">商户与顾客管理</el-menu-item>
+            <el-menu-item @click="router.push({path:'/operate',query:{type:1}}),view=true" index="1-1">社团与学生管理</el-menu-item>
             <el-menu-item @click="router.push('/appeal'),view=false" index="1-2">申诉管理</el-menu-item>
           </el-menu-item-group>
 
@@ -57,7 +57,7 @@
         <template #label>
           <span class="custom-tabs-label"  @click="router.push({path:'/operate',query:{type:1}})">
             <el-icon><Warning /></el-icon>
-            <span>商户</span>
+            <span>社团</span>
           </span>
         </template>
       </el-tab-pane>
@@ -66,7 +66,7 @@
         <template #label>
           <span class="custom-tabs-label"  @click="router.push({path:'/operate',query:{type:0}})">
             <el-icon><CircleCheck /></el-icon>
-            <span>顾客</span>
+            <span>学生</span>
           </span>
         </template>
       </el-tab-pane>
@@ -80,10 +80,7 @@
             <component v-if="!route.meta.keepAlive" :is="Component" />
           </router-view>
       </div>
-
-      
     </el-tabs>
-
         </el-main>
     
 	</el-container>

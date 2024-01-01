@@ -29,7 +29,6 @@
         <el-col :span="8">
       <el-input placeholder="请输入内容" clearable v-model="query" />
         </el-col>
-        
         <el-col :span="7"><el-button type="primary" icon="search" @click="getGoods"/></el-col>
         <el-col :span="3"><el-tag>按名称排序方式：</el-tag></el-col>
         <el-col :span="4">
@@ -40,7 +39,6 @@
         </el-radio-group>
         </el-col>
       </el-row>
-  
       <el-row>
     <el-table
       v-loading="loading"
@@ -260,7 +258,7 @@ import { id } from 'element-plus/es/locale';
         type.value=route.query.type as string;
     //   console.log(sto_id.value);
         // console.log(type);
-        getGoodsList();
+        // getGoodsList();
     });
 
   var durationTime=2000;

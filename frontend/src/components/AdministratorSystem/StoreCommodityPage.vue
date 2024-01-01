@@ -22,7 +22,7 @@
     <el-row>
   <el-page-header :icon="ArrowLeft" title="返回" @back="goBack" >
     <template #content>
-      <span class="text-large font-600 mr-3"> 商品总览 </span>
+      <span class="text-large font-600 mr-3"> 活动总览 </span>
     </template>
   </el-page-header>
   
@@ -57,7 +57,7 @@
       :default-sort="{ prop: 'com_id', order: 'ascending' }"
       :row-style="changeStyle"
       >
-      <el-table-column label="商品图片" width="200">
+      <el-table-column label="活动图片" width="200">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <el-image
@@ -71,21 +71,21 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="com_name" label="商品名字"> </el-table-column>
-      <el-table-column prop="com_id" sortable="custom" label="商品ID"></el-table-column>
-      <el-table-column prop="com_curr_price" label="当前价格"></el-table-column>
+      <el-table-column prop="com_name" label="活动名字"> </el-table-column>
+      <el-table-column prop="com_id" sortable="custom" label="活动ID"></el-table-column>
+      <el-table-column prop="com_curr_price" label="当前票价"></el-table-column>
       <el-table-column
       prop="com_left"
-      label="商品余量"
+      label="活动票余量"
       ></el-table-column>
       <el-table-column
       prop="com_categories"
-      label="商品类别"
+      label="活动类别"
       width="225"
       >
       <template #header>
         <div class="categoryStyle">
-        {{'商品类别'}}
+        {{'活动类别'}}
         <el-select
         v-model="category"
         multiple

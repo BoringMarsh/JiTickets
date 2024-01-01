@@ -16,7 +16,7 @@ public class AppealShortInfo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime appTime;
 
-    private Integer appMatters;
+    private Integer appMatters; // 申诉事项
     private String appContent;
     private Integer complainantId;
 }
