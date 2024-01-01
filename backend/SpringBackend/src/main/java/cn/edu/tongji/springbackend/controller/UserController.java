@@ -70,6 +70,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
+            logger.info("Successfully received request: {}", loginRequest);
             LoginResponse loginResponse = loginService.login(loginRequest.getUsername(), loginRequest.getPassword());
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (LoginException e) {

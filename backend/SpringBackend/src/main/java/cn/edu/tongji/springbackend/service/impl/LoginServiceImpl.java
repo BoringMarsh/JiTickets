@@ -22,21 +22,27 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponse login(String username, String password) {
-        User user = userMapper.getUserByUsername(username);
-        if (user == null) {
-            // Account does not exist
-            logger.warn("Login failed: Account does not exist.");
-            throw new LoginException("Account does not exist");
-        }
+        try {
+            User user = userMapper.getUserByUsername(username);
+            if (user == null) {
+                // Account does not exist
+                logger.warn("Login failed: Account does not exist.");
+                throw new LoginException("Account does not exist");
+            }
 
-        if (!password.equals(user.getPassword())) {
-            // Incorrect password
-            logger.warn("Login failed: Incorrect password.");
-            throw new LoginException("Incorrect password");
-        }
+            if (!password.equals(user.getPassword())) {
+                // Incorrect password
+                logger.warn("Login failed: Incorrect password.");
+                throw new LoginException("Incorrect password");
+            }
 
-        // Login successful
-        return new LoginResponse("success", user.getId(),
-                user.getUsername(), user.getCampus(), user.getAccountStatus(), user.getBalance(), user.getRole());
+            // Login successful
+            return new LoginResponse("success", user.getId(),
+                    user.getUsername(), user.getCampus(), user.getAccountStatus(), user.getBalance(), user.getRole());
+        } catch (Exception ex) {
+            logger.error("Error occurred in login: " + ex.getMessage(), ex);
+            throw ex; // Re-throw the exception if you want to propagate it up the call stack
+        }
     }
+
 }
