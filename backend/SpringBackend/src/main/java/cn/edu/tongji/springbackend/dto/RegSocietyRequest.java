@@ -23,8 +23,8 @@ public class RegSocietyRequest {
     private String socIntro;
     private String socType;
     // Add other fields as needed
-    private MultipartFile socLogoFile; // Assuming you are using Spring's MultipartFile for file upload
+    private String socLogoFile; // 接收Base64字符串
     private List<SocietyAdminRegistration> socAdminRegs;
-    private List<MultipartFile> socImageFiles; // Assuming multiple images can be uploaded
+    private List<String> socImageFiles; // 接收Base64字符串列表
     private List<String> socKeywords;
 }

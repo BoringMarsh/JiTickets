@@ -16,6 +16,6 @@ mybatis:
   type-aliases-package: cn.edu.tongji.springbackend.model
 file:
   upload:
-    society-logo-dir: D:\软件工程项目\backend\upload_images\society_logo\
-    society-image-dir: D:\软件工程项目\backend\upload_images\society_image\
+    society-logo-dir: D:\\软件工程项目\\backend\\upload_images\\society_logo\\
+    society-image-dir: D:\\软件工程项目\\backend\\upload_images\\society_image\\
 

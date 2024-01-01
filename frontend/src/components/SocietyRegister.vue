@@ -64,7 +64,6 @@
           </el-select>
         </el-form-item>
 
-
         <el-form-item label="社团图片">
           <el-upload
             v-model:file-list='fileList1'
@@ -224,26 +223,22 @@ const deleteRow = (row) => {
       if (index !== -1) {
         adminData.value.splice(index, 1);
       }
-    };
+};
 
   // 校区选项数组，每个选项包含 label（显示文本） 和 value（对应值）
   const campusOptions = ref([
-    { label: '嘉定校区', value: 'campus1' },
-    { label: '四平路校区', value: 'campus2' },
-    { label: '沪西校区', value: 'campus3' },
-    { label: '沪北校区', value: 'campus4' },
-    { label: '彰武路校区', value: 'campus5' },
-    { label: '张江校区', value: 'campus6' },
-    { label: '临港校区', value: 'campus7' },
+  { label: '嘉定校区', value: '嘉定校区' },
+    { label: '四平路校区', value: '四平路校区' },
+    { label: '沪西校区', value: '沪西校区' },
+    { label: '沪北校区', value: '沪北校区' },
+    { label: '其它校区', value: '其它校区' },
     // 添加更多校区选项...
   ]);
   // 社团类型选项数组，每个选项包含 label（显示文本） 和 value（对应值）
   const socTypeOptions = ref([
-    { label: '学术类', value: '学术类' },
-    { label: '文化类', value: '文化类' },
-    { label: '艺术类', value: '艺术类' },
-    { label: '体育类', value: '体育类' },
-    { label: '娱乐类', value: '娱乐类' },
+    { label: '科技类社团', value: '科技类社团' },
+    { label: '艺术类社团', value: '艺术类社团' },
+    { label: '体育类社团', value: '体育类社团' },
     // 添加更多社团类型选项...
   ]);
   //确认密码验证
@@ -286,7 +281,7 @@ const deleteRow = (row) => {
           }
           }).then(response => {
             console.log(response.data)
-            keywords.value=response.data
+            keywords.value=response.data.keywords
             console.log(keywords.value)
           })
           .catch((error) => {
@@ -312,65 +307,66 @@ const handleExceed = () => {
 const registerStore = async () => {
   console.log(sessionStorage.getItem('id') as string)
   try {
-    const formData = new FormData();
-    // 处理营业执照图片
-    fileList.value.forEach((file) => {
-        formData.append('socLogoFile', file/*.raw*/); // 将文件添加到FormData中
-    });
-    // 处理商家图片
-    fileList1.value.forEach((file) => {
-        formData.append('socImageFiles', file/*.raw*/);  // 将商家图片添加到FormData中
-    });
-    //formData.append('username',sto_ID.value as any)
-    formData.append('username',form.username);
-    formData.append('password',form.user_password);
-    formData.append('email',form.user_email);
-    formData.append('phone',form.user_phone);
-    formData.append('campus',form.user_campus);
-    formData.append('payPassword',form.pay_password);
-    formData.append('socName',form.soc_name);
-    formData.append('socIntro',form.soc_introduction);
-    formData.append('socType',form.soc_type);
-    //formData.append('socKeywords',soc_keyword);
-    soc_keyword.value.forEach(keyword => {
-      formData.append('socKeywords[]', keyword);
-    });
+    // 创建一个对象来存储注册信息
+    let registerData = {
+      username: form.username,
+      password: form.user_password,
+      email: form.user_email,
+      phone: form.user_phone,
+      campus: form.user_campus,
+      payPassword: form.pay_password,
+      socName: form.soc_name,
+      socIntro: form.soc_introduction,
+      socType: form.soc_type,
+      socKeywords: soc_keyword.value,
+      socAdminRegs: registeredAdmins.value, //包含管理员信息
+      socLogoFile: '',
+      socImageFiles: []
+    };
+    // 确保 fileList 中的第一个元素存在且有 raw 属性
+    if (fileList.value.length > 0 && fileList.value[0].raw) {
+      registerData.socLogoFile = await toBase64(fileList.value[0]);
+    }
+    // 遍历 fileList1 以获取其他图片
+    for (let fileObj of fileList1.value) {
+      if (fileObj.raw) {
+        registerData.socImageFiles.push(await toBase64(fileObj));
+      }
+    }
 
-    // formData.append('socAdmins',form.);
-
-    const response = await axios.post('/api/user/register/society', formData, {
+    // 发送请求
+    const response = await axios.post('/api/user/register/society', registerData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'Content-Type': 'application/json',
       },
     });
     console.log(response);
-    if (response.status === 200) {
+    if (response.status === 201) {
       ElMessage({
           message: '社团注册信息已提交，正在跳转...',
           type: 'success',
         });
         // 这里跳转到登录首页
         router.push('/login');
-      // const data = response.data;
-      // if (data.message === 'success') {
-      //   ElMessage({
-      //     message: '社团注册信息已提交，正在跳转...',
-      //     type: 'success',
-      //   });
-      //   // 这里跳转到登录首页
-      //   router.push('/login');
-      // } else if (data.message === '商家未存在') {
-      //   ElMessage({
-      //     message: '商家未存在',
-      //     type: 'error',
-      //   });
-      // }
     } else {
       console.error(`Error: HTTP status code ${response.status}`);
     }
   } catch (error) {
     console.error(error);
   }
+}
+// 修改 toBase64 方法以接收包含文件的对象
+function toBase64(fileObj) {
+  return new Promise((resolve, reject) => {
+    if (fileObj && fileObj.raw instanceof File) {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileObj.raw);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    } else {
+      reject(new Error("No file object found"));
+    }
+  });
 }
 </script>
 
