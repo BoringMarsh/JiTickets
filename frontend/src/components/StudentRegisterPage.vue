@@ -79,7 +79,6 @@
                      placeholder="Select"
                      style="width: 100%; position: relative; margin: auto;">
                      <el-option v-for="item in keywords" :key="item" :label="item" :value="item" />
-
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -241,7 +240,7 @@
           }
           }).then(response => {
             console.log(response.data)
-            keywords.value=response.data
+            keywords.value=response.data.keywords
             console.log(keywords.value)
           })
           .catch((error) => {
@@ -280,7 +279,7 @@
 
       console.log(response);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         const data = response.data;
         if (data.message === 'success') {
             localStorage.setItem('user_ID', data.user_ID); // 保存 user_ID 到 localStorage

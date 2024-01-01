@@ -10,6 +10,5 @@ import org.springframework.stereotype.Service;
 public interface ProfileService {
     GetStudentProfileResponse getStudentProfile(String username);
     void modifyStudentProfile(ModifyStuProfileReq modifyRequest);
-
     GetSocietyProfileResponse getSocietyProfileInfo(String username);
 }
