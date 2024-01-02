@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface AppealImageMapper {
     List<AppealImage> getById(@Param("id") int id);
+    void add(AppealImage appealImage);
 }

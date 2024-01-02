@@ -2,11 +2,12 @@ package cn.edu.tongji.springbackend.service;
 
 import cn.edu.tongji.springbackend.dto.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ActivityPersonalService {
     GetActivityPageResponse getActivityPage(int page);
-    ActivityDetailedInfo getActivity(int actId);
+    ActivityDetailedInfo getActivity(int actId) throws IOException;
     void addBrowse(AddBrowseRequest addBrowseRequest);
     List<ActivityShortInfo> getFavour(int stuId);
     void addFavour(FavourRequest favourRequest);

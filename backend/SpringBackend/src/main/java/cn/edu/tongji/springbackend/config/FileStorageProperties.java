@@ -20,6 +20,9 @@ public class FileStorageProperties {
     private String imageUploadDir = "D:/软件工程项目/backend/upload_images/society_image/";
 
 
+    @Value("${file.upload.appeal-image-dir}")
+    private String appealImageDir;
+
     public String getLogoUploadDir() {
         logger.info("Successfully get dir");
         return logoUploadDir;
@@ -27,5 +30,9 @@ public class FileStorageProperties {
 
     public String getImageUploadDir() {
         return imageUploadDir;
+    }
+
+    public String getAppealImageDir() {
+        return appealImageDir;
     }
 }

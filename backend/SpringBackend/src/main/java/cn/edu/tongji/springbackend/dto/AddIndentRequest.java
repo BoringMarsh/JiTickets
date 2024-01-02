@@ -22,5 +22,4 @@ public class AddIndentRequest {
     private String indNotes;
     private Integer actId;
     private Integer stuId;
-    private Integer socId;
 }

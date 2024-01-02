@@ -6,6 +6,7 @@ import cn.edu.tongji.springbackend.dto.GetStudentProfileResponse;
 import cn.edu.tongji.springbackend.dto.ModifyStuProfileReq;
 import cn.edu.tongji.springbackend.dto.RegSocietyRequest;
 import cn.edu.tongji.springbackend.dto.RegStudentRequest;
+import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.SocietyMapper;
 import cn.edu.tongji.springbackend.mapper.StudentKeywordMapper;
 import cn.edu.tongji.springbackend.mapper.StudentMapper;
@@ -263,11 +264,5 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public void modifyStudentProfile(String username, ModifyStuProfileReq modifyRequest) {
 
-    }
-}
-
-class FileStorageException extends RuntimeException {
-    public FileStorageException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

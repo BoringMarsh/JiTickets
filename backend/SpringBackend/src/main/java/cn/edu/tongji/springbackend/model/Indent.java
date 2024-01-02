@@ -19,7 +19,6 @@ public class Indent {
     private Double indRating;
     private Integer actId;
     private Integer stuId;
-    private Integer socId;
     private LocalDateTime indRtime;
     private String indRnotes;
     private Double indRmoney;

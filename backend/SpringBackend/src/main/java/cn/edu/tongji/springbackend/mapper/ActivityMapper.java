@@ -13,5 +13,5 @@ public interface ActivityMapper {
     int getCount();
     Activity getByActId(@Param("actId") int actId);
     List<Activity> getByPage(@Param("pageSize") int pageSize, @Param("offset") int offset);
-    int update(Activity activity);
+    void update(Activity activity);
 }

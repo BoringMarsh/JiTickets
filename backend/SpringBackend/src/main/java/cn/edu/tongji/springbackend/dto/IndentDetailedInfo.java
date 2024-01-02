@@ -25,7 +25,6 @@ public class IndentDetailedInfo {
     private Double indRating;
     private Integer actId;
     private Integer stuId;
-    private Integer socId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime indRtime;

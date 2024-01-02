@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface CommentMapper {
     List<Comment> getByActId(@Param("actId") int actId);
-    int add(Comment comment);
+    void add(Comment comment);
 }
