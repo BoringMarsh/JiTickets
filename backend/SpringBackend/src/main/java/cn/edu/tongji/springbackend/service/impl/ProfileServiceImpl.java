@@ -13,8 +13,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -105,7 +110,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public GetSocietyProfileResponse getSocietyProfileInfo(String username) {
-
         User user = userMapper.getUserByUsername(username);
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -120,17 +124,40 @@ public class ProfileServiceImpl implements ProfileService {
         if (society == null) {
             throw new NotFoundException("Society not found");
         }
-
         List<String> societyKeywords = societyKeywordMapper.getSocietyKeywords(userId);
         List<SocietyAdmin> societyAdmins = societyAdminMapper.getSocietyAdmins(userId);
 
+        // 读取logo文件并转换为Base64字符串
+        String logoBase64 = readAndConvertToBase64(society.getSocLogo());
+        logoBase64 = "data:image/jpg;base64," + logoBase64;
+
+        // 查询并读取社会的所有image文件并转换为Base64字符串列表
+        List<String> imageBase64List = new ArrayList<>();
+        List<SocietyImage> societyImages = societyMapper.getSocietyImagesBySocietyId(userId);
+        for (SocietyImage image : societyImages) {
+            String imageBase64 = readAndConvertToBase64(image.getSocImage());
+            imageBase64 = "data:image/jpg;base64," + imageBase64;
+            imageBase64List.add(imageBase64);
+        }
         // Create and return the response object
         return new GetSocietyProfileResponse(
                 user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getCampus(),
                 user.getAccountStatus(), user.getBalance(), formattedDateTime, user.getRole(),
                 society.getSocName(), society.getSocIntro(), society.getSocType(),
-                societyKeywords, societyAdmins
+                societyKeywords, societyAdmins, logoBase64, imageBase64List
         );
+    }
+
+    // 读取文件并将内容转换为Base64字符串的方法
+    private String readAndConvertToBase64(String filePath) {
+        try {
+            byte[] fileBytes = Files.readAllBytes(Paths.get(filePath));
+            return Base64.getEncoder().encodeToString(fileBytes);
+        } catch (IOException e) {
+            // 处理文件读取异常
+            logger.error("Error reading and converting file to Base64: {}", e.getMessage(), e);
+            return null;
+        }
     }
 
 

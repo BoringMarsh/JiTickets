@@ -59,7 +59,7 @@
         <el-sub-menu index="1">
           <template #title>
             <el-icon><location /></el-icon>
-            <span>商家信息</span>
+            <span>社团信息</span>
           </template>
           <el-menu-item-group>
             <el-menu-item @click="viewUserInfo" index="1-1">社团信息</el-menu-item>

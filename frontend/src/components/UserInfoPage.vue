@@ -330,7 +330,7 @@
               </span>
             </el-col>
             <el-col :span="21">
-              <el-image style="width: 100px; height: 100px" :src= userInfo.base64socLogo />
+              <el-image style="width: 100px; height: 100px" :src= userInfo.socLogoFile />
             </el-col>
           </el-row>
           <br><br>
@@ -343,7 +343,7 @@
             </el-col>
             <el-col :span="9">
               <div class="grid-container">
-                <div v-for="(pic, index) in userInfo.base64SocImages" :key="index" class="grid-item">
+                <div v-for="(pic, index) in userInfo.socImageFiles" :key="index" class="grid-item">
                   <el-image :src="pic" style="width: 100%; height: 100%; object-fit: cover;"></el-image>
                 </div>
               </div>
@@ -492,7 +492,6 @@ const setGreeting = () => {
     greeting.value = '晚上好';
   }
 };
-//加入百度地图组件
 
 
 onMounted(async () => {
@@ -523,7 +522,10 @@ onMounted(async () => {
     // }
 
     // console.log('##'+userInfo.value.role)
+
     if (user_role.value === '0') {
+      console.log(`user role is ${user_role.value}`);
+      console.log(`username is ${username.value}`);
       const studentResponse = await axios.get('/api/user/profile/student/get', { params: { username: username.value } });
       if (studentResponse.status === 200) {
           // Object.assign(userInfo.value, studentResponse.data);
@@ -534,8 +536,11 @@ onMounted(async () => {
           console.error(`Error: HTTP status code ${studentResponse.status}`);
       }
     } else if (user_role.value === '1') {
+      console.log(`user role is ${user_role.value}`);
+      console.log(`username is ${username.value}`);
       const societyResponse = await axios.get('/api/user/profile/society/info/get', { params: { username: username.value } });
       // image.value='http://localhost:5000\\'+societyResponse.data.soc_logo;
+      console.log(username.value);
       if (societyResponse.status === 200) {
           // Object.assign(userInfo.value, societyResponse.data);
           userInfo.value = societyResponse.data;
@@ -573,7 +578,7 @@ const goBack = () => {
       router.push('/administrator')
     }
     else if (userRole === '1') {
-      router.push({ path: '/store' });
+      router.push({ path: '/society' });
     } else if (userRole === '0') {
       router.push({ path: '/home' });
     } else {

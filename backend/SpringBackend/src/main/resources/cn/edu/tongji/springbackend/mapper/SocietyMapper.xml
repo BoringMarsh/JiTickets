@@ -31,4 +31,11 @@
         VALUES (#{socId}, #{keyword})
     </insert>
 
+    <resultMap id="societyImageResultMap" type="SocietyImage">
+        <result column="soc_id" property="socId" />
+        <result column="soc_image" property="socImage" />
+    </resultMap>
+    <select id="getSocietyImagesBySocietyId" resultMap="societyImageResultMap">
+        SELECT * FROM society_image WHERE soc_id = #{socId}
+    </select>
 </mapper>
