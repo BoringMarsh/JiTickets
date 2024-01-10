@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DetailPage from '../src/components/StoreSystem/DetailPage.vue'; // 导入相应的路由组件
-import ViewPage from '../src/components/StoreSystem/ViewPage.vue'; // 导入相应的路由组件
-import UploadCommodityPage from '../src/components/StoreSystem/UploadCommodityPage.vue'; // 导入相应的路由组件
-import SocietyPage from '../src/components/StoreSystem/SocietyPage.vue'
+import DetailPage from '../src/components/SocietySystem/DetailPage.vue'; // 导入相应的路由组件
+import ViewPage from '../src/components/SocietySystem/ViewPage.vue'; // 导入相应的路由组件
+import UploadCommodityPage from '../src/components/SocietySystem/UploadCommodityPage.vue'; // 导入相应的路由组件
+import SocietyPage from '../src/components/SocietySystem/SocietyPage.vue'
 import AdministratorPage from '../src/components/AdministratorSystem/AdministratorPage.vue';
-import UpdateCommodityPageVue from '@/components/StoreSystem/UpdateCommodityPage.vue';
-import VerificationPage from '@/components/StoreSystem/VerificationPage.vue';
-import RefundPage from '@/components/StoreSystem/RefundPage.vue'
+import UpdateCommodityPageVue from '@/components/SocietySystem/UpdateCommodityPage.vue';
+import VerificationPage from '@/components/SocietySystem/VerificationPage.vue';
+import RefundPage from '@/components/SocietySystem/RefundPage.vue'
 import OperatePage from '@/components/AdministratorSystem/OperatePage.vue';
 import StoreCommodityPage from '@/components/AdministratorSystem/StoreCommodityPage.vue'
 import StoreIndentPage from '@/components/AdministratorSystem/StoreIndentPage.vue'
@@ -25,16 +25,16 @@ import ModifyStudentInfo from '@/components/ModifyStudentInfoPage.vue';
 import ModifySocietyInfo from '@/components/ModifySocietyInfoPage.vue';
 import ChatPage from '@/components/ChatPage.vue';
 import MiddleTestPage from '@/components/MiddleTestPage.vue';
-import SearchPage from '../src/components/cusSystem/homepages/SearchPage.vue';
-import CommodityDetailPage from '../src/components/cusSystem/homepages/CommodityDetailPage.vue';
-import storeDetaillPage from '../src/components/cusSystem/storeDetailPage.vue';
-import PersonalFavorPage from '../src/components/cusSystem/homepages/PersonalFavorPage.vue'
-import HistoryPage from '../src/components/cusSystem/homepages/HistoryPage.vue'
-import ShoppingCartPage from '../src/components/cusSystem/homepages/ShoppingCartPage.vue'
-import RecommendationPage from '../src/components/cusSystem/homepages/RecommendationPage.vue'
-import IndentPage from '../src/components/cusSystem/homepages/IndentPage.vue'
+import SearchPage from '../src/components/StudentSystem/homepages/SearchPage.vue';
+import CommodityDetailPage from '../src/components/StudentSystem/homepages/CommodityDetailPage.vue';
+import storeDetaillPage from '../src/components/StudentSystem/storeDetailPage.vue';
+import PersonalFavorPage from '../src/components/StudentSystem/homepages/PersonalFavorPage.vue'
+import HistoryPage from '../src/components/StudentSystem/homepages/HistoryPage.vue'
+import ShoppingCartPage from '../src/components/StudentSystem/homepages/ShoppingCartPage.vue'
+import RecommendationPage from '../src/components/StudentSystem/homepages/RecommendationPage.vue'
+import IndentPage from '../src/components/StudentSystem/homepages/IndentPage.vue'
 import BlockUserPage from '../src/components/BlockUserPage.vue';
-import HomePage from '../src/components/cusSystem/HomePage.vue';
+import HomePage from '../src/components/StudentSystem/HomePage.vue';
 
 
 const router = createRouter({

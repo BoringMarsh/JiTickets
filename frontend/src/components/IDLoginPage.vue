@@ -67,7 +67,7 @@ import { useRouter } from 'vue-router';
                   sessionStorage.setItem("username", loginUsername.value);
                   sessionStorage.setItem("user_role", response.data.role);
                     router.push({
-                      path:'/store'
+                      path:'/society'
                   });
                 }
                 else if (response.data.role=='0'){

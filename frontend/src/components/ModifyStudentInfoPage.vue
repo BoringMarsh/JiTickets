@@ -204,6 +204,7 @@
   import { reactive,ref, onMounted } from 'vue';
   import axios from 'axios';
   import { useRoute, useRouter } from 'vue-router';
+  import { ElMessage } from 'element-plus';
   
   
   const form = reactive({
@@ -374,32 +375,32 @@
     }
   });
   
-  const searchLocation = () => { // 搜索地点
-    const local = new BMapGL.LocalSearch(map, {
-      renderOptions: { map: map, autoViewport: true, selectFirstResult: false },
-      pageCapacity: 8,
-    });
-    // 搜索回调
-    local.setSearchCompleteCallback(results => {
-      if (local.getStatus() === BMAP_STATUS_SUCCESS) {
-        const pt = results.getPoi(0).point;
-        //form.sto_locationPoint = `${pt.lng},${pt.lat}`;
-        // 更新输入框地址
-        geoc.getLocation(pt, rs => {
-          const addComp = rs.addressComponents;
-          addressInput.value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-          userInfo.value.user_address = addressInput.value;
-          //form.sto_lng = pt.lng.toString();
-          //form.sto_lat = pt.lat.toString();
-        });
+  // const searchLocation = () => { // 搜索地点
+  //   const local = new BMapGL.LocalSearch(map, {
+  //     renderOptions: { map: map, autoViewport: true, selectFirstResult: false },
+  //     pageCapacity: 8,
+  //   });
+  //   // 搜索回调
+  //   local.setSearchCompleteCallback(results => {
+  //     if (local.getStatus() === BMAP_STATUS_SUCCESS) {
+  //       const pt = results.getPoi(0).point;
+  //       //form.sto_locationPoint = `${pt.lng},${pt.lat}`;
+  //       // 更新输入框地址
+  //       geoc.getLocation(pt, rs => {
+  //         const addComp = rs.addressComponents;
+  //         addressInput.value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+  //         userInfo.value.user_address = addressInput.value;
+  //         //form.sto_lng = pt.lng.toString();
+  //         //form.sto_lat = pt.lat.toString();
+  //       });
 
-      } else {
-        ElMessage.error('未找到相关地址！');
-      }
-    });
+  //     } else {
+  //       ElMessage.error('未找到相关地址！');
+  //     }
+  //   });
 
-    local.search(addressInput.value);
-  };
+  //   local.search(addressInput.value);
+  // };
 
   const goBack = () => {
     if(flag==null)

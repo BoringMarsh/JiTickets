@@ -44,7 +44,7 @@
         </el-form-item>
         <el-form-item label="社团logo">
           <el-upload
-            v-model:file-list='fileList'
+            v-model:file-list='fileList_logo'
             class="upload-demo"
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
             :auto-upload="false"
@@ -66,7 +66,7 @@
 
         <el-form-item label="社团图片">
           <el-upload
-            v-model:file-list='fileList1'
+            v-model:file-list='fileList_pic'
             class="upload-demo"
             action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
             :auto-upload="false"
@@ -184,13 +184,13 @@ const emailError = ref('');
 const phoneStatus = ref('');
 const phoneError = ref('');
 const emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
-const phoneReg = /^1[3-9]\d{9}$/;   //正则表达式，暂时先检测中国号码。。。。
+const phoneReg = /^1[3-9]\d{9}$/;   //正则表达式，暂时先检测中国号码
 const soc_keyword = ref([]);
 const keywords = ref([]);
 const adminInputs = ref([]);
 //const sto_ID=ref(sessionStorage.getItem('id') as string)
-const fileList = ref([]);  // 用于保存社团标志的文件列表
-const fileList1 = ref([]); // 用于保存社团图片的文件列表
+const fileList_logo = ref([]);  // 用于保存社团标志的文件列表
+const fileList_pic = ref([]); // 用于保存社团图片的文件列表
 
 const dialogVisible = ref(false);
 const adminData = ref([
@@ -293,7 +293,7 @@ const deleteRow = (row) => {
   })
 
     const beforeImageUpload = (file: File) => {
-    if (fileList1.value.length >= 9) {
+    if (fileList_pic.value.length >= 9) {
       ElMessage.error('You can only upload up to 9 images.');
       return false;
     }
@@ -324,15 +324,16 @@ const registerStore = async () => {
       socImageFiles: []
     };
     // 确保 fileList 中的第一个元素存在且有 raw 属性
-    if (fileList.value.length > 0 && fileList.value[0].raw) {
-      registerData.socLogoFile = await toBase64(fileList.value[0]);
+    if (fileList_logo.value.length > 0 && fileList_logo.value[0].raw) {
+      registerData.socLogoFile = await toBase64(fileList_logo.value[0]);
     }
     // 遍历 fileList1 以获取其他图片
-    for (let fileObj of fileList1.value) {
+    for (let fileObj of fileList_pic.value) {
       if (fileObj.raw) {
         registerData.socImageFiles.push(await toBase64(fileObj));
       }
     }
+    
 
     // 发送请求
     const response = await axios.post('/api/user/register/society', registerData, {

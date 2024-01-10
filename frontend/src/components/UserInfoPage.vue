@@ -4,12 +4,19 @@
       <el-row justify="space-between">
         <el-col :span="4" style="display: flex; align-items: center;"> <!-- 使用flex布局来垂直居中 -->
           <img src="../assets/shibaobao_logo.png" alt="商标" style="height: 100%; max-height: 50px; margin-right: 10px;"> <!-- 添加商标图片 -->
-          <h3 style="
+          <h3 v-if="displayUserType === '学生'" style="
             color:aliceblue;
             text-overflow:ellipsis;
             white-space:nowrap;
             overflow:hidden;">
             个人信息
+          </h3>
+          <h3 v-else-if="displayUserType === '社团'" style="
+            color:aliceblue;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+            overflow:hidden;">
+            社团信息
           </h3>
         </el-col>
         <el-col :span="20" style="display: flex; justify-content: flex-end; align-items: center;">
@@ -91,7 +98,7 @@
           </el-col>
         </el-row>
         <br><br>
-        <!-- 基本信息或商户信息 -->
+        <!-- 基本信息或社团信息 -->
         <div style="border-bottom: 1px solid gray; padding: 10px;">
           <div v-if="displayUserType === '学生'" style="display: flex; align-items: center;">
             <img src="../assets/icons8-information-64.png" alt="基本信息">
@@ -304,6 +311,9 @@
                 校区：
               </span>
             </el-col>
+            <el-col :span="9">
+              <span class="value">{{ userInfo.campus }}</span>
+            </el-col>
           </el-row>
           <br>
 
@@ -315,14 +325,7 @@
               </span>
             </el-col>
             <el-col :span="15">
-              <el-select v-model="userInfo.socType" multiple disabled>
-                <el-option
-                  v-for="(item, index) in userInfo.socType"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                ></el-option>
-              </el-select>
+              <span class="value">{{ userInfo.socType }}</span>
             </el-col>
           </el-row>
           <br>
@@ -346,7 +349,7 @@
               </span>
             </el-col>
             <el-col :span="21">
-              <el-image style="width: 100px; height: 100px" :src="image" />
+              <el-image style="width: 100px; height: 100px" :src= userInfo.base64socLogo />
             </el-col>
           </el-row>
           <br><br>
@@ -359,7 +362,7 @@
             </el-col>
             <el-col :span="9">
               <div class="grid-container">
-                <div v-for="(pic, index) in storePictures" :key="index" class="grid-item">
+                <div v-for="(pic, index) in userInfo.base64SocImages" :key="index" class="grid-item">
                   <el-image :src="pic" style="width: 100%; height: 100%; object-fit: cover;"></el-image>
                 </div>
               </div>
@@ -551,7 +554,7 @@ onMounted(async () => {
       }
     } else if (user_role.value === '1') {
       const societyResponse = await axios.get('/api/user/profile/society/info/get', { params: { username: username.value } });
-      image.value='http://localhost:5000\\'+societyResponse.data.soc_logo;
+      // image.value='http://localhost:5000\\'+societyResponse.data.soc_logo;
       if (societyResponse.status === 200) {
           // Object.assign(userInfo.value, societyResponse.data);
           userInfo.value = societyResponse.data;
