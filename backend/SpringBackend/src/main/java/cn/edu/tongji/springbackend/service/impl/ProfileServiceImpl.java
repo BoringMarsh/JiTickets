@@ -89,7 +89,7 @@ public class ProfileServiceImpl implements ProfileService {
         student.setStuSchool(modifyRequest.getStuSchool());
         student.setStuMajor(modifyRequest.getStuMajor());
         student.setStuNotes(modifyRequest.getStuNotes());
-
+        logger.info("start to update keywords");
         // Update keywords
         List<String> newKeywords = modifyRequest.getStuKeywords();
         // Delete existing keywords for the student
@@ -103,9 +103,10 @@ public class ProfileServiceImpl implements ProfileService {
                 studentKeywordMapper.insertStudentKeyword(studentKeyword);
             }
         }
-
+        logger.info("done update keywords");
         // Update the student profile in the database
         studentMapper.updateStudent(student);
+        userMapper.updateUser(user);
     }
 
     @Override

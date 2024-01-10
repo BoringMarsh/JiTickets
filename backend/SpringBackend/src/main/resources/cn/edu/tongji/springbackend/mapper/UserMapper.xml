@@ -17,4 +17,12 @@
         WHERE username = #{username}
     </select>
 
+    <update id="updateUser" parameterType="user">
+        UPDATE user
+        SET
+            email = #{email},
+            phone = #{phone},
+            campus = #{campus}
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -101,6 +101,8 @@ public class UserController {
     @PostMapping("/profile/student/modify")
     public ResponseEntity<?> modifyStudentProfile(@RequestBody ModifyStuProfileReq modifyRequest) {
         try {
+            logger.info("start to modify student profile");
+            logger.info("Successfully received request: {}", modifyRequest);
             profileService.modifyStudentProfile(modifyRequest);
             return new ResponseEntity<>("Student profile updated successfully", HttpStatus.OK);
         } catch (Exception e) {
