@@ -26,8 +26,8 @@
     </select>
 
     <insert id="add" parameterType="indent" useGeneratedKeys="true" keyProperty="indId">
-        INSERT INTO indent(ind_price, ind_create_time, ind_verify_code, ind_name, ind_stu_no, ind_notes, ind_status, act_id, stu_id, soc_id)
-        VALUES (#{indPrice}, #{indCreateTime}, #{indVerifyCode}, #{indName}, #{indStuNo}, #{indNotes}, #{indStatus}, #{actId}, #{stuId}, #{socId});
+        INSERT INTO indent(ind_price, ind_create_time, ind_verify_code, ind_name, ind_stu_no, ind_notes, ind_status, act_id, stu_id)
+        VALUES (#{indPrice}, #{indCreateTime}, #{indVerifyCode}, #{indName}, #{indStuNo}, #{indNotes}, #{indStatus}, #{actId}, #{stuId});
     </insert>
 
     <update id="update" parameterType="indent">

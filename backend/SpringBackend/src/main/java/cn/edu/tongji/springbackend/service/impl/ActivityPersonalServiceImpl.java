@@ -9,7 +9,11 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -56,14 +60,19 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
         );
     }
 
+    private String getImage(String filePath) throws IOException {
+        byte[] imageBytes = Files.readAllBytes(Paths.get(filePath));
+        return Base64.getEncoder().encodeToString(imageBytes);
+    }
+
     @Override
-    public ActivityDetailedInfo getActivity(int actId) {
+    public ActivityDetailedInfo getActivity(int actId) throws IOException {
         Activity activity = activityMapper.getByActId(actId);
         List<String> images = new ArrayList<>();
         List<String> keywords = new ArrayList<>();
 
         for (ActivityImage image : activityImageMapper.getById(actId)) {
-            images.add(image.getActImage());
+            images.add(getImage(image.getActImage()));
         }
 
         for (ActivityKeyword keyword : activityKeywordMapper.getById(actId)) {
@@ -186,7 +195,6 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
                 indent.getIndRating(),
                 indent.getActId(),
                 indent.getStuId(),
-                indent.getSocId(),
                 indent.getIndRtime(),
                 indent.getIndRnotes(),
                 indent.getIndRmoney(),
@@ -217,7 +225,6 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
                 .indStatus(0)
                 .actId(addIndentRequest.getActId())
                 .stuId(addIndentRequest.getStuId())
-                .socId(addIndentRequest.getSocId())
                 .build()
         );
 

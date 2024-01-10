@@ -26,7 +26,7 @@ public class CommunicateServiceImpl implements CommunicateService {
     @Resource
     private ActivityMapper activityMapper;
 
-    public void getCommentRecursive(List<CommentInfo> list, final Map<Integer, List<Comment>> commentMap, final int fatherId) {
+    private void getCommentRecursive(List<CommentInfo> list, final Map<Integer, List<Comment>> commentMap, final int fatherId) {
         List<Comment> comments = commentMap.get(fatherId);
         if (comments == null)
             return;

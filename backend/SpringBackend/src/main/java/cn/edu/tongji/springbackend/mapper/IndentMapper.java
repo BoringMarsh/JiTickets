@@ -18,7 +18,7 @@ public interface IndentMapper {
             @Param("pageSize") int pageSize,
             @Param("offset") int offset
     );
-    int add(Indent indent);
-    int update(Indent indent);
+    void add(Indent indent);
+    void update(Indent indent);
     int getActIdByIndId(@Param("indId") int indId);
 }

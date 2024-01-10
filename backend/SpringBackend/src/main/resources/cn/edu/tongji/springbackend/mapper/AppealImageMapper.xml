@@ -6,4 +6,9 @@
         SELECT * FROM appeal_image
         WHERE app_id = #{id};
     </select>
+
+    <insert id="add" parameterType="appealImage">
+        INSERT INTO appeal_image
+        VALUES (#{appId}, #{appImage});
+    </insert>
 </mapper>

@@ -9,6 +9,9 @@ import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
@@ -39,8 +42,9 @@ public class OrderController {
     }
 
     @PostMapping("/appeal")
-    public ResponseEntity<?> addAppeal(@RequestBody AddAppealRequest addAppealRequest) {
+    public ResponseEntity<?> addAppeal(@RequestParam("appealImages") List<MultipartFile> appealImages, AddAppealRequest addAppealRequest) {
         try {
+            addAppealRequest.setAppealImages(appealImages);
             orderService.addAppeal(addAppealRequest);
             return new ResponseEntity<>("successfully add appeal", HttpStatus.OK);
         } catch (Exception e) {
