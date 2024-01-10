@@ -113,6 +113,7 @@
           <div style="clear: both;"></div>
         </div>
         <br><br>
+
         <!-- 根据 displayUserType 显示相应的字段 -->
         <div v-if="displayUserType === '学生'">
           <!-- 显示顾客相关的表单项 -->
@@ -203,18 +204,6 @@
             </el-col>
           </el-row>
           <br>
-          <!-- <el-row :gutter="25">
-            <el-col :span="3">
-              <span class="label">
-                <img :src="require('../assets/icons8-address-50.png')" alt="注册地址图标" style="height: 1.1em; margin-right: 1px;">
-                注册地址：
-              </span>
-            </el-col>
-            <el-col :span="21">
-              <span class="value">{{ userInfo.user_address }}</span>
-            </el-col>
-          </el-row>
-          <br> -->
           <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
@@ -223,14 +212,7 @@
               </span>
             </el-col>
             <el-col :span="15">
-              <el-select v-model="userInfo.stuKeywords" multiple disabled>
-                <el-option
-                  v-for="(item, index) in userInfo.stuKeywords"
-                  :key="index"
-                  :label="item"
-                  :value="item"
-                ></el-option>
-              </el-select>
+              <span v-for="(item, index) in userInfo.stuKeywords" :key="index">{{ item }}</span>
             </el-col>
           </el-row>
           <br>
@@ -270,18 +252,6 @@
             </el-col>
           </el-row>
           <br>
-          <!-- <el-row :gutter="25">
-            <el-col :span="3">
-              <span class="label">
-                <img :src="require('../assets/icons8-address-50.png')" alt="商户注册地址图标" style="height: 1.1em; margin-right: 1px;">
-                注册地址：
-              </span>
-            </el-col>
-            <el-col :span="21">
-              <span class="value">{{ userInfo.user_address }}</span>
-            </el-col>
-          </el-row> 
-          <br>-->
           <el-row :gutter="25">
             <el-col :span="3">
               <span class="label">
@@ -324,9 +294,20 @@
                 社团类型：
               </span>
             </el-col>
-            <el-col :span="15">
+            <el-col :span="9">
               <span class="value">{{ userInfo.socType }}</span>
             </el-col>
+
+            <el-col :span="3.5">
+              <span class="label">
+                <img :src="require('../assets/icons8-like-50.png')" alt="商品喜好图标" style="height: 1.1em; margin-right: 1px;">
+                社团关键词：
+              </span>
+            </el-col>
+            <el-col :span="8">
+              <span v-for="(item, index) in userInfo.socKeywords" :key="index">{{ item }}</span>
+            </el-col>
+          <br>
           </el-row>
           <br>
           <el-row :gutter="25">

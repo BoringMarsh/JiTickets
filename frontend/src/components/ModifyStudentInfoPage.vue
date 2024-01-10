@@ -151,8 +151,8 @@
             </span>
           </el-col>
           <el-col :span="9">
-            <el-select v-model="userInfo.stuKeywords" multiple clearable placeholder="Select" filterable allow-create :disabled="flag!=null">
-                <el-option v-for="item in userInfo.stuKeywords" :key="item" :label="item" :value="item" :disabled="flag!=null"></el-option>
+            <el-select v-model="userInfo.stuKeyword" multiple clearable placeholder="Select" filterable allow-create :disabled="flag!=null">
+                <el-option v-for="item in keywords" :key="item" :label="item" :value="item" :disabled="flag!=null"></el-option>
               </el-select>
           </el-col>
         </el-row>
@@ -222,7 +222,7 @@
     stu_notes: '',        // Add stu_notes
     stu_keyword: [],      // Add stu_keyword as an array
   });
-
+  const keywords = ref([]);
 
   // 校区选项数组，每个选项包含 label（显示文本） 和 value（对应值）
   const campusOptions = ref([
@@ -300,17 +300,23 @@
   const route = useRoute();
   const router = useRouter();
   const userInfo = ref({});
-  const cusInfo=ref({})
   const categories = ref([]);  
 
-  //加入百度地图组件
-  /* eslint-disable */
-  let map: BMapGL.Map;
-  let geoc: BMapGL.Geocoder;
-  const addressInput = ref('');     //地址搜索框绑定变量
-
   const flag=route.query.flag;
+  const get_keywords = () => {
+      axios.get('/api/keywords/getkeywords')
+      .then(response => {
+            console.log(response.data)
+            keywords.value=response.data.keywords
+            console.log('keywords',keywords.value)
+          })
+          .catch((error) => {
+              console.log('An error occurred:', error);
+          });
+    }
+
   onMounted(async () => {
+    get_keywords();
     const username = flag==null? sessionStorage.getItem('username') as string:route.query.id;
     // const cus_ID=user_ID;
     console.log(sessionStorage.getItem('username'))
@@ -319,59 +325,6 @@
       userInfo.value = response.data;
     } else {
       console.error(`Error: HTTP status code ${response.status}`);
-    }
-
-    // map = new BMapGL.Map("baiduMap"); 
-    // geoc = new BMapGL.Geocoder();
-    // //const map = new BMapGL.Map("baiduMap"); 
-    // const point = new BMapGL.Point(116.404, 39.915);  // 创建点坐标
-    // map.centerAndZoom(point, 15);                     // 初始化地图，设置中心点坐标和地图级别
-    // map.enableScrollWheelZoom(true);                  // 开启鼠标滚轮缩放
-    // addressInput.value = userInfo.value.user_address;
-    // // 创建地址解析器实例
-    // const myGeo = new BMapGL.Geocoder();
-    // // 将地址解析结果显示在地图上，并调整地图视野
-    // myGeo.getPoint(userInfo.value.user_address, function(point) {
-    //   if (point) {
-    //     map.centerAndZoom(point, 16);
-    //     map.addOverlay(new BMapGL.Marker(point));
-    //   } else {
-    //     alert("您选择地址没有解析到结果!");
-    //   }
-    // });
-
-    // // 添加地图点击事件监听
-    // map.addEventListener("click", function (e: any) {
-    //   const pt = e.latlng;
-    //   //alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
-    //   geoc.getLocation(pt, function (rs: any) {
-    //     console.log('Complete geocoding result:', rs);
-    //     const addComp = rs.addressComponents;
-    //     addressInput.value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-    //     //alert(form.user_address);
-    //     //form.sto_lng = pt.lng.toString();
-    //     //form.sto_lat = pt.lat.toString();
-    //     //alert('点击的经纬度：' + pt.lng.toString() + ', ' + pt.lat.toString());
-    //     userInfo.value.user_address = addressInput.value;
-    //     var marker = new BMapGL.Marker(pt);  // 创建标注
-    //     map.clearOverlays(); // 清除所有覆盖物
-    //     map.addOverlay(marker); // 将标注添加到地图中
-    //     //marker.enableDragging(); // 可拖拽
-    //   });
-    // });
-
-    const response_cus = await axios.get('/api/getinformation/customer', { params: { cus_ID } });
-    if (response_cus.status === 200) {
-      cusInfo.value = response_cus.data;
-    } else {
-      console.error(`Error: HTTP status code ${response_cus.status}`);
-    }
-
-    const response_categoty = await axios.get('/api/category/getcategories');
-    if (response_categoty.status === 200) {
-      categories.value = response_categoty.data.categorylist;
-    } else {
-      console.error(`Error: HTTP status code ${response_categoty.status}`);
     }
   });
   
@@ -433,13 +386,13 @@
       // });
       console.log(userResponse);
       if (userResponse.status === 200/* && customerResponse.data.message === 'success'*/) {
-        alert('修改成功');
+        ElMessage.success('修改成功');
         if(flag==null)
           router.push({ name: 'UserInfoPage'});
         else
         router.push({ name: 'UserInfoPage',query:{id:userInfo.value.username,flag:1}});
       } else {
-        alert('修改失败');
+        ElMessage.error('修改失败');
       }
     } catch (error) {
       console.error(error);
