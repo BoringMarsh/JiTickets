@@ -3,18 +3,36 @@
   <div>
     <v-form-render :form-json="formJson" :form-data="formData" :option-data="optionData" ref="vFormRef">
     </v-form-render>
-
+    <el-row>
+    <el-col :span="14" :offset="3">
+      <el-form-item label="🧩社团图片">
+        <el-upload
+          v-model:file-list='fileList_pic'
+          class="upload-demo"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :auto-upload="false"
+          :multiple="true"
+          :limit="9"
+          :before-upload="beforeImageUpload"
+          :on-exceed="handleExceed">
+          <template #trigger>
+            <el-button type="primary">select file</el-button>
+          </template>
+        </el-upload>
+      </el-form-item>
+    </el-col>
+  </el-row>
   </div>
 
   <el-row>
 
   <el-col :span="3"/>
-  <el-upload
+  <!-- <el-upload
     ref="uploadImageRef"
     v-model:file-list="fileList"
-    action="/api/uploadcommodity/updateImage"
+  
     list-type="picture-card"
-    :data = COM_ID_TYPE     
+    :data = ACT_ID_TYPE     
     :auto-upload="true"
     :on-preview="handlePictureCardPreview"
     :on-exceed = "handleExceed"
@@ -25,7 +43,7 @@
     :limit  =3
   >
   <el-icon><Plus /></el-icon>
-</el-upload>
+</el-upload> -->
 
 <el-dialog v-model="dialogVisible">
   <img w-full :src="dialogImageUrl" alt="Preview Image" />
@@ -44,20 +62,20 @@ import { ElMessage, UploadFile } from 'element-plus'
 import type { UploadProps, UploadUserFile ,UploadInstance } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import axios from 'axios';
-import vformjson1 from '../../vform1.json'
+import vformjson1 from '../../vform.json'
 const formJson = reactive( {})
 const formData = reactive({})
 const optionData = reactive({})
 const vFormRef = ref(null)
 const router=useRouter();
 const route=useRoute();
-const sto_ID = ref('');
-const com_id = ref('');
-com_id.value=route.query.com_id as string; 
+const socId = ref('');
+const actId = ref('');
+actId.value=route.query.actId as string; 
 
-type COM_ID  = Record<string,number|string>;
-const COM_ID_TYPE:COM_ID = {
-"COM_ID":parseInt (com_id.value)
+type ACT_ID  = Record<string,number|string>;
+const ACT_ID_TYPE:ACT_ID = {
+"ACT_ID":parseInt (actId.value)
 };
 
 const fileList = ref<UploadUserFile[]>([]);
@@ -69,7 +87,7 @@ onBeforeMount(
 () =>{
   console.log('mount！');
   
-  axios.get('/api/uploadcommodity/form-data?COM_ID='+com_id.value) 
+  axios.get('/api/activity-personal/activity/'+parseInt(actId.value)) 
       .then(response =>{
           let newFormData = null
           console.log(response.data);
@@ -83,38 +101,36 @@ onBeforeMount(
 )
 
 onMounted(()=>{
-//sto_ID.value=route.query.sto_id as string;
-sto_ID.value = sessionStorage.getItem('sto_id') as string;
-console.log(sto_ID.value);
-axios.get('/api/uploadcommodity/image-path?COM_ID='+com_id.value)
-  .then(response =>{
-    response.data.forEach(path => {
-      var urlPath = path.substr(10);
-      console.log(urlPath);
-      fileList.value.push(
-        {
-          name:path,
-          url:urlPath
-        })
-      });
-      //const statusArray: Array<"ready" | "uploading" | "success" | "fail"> = ["success","ready"];
-      //uploadImageRef.value!.clearFiles(statusArray);
-  })
-    
-  
+//socId.value=route.query.socId as string;
+socId.value = sessionStorage.getItem('socId') as string;
+console.log(socId.value);
+// axios.get('/api/uploadcommodity/image-path?ACT_ID='+actId.value)
+//   .then(response =>{
+//     response.data.forEach(path => {
+//       var urlPath = path.substr(10);
+//       console.log(urlPath);
+//       fileList.value.push(
+//         {
+//           name:path,
+//           url:urlPath
+//         })
+//       });
+//       //const statusArray: Array<"ready" | "uploading" | "success" | "fail"> = ["success","ready"];
+//       //uploadImageRef.value!.clearFiles(statusArray);
+//   })
 });
 
 
 const submitForm = () => {
 vFormRef.value.getFormData().then(async formData => {
-  formData.STO_ID = sto_ID.value;
+  formData.actId=actId.value;
   console.log(JSON.stringify(formData));
-  axios.post("/api/uploadcommodity/updateBasicData?COM_ID="+com_id.value,JSON.stringify(formData),{ headers: {'Content-Type': 'application/json'} } ).then(response =>{
-    console.log(response.data);
-    uploadImageRef.value!.submit()
+  axios.put("/api/society/activity/update",JSON.stringify(formData),{ headers: {'Content-Type': 'application/json'} } ).then(response =>{
+    console.log('submitForm_response',response.data);
+    //uploadImageRef.value!.submit()
     ElMessage({
         showClose: true,
-        message: response.data,
+        message: "修改成功",
         type: 'success',
       });
     location.reload();
@@ -130,7 +146,7 @@ const returnDetailPage = () =>{
 router.push({
     path: '/detail',
     query:{
-        sto_id:sto_ID.value
+        socId:socId.value
     }
 });
 }
@@ -148,7 +164,7 @@ return true;
 const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
 //console.log(uploadFile, uploadFiles)
 console.log("准备删除"+uploadFile.name);
-axios.post('/api/uploadcommodity/deleteImage?COM_ID='+com_id.value+"&COM_IMAGE="+uploadFile.name);
+axios.post('/api/uploadcommodity/deleteImage?ACT_ID='+actId.value+"&COM_IMAGE="+uploadFile.name);
 
 }
 
