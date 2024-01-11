@@ -59,32 +59,32 @@
         <el-sub-menu index="1">
           <template #title>
             <el-icon><location /></el-icon>
-            <span>商家信息</span>
+            <span>社团信息</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="viewUserInfo" index="1-1">社团信息</el-menu-item>
-            <el-menu-item @click="modifyStoreInfo" index="1-2">修改信息</el-menu-item>
+            <el-menu-item @click="router.push({path:'/UserInfoPage',query:{id:sto_id}})" index="1-1">社团信息</el-menu-item>
+            <el-menu-item @click="router.push({path:'/ModifySocietyInfoPage',query:{id:sto_id}})" index="1-2">修改信息</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
             <el-menu-item index="1-3" @click="dialogVisible = true">公告发布</el-menu-item>
           </el-menu-item-group>
           <el-sub-menu index="1-4">
             <template #title>聊天相关</template>
-            <el-menu-item @click="viewChatInfo" index="1-4-1">聊天入口</el-menu-item>
+            <el-menu-item @click="router.push({path:'/ChatPage',query:{id:sto_id}})" index="1-4-1">聊天入口</el-menu-item>
           </el-sub-menu>
         </el-sub-menu>
         <el-menu-item index="2" @click="router.push({path:'/detail',query:{sto_id:sto_id}})">
           <el-icon><document /></el-icon>
-          <span>商品总览</span>
+          <span>活动总览</span>
         </el-menu-item>
         <el-menu-item index="3" @click="router.push({path:'/upload',query:{sto_id:sto_id}})">
           <el-icon><edit /></el-icon>
-          <span>上传商品</span>
+          <span>发布活动</span>
         </el-menu-item>
 
         <el-menu-item index="4" @click="router.push({path:'/verification',query:{sto_id:sto_id}})">
           <el-icon><Warning /></el-icon>
-          <span>待核销订单</span>
+          <span>待核销活动</span>
         </el-menu-item>
 
         <el-menu-item index="5" @click="router.push({path:'/refund',query:{sto_id:sto_id}})">
@@ -98,19 +98,13 @@
       </div>
         <!-- 右侧主体区域 -->
         <el-main >
-
-            <div>
-          <!-- <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component" />
-            </keep-alive>
-          </router-view> -->
-        <router-view v-slot="{ Component,route }">
-          <keep-alive >
-            <component v-if="route.meta.keepAlive" :is="Component" />
-          </keep-alive>
-          <component v-if="!route.meta.keepAlive" :is="Component" />
-        </router-view>
+          <div>
+            <router-view v-slot="{ Component,route }">
+              <keep-alive >
+                <component v-if="route.meta.keepAlive" :is="Component" />
+              </keep-alive>
+              <component v-if="!route.meta.keepAlive" :is="Component" />
+            </router-view>
           </div>
         </el-main>
     
@@ -192,8 +186,6 @@
     // getContent.value='222';
   }
   const logout=()=>{
-    // router.push('/test');
-    // getContent.value='录入商品'
     router.push('/login');
     console.log('success jump');
   }

@@ -2,7 +2,7 @@
   <el-row>
 <el-page-header :icon="ArrowLeft" title="返回" @back="goBack" >
   <template #content>
-    <span class="text-large font-600 mr-3"> 商品总览 </span>
+    <span class="text-large font-600 mr-3"> 活动总览 </span>
   </template>
 </el-page-header>
 
@@ -19,9 +19,9 @@
       <el-col :span="5">
       
         <el-radio-group fill="#F56C6C" v-model="tableLayout">
-          <el-radio-button  label="在售" @click="checkLeft"/>
-          <el-radio-button label="售罄" @click="checkLeft1"/>
-          <el-radio-button label="过期" @click="checkLeft2"/>
+          <el-radio-button  label="报名进行中" @click="checkLeft"/>
+          <el-radio-button label="报名人满" @click="checkLeft1"/>
+          <el-radio-button label="报名结束" @click="checkLeft2"/>
         </el-radio-group>
             
       </el-col>
@@ -35,9 +35,9 @@
     border 
     stripe
     @sort-change="changeSort"
-    :default-sort="{ prop: 'com_id', order: 'descending' }"
+    :default-sort="{ prop: 'act_id', order: 'descending' }"
     >
-    <el-table-column label="商品图片" width="200">
+    <el-table-column label="活动图片" width="200">
       <template #default="scope">
         <div style="display: flex; align-items: center">
           <el-image
@@ -51,23 +51,23 @@
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="com_name" label="商品名字"> </el-table-column>
-    <el-table-column prop="com_id" sortable="custom" label="商品ID"></el-table-column>
-    <el-table-column prop="com_curr_price" label="当前价格"></el-table-column>
+    <el-table-column prop="act_name" label="活动名"> </el-table-column>
+    <el-table-column prop="act_id" sortable="custom" label="活动ID"></el-table-column>
+    <el-table-column prop="ticket_price" label="票价"></el-table-column>
     <el-table-column
-    prop="com_left"
-    label="商品余量"
+    prop="act_left"
+    label="活动剩余名额"
     ></el-table-column>
     <el-table-column
-    prop="com_categories"
-    label="商品类别"
+    prop="keyword"
+    label="活动关键词"
     width="225"
     >
     <template #header>
       <div class="categoryStyle">
-      {{'商品类别'}}
+      {{'活动关键词'}}
       <el-select
-      v-model="category"
+      v-model="keyword"
       multiple
       collapse-tags
       collapse-tags-tooltip
@@ -85,12 +85,12 @@
     </div>
     </template>
   </el-table-column>
-  <el-table-column prop="com_uploaddate" label="上传日期" width="160">
+  <el-table-column prop="upload_time" label="上传日期" width="160">
     <template #header>
       <div class="categoryStyle">
-      {{'上传日期'}}
+      {{'发布时间'}}
           <el-date-picker
-            v-model="uploadDate"
+            v-model="upload_time"
             type="date"
             placeholder="Pick a day"
             :disabled-date="disabledDate"
@@ -102,12 +102,12 @@
         </div>
       </template>
   </el-table-column>
-  <el-table-column prop="com_expirationdate" label="过期日期" width="160">
+  <el-table-column prop="reg_end_time" label="过期日期" width="160">
     <template #header>
       <div class="categoryStyle">
-      {{'过期日期'}}
+      {{'报名截至时间'}}
           <el-date-picker
-            v-model="expirationDate"
+            v-model="reg_end_time"
             type="date"
             placeholder="Pick a day"
             :shortcuts="shortcuts"
@@ -174,27 +174,27 @@
   const query=ref('');
   const haveQuery=ref('');
   const tableLayout = ref('在售')
-  const uploadDate=ref('');
-  const expirationDate=ref('')
+  const upload_time=ref('');
+  const reg_end_time=ref('')
   const loading=ref(false);
   const ableEdit = ref([true]);
-  const isEmpty = ref([true]) //是否售空
-  const isOverDate = ref([true]) //是否过期
-  const sto_id=ref('');
+  const isEmpty = ref([false]) //是否售空
+  const isOverDate = ref([false]) //是否过期
+  const soc_id=ref('');
   const route=useRoute();
   const tot=ref(800);
   const goodsList=ref([
     {
-        "com_id": 1,
-        "com_name": "商品1",
-        "com_left": 1,
-        "com_uploaddate":'',
-        "com_expirationdate":'',
-        "com_curr_price": 0.01,
-        "com_categories": [
+        "act_id": 1,
+        "act_name": "商品1",
+        "act_left": 1,
+        "upload_time":'',
+        "reg_end_time":'',
+        "ticket_price": 0.01,
+        "keyword": [
             "苹果"
         ],
-        "com_image": [
+        "act_image": [
             ".\\wwwroot\\commodity_image\\1\\com_image_0.jpg"
         ]
     }
@@ -226,45 +226,49 @@ const disabledDate = (time: Date) => {
 }
 const options =ref( [
   {
-    value: '主食',
-    label: '主食',
+    value: '体育',
+    label: '体育',
   },
   {
-    value: '面包',
-    label: '面包',
+    value: '文艺',
+    label: '文艺',
   },
   {
-    value: '苹果',
-    label: '苹果',
+    value: '娱乐',
+    label: '娱乐',
   }
 ]);
 
-const status=ref(1);  //1 在售 0 售罄/下架 -1 过期
+const status=ref(1);  //1 活动报名中 0 报名人满 -1 报名截止
 const order=ref(1);
-const category=ref([]);
+const keyword=ref([]);
 const getGoodsList=async()=>{
   loading.value=Boolean(true);
   goodsList.value.length=0;
 
-  axios.get('api/searchCommodity/getcommoditytotal?STO_ID='+sto_id.value+'&COM_STATUS='+status.value)
-  .then(response=>{
-    tot.value=response.data;
-  });
-  axios.post('api/searchCommodity?STO_ID='+sto_id.value+'&com_begin_n='+(pagesize.value*(pagenum.value-1)+1)+'&com_end_n='+(pagesize.value*pagenum.value),{
-    "status":status.value,
-    "order":order.value,
-    "category":category.value,
-    "query":query.value,
-    'COM_UPLOADDATE':uploadDate.value,
-    'COM_EXPIRATIONDATE':expirationDate.value
-  }) 
-    .then(response=>{
-      console.log(pagesize.value*(pagenum.value-1)+1);
-      console.log(pagesize.value*pagenum.value);
-      goodsList.value=JSON.parse(JSON.stringify(response.data));
-      isEmpty.value = []
-      isOverDate.value=[]
-      for(var i = 0; i < goodsList.value.length;i++){
+  // axios.get('api/searchCommodity/getcommoditytotal?STO_ID='+soc_id.value+'&COM_STATUS='+status.value)
+  // .then(response=>{
+  //   tot.value=response.data;
+  // });
+  // 获取某社团活动
+  axios.get('/api/society/activities', {
+        params: {
+          username: soc_id.value,
+          status: status.value,
+          order: order.value,
+          keyword: keyword.value,
+          query: query.value,
+          upload_time: upload_time.value,
+          reg_end_time: reg_end_time.value,
+          page: pagenum,
+          pageSize: pagesize,
+        },
+      })
+      .then(response => {
+        console.log('response',response.data)
+        goodsList.value = response.data;
+        loading.value=Boolean(false);
+        for(var i = 0; i < goodsList.value.length;i++){
         if(status.value==1){
           isEmpty.value.push(false);
           isOverDate.value.push(false);
@@ -274,13 +278,48 @@ const getGoodsList=async()=>{
           isOverDate.value.push(false);
         }
         else{ if(status.value==-1)
-          if(goodsList.value[i].com_left !=0)  {isEmpty.value.push(false);}
+          if(goodsList.value[i].act_left !=0)  {isEmpty.value.push(false);}
           else {isEmpty.value.push(true);}
           isOverDate.value.push(true);
         }
       }
-      loading.value=Boolean(false);
-    })
+      })
+      .catch(error => {
+        console.error(error);
+        loading.value=Boolean(false);
+      });
+  // axios.post('api/searchCommodity?STO_ID='+soc_id.value+'&com_begin_n='+(pagesize.value*(pagenum.value-1)+1)+'&com_end_n='+(pagesize.value*pagenum.value),{
+  //   "status":status.value,
+  //   "order":order.value,
+  //   "category":category.value,
+  //   "query":query.value,
+  //   'COM_UPLOADDATE':uploadDate.value,
+  //   'COM_EXPIRATIONDATE':expirationDate.value
+  // }) 
+  //   .then(response=>{
+  //     console.log(pagesize.value*(pagenum.value-1)+1);
+  //     console.log(pagesize.value*pagenum.value);
+  //     goodsList.value=JSON.parse(JSON.stringify(response.data));
+  //     isEmpty.value = []
+  //     isOverDate.value=[]
+  //     for(var i = 0; i < goodsList.value.length;i++){
+  //       if(status.value==1){
+  //         isEmpty.value.push(false);
+  //         isOverDate.value.push(false);
+  //       }
+  //       else if (status.value==0){
+  //         isEmpty.value.push(true);
+  //         isOverDate.value.push(false);
+  //       }
+  //       else{ if(status.value==-1)
+  //         if(goodsList.value[i].com_left !=0)  {isEmpty.value.push(false);}
+  //         else {isEmpty.value.push(true);}
+  //         isOverDate.value.push(true);
+  //       }
+  //     }
+  //     loading.value=Boolean(false);
+  //   })
+
 }
 
 const checkLeft=()=>{
@@ -350,7 +389,7 @@ const srcList =ref( [
   ]);
 const url = 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg';
 const getUrl=(index:number)=>{
-  return change(goodsList.value[index].com_image);
+  return change(goodsList.value[index].act_image);
 }
 
 const goBack=()=>{
@@ -358,29 +397,30 @@ const goBack=()=>{
 }
 onMounted(()=>{
     //sto_id.value = route.query.sto_id as string;
-    sto_id.value = sessionStorage.getItem('sto_id') as string;
-    console.log(sto_id.value);
+    
+    soc_id.value = sessionStorage.getItem('username') as string;
+    console.log('soc_id_inDetailPage',soc_id.value);
       getGoodsList();
   });
   const viewDetail=(index: number)=>{
       // router.push('/view');
-      console.log(goodsList.value[index].com_id);
+      console.log(goodsList.value[index].act_id);
       router.push({
         path: '/view',
         query:{
-            com_id:goodsList.value[index].com_id
+            act_id:goodsList.value[index].act_id
         }
     });
   }
 var durationTime=2000;
 const viewUpdate=(index: number)=>{
       // router.push('/view');
-      console.log(goodsList.value[index].com_id);
+      console.log(goodsList.value[index].act_id);
       router.push({
         path: '/updateCommodity',
         query:{
-            com_id:goodsList.value[index].com_id,
-            sto_id:sto_id.value
+            act_id:goodsList.value[index].act_id,
+            username:soc_id.value
         }
     });
   }
@@ -398,7 +438,11 @@ const viewUpdate=(index: number)=>{
   )
     .then(() => {
 
-      axios.post('api/UploadCommodity/deleteCommodity?COM_ID='+goodsList.value[index].com_id)
+      axios.delete('/api/society/activities', {
+        params: {
+          act_id: goodsList.value[index].act_id
+        },
+      })
         .then(response=>{
           console.log(response);
           ElNotification.success({
@@ -447,8 +491,8 @@ const viewUpdate=(index: number)=>{
     var arr: string[];
     // arr=goodsList.value[index].com_image;
     arr=[];
-    for(var i=0;i<goodsList.value[index].com_image.length;i++)
-      arr.push(goodsList.value[index].com_image[i]);
+    for(var i=0;i<goodsList.value[index].act_image.length;i++)
+      arr.push(goodsList.value[index].act_image[i]);
     for(i=0;i<arr.length;i++){
       var str=arr[i].split('\\');
       arr[i]='/';

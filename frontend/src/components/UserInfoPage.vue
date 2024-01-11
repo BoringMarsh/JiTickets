@@ -573,7 +573,7 @@ const goBack = () => {
       router.push('/administrator')
     }
     else if (userRole === '1') {
-      router.push({ path: '/store' });
+      router.push({ path: '/society' });
     } else if (userRole === '0') {
       router.push({ path: '/home' });
     } else {
