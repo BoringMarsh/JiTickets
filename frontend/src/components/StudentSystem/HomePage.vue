@@ -1,19 +1,19 @@
 <template >
-    <el-container style="background-color: #fef0f0;">
+    <el-container style="background-color: #fffbf7;">
       <el-header >
         <el-menu
           mode="horizontal"
           router= true
 
-          background-color="#aa0d0d"
+          background-color="#eeebe4"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#c5ce61"
 
 
           :default-active="store.activePath"
         >
         <el-image
-              :src="require('../../assets/logo_short.png')"
+              :src="require('../../../public/Logo.png')"
               style="height: 60px;"
               ></el-image>
           <div class="flex-grow" />
@@ -160,8 +160,7 @@
     }
 
     .menuItem{
-      color: white ;
-
+      color: #9f4833 ;
     }
     .menuItem:hover{
       color: #409EFF ;

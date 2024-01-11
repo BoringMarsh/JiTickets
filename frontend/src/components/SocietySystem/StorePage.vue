@@ -29,7 +29,7 @@
     <!-- 头部区域 -->
     <el-header height="80px">
       <div>
-        <img src="StoreLogo.jpg" alt="" style="width: 150px; padding-right: 10px;"/>
+        <img src="Logo.png" alt="" style="width: 150px; padding-right: 10px;"/>
         <span>商户系统</span>
       </div>
       <!-- <el-button type="info"  @click="dialogVisible = true">发布公告</el-button> -->
