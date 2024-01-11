@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
 public class ActivityImage {
     private Integer actId;
     private String actImage;

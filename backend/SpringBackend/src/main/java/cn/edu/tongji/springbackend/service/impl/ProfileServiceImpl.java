@@ -220,5 +220,130 @@ public class ProfileServiceImpl implements ProfileService {
         }
     }
 
+    @Override
+    public List<GetStudentProfileResponse> getStudentProfileList(int beginNumber, int endNumber) {
+        try {
+            // 根据起始和结束索引分页查询学生列表
+            int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
+            int pageSize = endNumber - beginNumber + 1;  // 检索的数据行数
+            List<Student> studentList = studentMapper.getStudentListByRange(beginNumber, endNumber);
+            // 处理数据库记录不足的情况
+            if (studentList.isEmpty()) {
+                return new ArrayList<>(); // 返回一个空列表
+            }
+            // 创建一个存储学生资料响应的列表
+            List<GetStudentProfileResponse> studentProfiles = new ArrayList<>();
+            // 遍历学生列表并获取个人资料
+            for (Student student : studentList) {
+                Integer stuId = student.getStuId();
+                // 创建学生资料响应对象
+                GetStudentProfileResponse studentProfile = new GetStudentProfileResponse();
+                // 设置用户属性
+                User user = userMapper.getUserById(stuId);
+                studentProfile.setId(user.getId());
+                studentProfile.setUsername(user.getUsername());
+                studentProfile.setEmail(user.getEmail());
+                studentProfile.setPhone(user.getPhone());
+                studentProfile.setCampus(user.getCampus());
+                studentProfile.setAccountStatus(user.getAccountStatus());
+                studentProfile.setBalance(user.getBalance());
+                // 格式化注册时间
+                LocalDateTime regTime = user.getRegTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                studentProfile.setRegTime(regTime.format(formatter));
+                studentProfile.setRole(user.getRole());
+
+                // 设置学生属性
+                studentProfile.setStuName(student.getStuName());
+                studentProfile.setStuYear(student.getStuYear());
+                studentProfile.setStuSchool(student.getStuSchool());
+                studentProfile.setStuMajor(student.getStuMajor());
+                studentProfile.setStuNotes(student.getStuNotes());
+
+                // 获取学生的关键字信息并设置到响应对象中
+                List<String> studentKeywords = studentKeywordMapper.getStudentKeywords(stuId);
+                studentProfile.setStuKeywords(studentKeywords);
+
+                // 将学生资料添加到响应列表
+                studentProfiles.add(studentProfile);
+            }
+            return studentProfiles;
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            logger.error("Failed to retrieve student profiles: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve student profiles: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<GetSocietyProfileResponse> getSocietyProfileList(int beginNumber, int endNumber) {
+        try {
+            // 根据起始和结束索引分页查询社团列表
+            int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
+            int pageSize = endNumber - beginNumber + 1;  // 检索的数据行数
+            List<Society> societyList = societyMapper.getSocietyListByRange(beginNumber, endNumber);
+            // 处理数据库记录不足的情况
+            if (societyList.isEmpty()) {
+                return new ArrayList<>(); // 返回一个空列表
+            }
+            // 创建一个存储学生资料响应的列表
+            List<GetSocietyProfileResponse> societyProfiles = new ArrayList<>();
+            // 遍历学生列表并获取个人资料
+            for (Society society : societyList) {
+                Integer socId = society.getSocId();
+                // 创建社团资料响应对象
+                GetSocietyProfileResponse societyProfile = new GetSocietyProfileResponse();
+                // 设置用户属性
+                User user = userMapper.getUserById(socId);
+                societyProfile.setUserId(user.getId());
+                societyProfile.setUsername(user.getUsername());
+                societyProfile.setEmail(user.getEmail());
+                societyProfile.setPhone(user.getPhone());
+                societyProfile.setCampus(user.getCampus());
+                societyProfile.setAccountStatus(user.getAccountStatus());
+                societyProfile.setBalance(user.getBalance());
+                // 格式化注册时间
+                LocalDateTime regTime = user.getRegTime();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                societyProfile.setRegTime(regTime.format(formatter));
+                societyProfile.setRole(user.getRole());
+
+                // 设置社团属性
+                societyProfile.setSocName(society.getSocName());
+                societyProfile.setSocIntro(society.getSocIntro());
+                societyProfile.setSocType(society.getSocType());
+
+                // 获取学生的关键字信息并设置到响应对象中
+                List<String> societyKeywords = societyKeywordMapper.getSocietyKeywords(socId);
+                societyProfile.setSocKeywords(societyKeywords);
+                List<SocietyAdmin> societyAdmins = societyAdminMapper.getSocietyAdmins(socId);
+                societyProfile.setSocAdmins(societyAdmins);
+
+                // 读取logo文件并转换为Base64字符串
+                String logoBase64 = readAndConvertToBase64(society.getSocLogo());
+                logoBase64 = "data:image/jpg;base64," + logoBase64;
+                societyProfile.setSocLogoFile(logoBase64);
+
+                // 查询并读取社会的所有image文件并转换为Base64字符串列表
+                List<String> imageBase64List = new ArrayList<>();
+                List<SocietyImage> societyImages = societyMapper.getSocietyImagesBySocietyId(socId);
+                for (SocietyImage image : societyImages) {
+                    String imageBase64 = readAndConvertToBase64(image.getSocImage());
+                    imageBase64 = "data:image/jpg;base64," + imageBase64;
+                    imageBase64List.add(imageBase64);
+                }
+                societyProfile.setSocImageFiles(imageBase64List);
+
+                // 将学生资料添加到响应列表
+                societyProfiles.add(societyProfile);
+            }
+            return societyProfiles;
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            logger.error("Failed to retrieve student profiles: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve student profiles: " + e.getMessage());
+        }
+    }
+
 }
 

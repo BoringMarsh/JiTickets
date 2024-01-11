@@ -28,5 +28,6 @@ public class GetStudentProfileResponse {
     private String stuMajor;
     private String stuNotes;
 
+    // from student_keyword
     private List<String> stuKeywords;
 }

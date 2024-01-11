@@ -1,10 +1,9 @@
 package cn.edu.tongji.springbackend.controller;
 
-import cn.edu.tongji.springbackend.dto.AddAppealRequest;
-import cn.edu.tongji.springbackend.dto.AppealDetailedInfo;
-import cn.edu.tongji.springbackend.dto.GetAppealPageResponse;
-import cn.edu.tongji.springbackend.dto.SetUserProhibitedStatusRequest;
+import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.service.OrderService;
+import cn.edu.tongji.springbackend.service.ProfileService;
+import cn.edu.tongji.springbackend.service.SocietyActivityService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,53 @@ import java.util.List;
 public class OrderController {
     @Resource
     private OrderService orderService;
+    @Resource
+    private ProfileService profileService;
+    @Resource
+    private SocietyActivityService societyActivityService;
+
+    @GetMapping("/userlist/student")
+    public ResponseEntity<?> getStudentList(
+            @RequestParam(name = "BEGIN_NUMBER", required = false) Integer beginNumber,
+            @RequestParam(name = "END_NUMBER", required = false) Integer endNumber) {
+        try {
+            // 调用 profileService 的 getStudentProfileList 方法，并传递 beginNumber 和 endNumber 参数
+            List<GetStudentProfileResponse> studentList = profileService.getStudentProfileList(beginNumber, endNumber);
+            // 返回获取到的学生列表
+            return new ResponseEntity<>(studentList, HttpStatus.OK);
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            return new ResponseEntity<>("Failed to retrieve student list: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/userlist/society")
+    public ResponseEntity<?> getSocietyList(
+            @RequestParam(name = "BEGIN_NUMBER", required = false) Integer beginNumber,
+            @RequestParam(name = "END_NUMBER", required = false) Integer endNumber) {
+        try {
+            List<GetSocietyProfileResponse> societyList = profileService.getSocietyProfileList(beginNumber, endNumber);
+            // 返回获取到的学生列表
+            return new ResponseEntity<>(societyList, HttpStatus.OK);
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            return new ResponseEntity<>("Failed to retrieve society list: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/activitylist")
+    public ResponseEntity<?> getActivityList(
+            @RequestParam(name = "BEGIN_NUMBER", required = false) Integer beginNumber,
+            @RequestParam(name = "END_NUMBER", required = false) Integer endNumber) {
+        try {
+            List<ActivityDetailedInfo> activityList = societyActivityService.getActivityList(beginNumber, endNumber);
+            // 返回获取到的学生列表
+            return new ResponseEntity<>(activityList, HttpStatus.OK);
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            return new ResponseEntity<>("Failed to retrieve society list: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/appeal/page/{page}")
     public ResponseEntity<?> getAppealPage(@PathVariable("page") int page) {

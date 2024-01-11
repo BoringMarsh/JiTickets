@@ -6,7 +6,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class Activity {
     private Integer actId;
     private String actName;
@@ -23,3 +22,4 @@ public class Activity {
     private Integer ratingNum;
     private Integer socId;
 }
+

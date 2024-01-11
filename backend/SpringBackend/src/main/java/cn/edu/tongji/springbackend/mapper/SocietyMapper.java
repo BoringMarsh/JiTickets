@@ -17,4 +17,5 @@ public interface SocietyMapper {
     void insertSocietyKeyword(SocietyKeyword societyKeyword);
     List<SocietyImage> getSocietyImagesBySocietyId(Integer socId);
     void updateSociety(Society society);
+    List<Society> getSocietyListByRange(@Param("startRow") int startRow, @Param("pageSize") int pageSize);
 }
