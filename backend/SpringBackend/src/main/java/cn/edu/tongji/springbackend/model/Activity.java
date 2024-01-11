@@ -6,6 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class Activity {
     private Integer actId;
     private String actName;

@@ -43,31 +43,33 @@ public class SocietyActServiceImpl implements SocietyActivityService {
     private ActivityImageMapper activityImageMapper;
     @Autowired
     private FileStorageProperties fileStorageProperties;
+
     @Override
     @Transactional
     public int uploadActivity(UploadActReq uploadActReq) {
         try {
-            Activity activity = new Activity();
-            activity.setActName(uploadActReq.getActName());
-            activity.setActIntro(uploadActReq.getActIntro());
-            activity.setActLocation(uploadActReq.getActLocation());
-            activity.setTicketPrice(uploadActReq.getTicketPrice());
-            activity.setUploadTime(LocalDateTime.now());
-
-            activity.setActCapacity(uploadActReq.getActCapacity());
-            activity.setActLeft(uploadActReq.getActCapacity());
-            activity.setActRating(5.0);
-            activity.setRatingNum(0);
-            activity.setSocId(uploadActReq.getSocID());
-
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             // 将字符串转换为 LocalDateTime 对象
             LocalDateTime regStartTime = LocalDateTime.parse(uploadActReq.getRegStartTime(), formatter);
             LocalDateTime regEndTime = LocalDateTime.parse(uploadActReq.getRegEndTime(), formatter);
             LocalDateTime actTime = LocalDateTime.parse(uploadActReq.getActTime(), formatter);
-            activity.setRegStartTime(regStartTime);
-            activity.setRegEndTime(regEndTime);
-            activity.setActTime(actTime);
+
+            Activity activity = Activity.builder()
+                    .actName(uploadActReq.getActName())
+                    .actIntro(uploadActReq.getActIntro())
+                    .actLocation(uploadActReq.getActLocation())
+                    .ticketPrice(uploadActReq.getTicketPrice())
+                    .uploadTime(LocalDateTime.now())
+                    .actCapacity(uploadActReq.getActCapacity())
+                    .actLeft(uploadActReq.getActCapacity())
+                    .actRating(5.0)
+                    .ratingNum(0)
+                    .socId(uploadActReq.getSocID())
+                    .regStartTime(regStartTime)
+                    .regEndTime(regEndTime)
+                    .actTime(actTime)
+                    .build();
+
             logger.info("Successfully set activity info: {}", activity);
 
             int rowsAffected = activityMapper.insertActivity(activity);
