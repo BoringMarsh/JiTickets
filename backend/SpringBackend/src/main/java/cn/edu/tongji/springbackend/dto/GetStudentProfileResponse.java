@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GetStudentProfileResponse {
     //User attributes
-    private Integer id;
+    private Integer userId;
     private String username;
     private String email;
     private String phone;

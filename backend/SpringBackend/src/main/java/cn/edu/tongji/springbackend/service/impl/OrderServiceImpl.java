@@ -39,9 +39,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public GetAppealPageResponse getAppealPage(int timeOrder, int beginNum, int endNum) throws IOException {
         List<AppealDetailedInfo> appealDetailedInfos = new ArrayList<>();
-        List<String> images = new ArrayList<>();
 
         for (Appeal appeal : appealMapper.getByPage(timeOrder, endNum - beginNum + 1, beginNum - 1)) {
+            List<String> images = new ArrayList<>();
+
             for (AppealImage image : appealImageMapper.getById(appeal.getAppId())) {
                 images.add(getImage(image.getAppImage()));
             }
@@ -58,8 +59,6 @@ public class OrderServiceImpl implements OrderService {
                     appeal.getComplainantId(),
                     images
             ));
-
-            images.clear();
         }
 
         return new GetAppealPageResponse(
@@ -146,12 +145,5 @@ public class OrderServiceImpl implements OrderService {
 
         appealMapper.add(appeal);
         processAppealImages(appeal.getAppId(), addAppealRequest.getAppealImages());
-    }
-
-    @Override
-    public void setUserProhibitedStatus(SetUserProhibitedStatusRequest setUserProhibitedStatusRequest) {
-        /*User user = userMapper.getUserById(setUserProhibitedStatusRequest.getUserId());
-        user.setAccountStatus(setUserProhibitedStatusRequest.getIfProhibited() ? 0 : 1);
-        userMapper.update(user);*/
     }
 }
