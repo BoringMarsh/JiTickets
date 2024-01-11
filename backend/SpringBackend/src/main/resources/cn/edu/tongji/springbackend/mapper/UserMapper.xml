@@ -3,6 +3,10 @@
 
 <!--namespace指向mapper.xml所对应的Mapper接口-->
 <mapper namespace="cn.edu.tongji.springbackend.mapper.UserMapper">
+    <select id="getAll" resultType="user">
+        SELECT * FROM user;
+    </select>
+
     <select id="getUserById" parameterType="int" resultType="user">
         SELECT * FROM user WHERE id = #{id}
     </select>
@@ -22,7 +26,8 @@
         SET
             email = #{email},
             phone = #{phone},
-            campus = #{campus}
+            campus = #{campus},
+            account_status = #{accountStatus}
         WHERE id = #{id}
     </update>
 </mapper>

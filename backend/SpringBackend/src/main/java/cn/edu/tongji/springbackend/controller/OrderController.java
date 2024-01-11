@@ -46,6 +46,7 @@ public class OrderController {
             // 返回获取到的学生列表
             return new ResponseEntity<>(societyList, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             // 处理异常情况并返回适当的响应
             return new ResponseEntity<>("Failed to retrieve society list: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -103,17 +104,19 @@ public class OrderController {
     }
 
     @PutMapping("/prohibit")
-    public ResponseEntity<?> setUserProhibitedStatus(@RequestBody SetUserProhibitedStatusRequest setUserProhibitedStatusRequest) {
+    public ResponseEntity<?> setUserProhibitedStatus(
+            @RequestParam("USER_ID") int userId,
+            @RequestParam("IF_PROHIBITED") boolean ifProhibited) {
         try {
-            orderService.setUserProhibitedStatus(setUserProhibitedStatusRequest);
+            profileService.setUserProhibitedStatus(userId, ifProhibited);
             return new ResponseEntity<>(
-                    "successfully " + (setUserProhibitedStatusRequest.getIfProhibited() ? "prohibit" : "unblock") + " user",
+                    "successfully " + (ifProhibited ? "prohibit" : "unblock") + " user",
                     HttpStatus.OK
             );
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(
-                    (setUserProhibitedStatusRequest.getIfProhibited() ? "prohibit" : "unblock") + " user failed",
+                    (ifProhibited ? "prohibit" : "unblock") + " user failed",
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }

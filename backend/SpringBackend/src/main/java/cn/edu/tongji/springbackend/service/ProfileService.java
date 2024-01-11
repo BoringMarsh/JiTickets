@@ -17,4 +17,5 @@ public interface ProfileService {
     void modifySocietyProfile(ModifySocProfileReq modifyRequest);
     List<GetStudentProfileResponse> getStudentProfileList(int beginNumber, int endNumber);
     List<GetSocietyProfileResponse> getSocietyProfileList(int beginNumber, int endNumber);
+    void setUserProhibitedStatus(int userId, boolean ifProhibited);
 }

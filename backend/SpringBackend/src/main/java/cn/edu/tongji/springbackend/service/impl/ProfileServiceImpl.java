@@ -226,7 +226,7 @@ public class ProfileServiceImpl implements ProfileService {
             // 根据起始和结束索引分页查询学生列表
             int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
             int pageSize = endNumber - beginNumber + 1;  // 检索的数据行数
-            List<Student> studentList = studentMapper.getStudentListByRange(beginNumber, endNumber);
+            List<Student> studentList = studentMapper.getStudentListByRange(startRow, pageSize);
             // 处理数据库记录不足的情况
             if (studentList.isEmpty()) {
                 return new ArrayList<>(); // 返回一个空列表
@@ -240,7 +240,7 @@ public class ProfileServiceImpl implements ProfileService {
                 GetStudentProfileResponse studentProfile = new GetStudentProfileResponse();
                 // 设置用户属性
                 User user = userMapper.getUserById(stuId);
-                studentProfile.setId(user.getId());
+                studentProfile.setUserId(user.getId());
                 studentProfile.setUsername(user.getUsername());
                 studentProfile.setEmail(user.getEmail());
                 studentProfile.setPhone(user.getPhone());
@@ -281,7 +281,7 @@ public class ProfileServiceImpl implements ProfileService {
             // 根据起始和结束索引分页查询社团列表
             int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
             int pageSize = endNumber - beginNumber + 1;  // 检索的数据行数
-            List<Society> societyList = societyMapper.getSocietyListByRange(beginNumber, endNumber);
+            List<Society> societyList = societyMapper.getSocietyListByRange(startRow, pageSize);
             // 处理数据库记录不足的情况
             if (societyList.isEmpty()) {
                 return new ArrayList<>(); // 返回一个空列表
@@ -345,5 +345,11 @@ public class ProfileServiceImpl implements ProfileService {
         }
     }
 
+    @Override
+    public void setUserProhibitedStatus(int userId, boolean ifProhibited) {
+        User user = userMapper.getUserById(userId);
+        user.setAccountStatus(ifProhibited ? 0 : 1);
+        userMapper.updateUser(user);
+    }
 }
 

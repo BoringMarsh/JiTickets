@@ -42,35 +42,35 @@
       <el-row>
     <el-table
       v-loading="loading"
-     :data="goodsList"
+     :data="userList"
       style="width: 100%" max-height="1000" 
       border 
       stripe
       @sort-change="changeSort"
-      :default-sort="{ prop: 'USER_ID', order: 'ascending' }"
+      :default-sort="{ prop: 'userId', order: 'ascending' }"
       >
       <el-table-column label="用户图片" width="200" v-if="type=='1'">
         <template #default="scope">
           <div style="display: flex; align-items: center">
-            <el-image
+            <!-- <el-image
               style="width: 180px; height: 90px"
               :src="getUrl(scope.$index)"
               :zoom-rate="1.2"
               :initial-index="0"
               fit="fill"
-            />
+            /> -->
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="USER_NAME" label="用户名字"> </el-table-column>
-      <el-table-column prop="USER_ID" sortable="custom" label="用户ID">
+      <el-table-column prop="username" label="用户名字"> </el-table-column>
+      <el-table-column prop="userId" sortable="custom" label="用户ID">
         <template #default="scope">
-        <el-tag @click="router.push({path:'/UserInfoPage',query:{id:goodsList[scope.$index].USER_ID,flag:1}})">{{ goodsList[scope.$index].USER_ID }}</el-tag>
+        <el-tag @click="router.push({path:'/UserInfoPage',query:{id:userList[scope.$index].userId,flag:1}})">{{ userList[scope.$index].userId }}</el-tag>
         </template>
       </el-table-column>
-    <el-table-column prop="USER_REGTIME" label="用户注册日期" >
+    <el-table-column prop="regTime" label="用户注册日期" >
     </el-table-column>
-      <el-table-column prop="USER_STATE"  label="用户状态">
+      <el-table-column prop="accountStatus"  label="用户状态">
       </el-table-column>
 
       <el-table-column label="操作" width="250px">
@@ -96,14 +96,14 @@
         <el-button
           type="danger"
           size="medium"
-          @click="changeState(scope.$index)"
-          v-if= "isOverDate[scope.$index]"
+          @click="changeState(scope.row.userId, true)"
+          v-if= "scope.row.accountStatus == '正常'"
         >封禁</el-button>
         <el-button
           type="primary"
           size="medium"
-          @click="changeState(scope.$index)"
-          v-if= "!isOverDate[scope.$index]"
+          @click="changeState(scope.row.userId, false)"
+          v-if= "scope.row.accountStatus == '封禁'"
         >解封</el-button>
         </template>
     </el-table-column>
@@ -141,19 +141,18 @@ import { id } from 'element-plus/es/locale';
     const loading=ref(false);
     const ableEdit = ref([true]);
     const isEmpty = ref([true]) //是否售空
-    const isOverDate = ref([true]) //是否过期
     const sto_id=ref('');
     const route=useRoute();
     const type=ref('');
     const dialogVisible = ref(false)
     const text=ref('');
-    const goodsList=ref([
+    const userList=ref([
         {
-            "USER_ID": 1000001,
-            "USER_NAME": "张翔",
-            "USER_REGTIME": "2023-08-01",
-            "USER_STATE": 1,
-            "STO_IMAGE": "store_image\\1000040_picture.jpg"
+            "userId": 1000001,
+            "username": "张翔",
+            "regTime": "2023-08-01",
+            "accountStatus": 1,
+            //"": "store_image\\1000040_picture.jpg"
         }
     ]);
 
@@ -162,24 +161,34 @@ import { id } from 'element-plus/es/locale';
   const id_order=ref(1);
   const name_order=ref(-1);
   const category=ref([]);
-  const getGoodsList=async()=>{
+  const getUserList=async()=>{
     loading.value=Boolean(true);
-    goodsList.value.length=0;
+    userList.value.length=0;
     var Name=query.value;
     if(Name.length==0)
         Name="NULL";
-    axios.get('/api/administrator/userlist?ID_ORDER='+id_order.value+'&NAME_ORDER='+name_order.value+'&USER_NAME='+Name+'&USER_TYPE='+type.value+'&BEGIN_NUMBER='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUMBER='+(pagesize.value*pagenum.value)) 
+
+    console.log("开始查询：" + type.value);
+    axios.get('http://localhost:8084/api/order/userlist/' + (type.value == '1' ? 'society' : 'student') + '?&BEGIN_NUMBER='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUMBER='+(pagesize.value*pagenum.value)) 
       .then(response=>{
-        console.log(id_order.value);
-        console.log(pagesize.value*(pagenum.value-1)+1);
-        console.log(pagesize.value*pagenum.value);
-        console.log(type);
-        goodsList.value=JSON.parse(JSON.stringify(response.data));
-        for(var i=0;i<goodsList.value.length;++i)
-           getState(i)
-        // console.log(goodsList.value[0].USER_REGTIME)
+        console.log(response);
+        for(var i=0;i<response.data.length;i++){
+          switch (response.data[i].accountStatus) {
+            case 0:
+              response.data[i].accountStatus = '封禁';
+              break;
+            case 1:
+              response.data[i].accountStatus = '正常';
+              break;
+            case 2:
+              response.data[i].accountStatus = '待审核';
+              break;
+          }
+      }
+
+        userList.value=JSON.parse(JSON.stringify(response.data));
+        // console.log(userList.value[0].USER_REGTIME)
         isEmpty.value = []
-        isOverDate.value=[]
         
         loading.value=Boolean(false);
       })
@@ -187,7 +196,7 @@ import { id } from 'element-plus/es/locale';
   
   
   const getGoods=async()=>{
-    getGoodsList().then(()=>{
+    getUserList().then(()=>{
     ElNotification.success({
       title: 'Success',
       message: '搜索成功',
@@ -209,7 +218,7 @@ import { id } from 'element-plus/es/locale';
       str+=query.value[i];
     console.log(str);
     query.value=haveQuery.value;
-    getGoodsList();
+    getUserList();
     query.value=str;
   }
   
@@ -239,8 +248,8 @@ import { id } from 'element-plus/es/locale';
     ]);
   const url = 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg';
   const getUrl=(index:number)=>{
-    // console.log(change([goodsList.value[index].STO_IMAGE]));
-    return goodsList.value[index].STO_IMAGE;
+    // console.log(change([userList.value[index].STO_IMAGE]));
+    return userList.value[index].STO_IMAGE;
   }
 
     onBeforeUpdate(()=>{
@@ -249,7 +258,7 @@ import { id } from 'element-plus/es/locale';
         type.value=route.query.type as string;
     //   console.log(sto_id.value);
         // console.log(type);
-        getGoodsList();
+        getUserList();
     });
 
     onMounted(()=>{
@@ -258,7 +267,7 @@ import { id } from 'element-plus/es/locale';
         type.value=route.query.type as string;
     //   console.log(sto_id.value);
         // console.log(type);
-        // getGoodsList();
+        getUserList();
     });
 
   var durationTime=2000;
@@ -266,32 +275,32 @@ import { id } from 'element-plus/es/locale';
   
     const handleSizeChange=(val:number)=>{
       pagesize.value=val;
-      getGoodsList();
+      getUserList();
     }
   
     const handleCurrentChange=(val:number)=>{
       pagenum.value=val;
       
-      getGoodsList();
+      getUserList();
     }
 
   
   
   const viewIndent=(index:number)=>{
-    // sessionStorage.setItem('sto_id',goodsList.value[index].USER_ID.toString());
+    // sessionStorage.setItem('sto_id',userList.value[index].USER_ID.toString());
     router.push({
         path:'/indent',
         query:{
-            sto_id:goodsList.value[index].USER_ID
+            sto_id:userList.value[index].userId
         }
     })
   }
   const viewCommodity=(index:number)=>{
-    // sessionStorage.setItem('sto_id',goodsList.value[index].USER_ID.toString());
+    // sessionStorage.setItem('sto_id',userList.value[index].USER_ID.toString());
     router.push({
         path:'/commodity',
         query:{
-            sto_id:goodsList.value[index].USER_ID,
+            sto_id:userList.value[index].userId,
             admi:1
         }
     })
@@ -299,39 +308,26 @@ import { id } from 'element-plus/es/locale';
 
 const checkLeft=()=>{
   name_order.value=1;
-  getGoodsList();
+  getUserList();
 }
 
 const checkLeft1=()=>{
   name_order.value=-1;
-  getGoodsList();
+  getUserList();
 }
 
 const checkLeft2=()=>{
   name_order.value=0;
-  getGoodsList();
+  getUserList();
 }
 
-const getState=(index:number)=>{
-  axios.get('api/administrator/userstate?USER_ID='+goodsList.value[index].USER_ID+'&USER_TYPE='+type.value)
-  .then(response=>{
-    console.log('getState : '+(parseInt(response.data)==1));
-    isOverDate.value[index]=(parseInt(response.data)==1);
-  })
-  return;
-}
-
-const changeState=(index:number)=>{
-  var temp=isOverDate.value[index]? 1:0;
-  // console.log(getState(index))
-  console.log('from_State : '+temp);
-  temp^=1
+const changeState=(userId:number, ifProhibited:boolean)=>{
   dialogVisible.value=true;
-  axios.post('api/administrator/changeuserstate',{USER_ID:goodsList.value[index].USER_ID,USER_TYPE:type.value,TO_STATE:temp})
+  axios.put('http://localhost:8084/api/order/prohibit?USER_ID='+userId+'&IF_PROHIBITED='+ifProhibited)
     .then(response=>{
       // getState(index)
     });
-  console.log('to_State : '+temp);
+  console.log('to_State : '+ ifProhibited ? '封禁' : '解封');
 }
 
 const noticeNotUpload=()=>{

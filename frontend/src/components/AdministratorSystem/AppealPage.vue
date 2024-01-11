@@ -13,7 +13,7 @@
         <el-card>
           {{ "申诉ID : "+item.appId }}
           <el-row :gutter="20" >
-              <el-col :span="5" v-for="(itemm,idx) in item.images" :key="idx"><el-image style="width: 200px; height: 100px" :src="itemm" fit="fill" :preview-src-list="[itemm]" /></el-col>
+              <el-col :span="5" v-for="(itemm,idx) in item.images" :key="idx"><el-image style="width: 200px; height: 100px" :src="'data:image/png;base64,' + itemm" fit="fill" /></el-col>
               <el-col :span="19">
                 <el-descriptions
             class="margin-top"
