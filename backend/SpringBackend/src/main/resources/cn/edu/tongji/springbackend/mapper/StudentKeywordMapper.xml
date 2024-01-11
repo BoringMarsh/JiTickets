@@ -7,7 +7,7 @@
     <select id="getStudentKeywords" resultType="java.lang.String">
         SELECT keyword
         FROM student_keyword
-        WHERE student_id = #{stuId}
+        WHERE stu_id = #{stuId}
     </select>
 
     <insert id="insertStudentKeyword" parameterType="studentKeyword">
@@ -17,6 +17,6 @@
 
     <delete id="deleteKeywordsByStudentId">
         DELETE FROM student_keyword
-        WHERE student_id = #{stuId}
+        WHERE stu_id = #{stuId}
     </delete>
 </mapper>

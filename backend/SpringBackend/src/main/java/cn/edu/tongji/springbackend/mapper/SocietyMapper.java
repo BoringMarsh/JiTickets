@@ -20,4 +20,6 @@ public interface SocietyMapper {
     void insertSocietyImage(SocietyImage societyImage);
 
     void insertSocietyKeyword(SocietyKeyword societyKeyword);
+
+    List<SocietyImage> getSocietyImagesBySocietyId(Integer socId);
 }

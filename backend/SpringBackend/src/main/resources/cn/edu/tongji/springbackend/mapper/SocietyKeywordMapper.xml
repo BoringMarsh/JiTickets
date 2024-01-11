@@ -7,7 +7,7 @@
     <select id="getSocietyKeywords" resultType="java.lang.String">
         SELECT keyword
         FROM society_keyword
-        WHERE society_id = #{socId}
+        WHERE soc_id = #{socId}
     </select>
 
     <insert id="insertSocietyKeyword" parameterType="societyKeyword">
@@ -17,6 +17,6 @@
 
     <delete id="deleteKeywordsBySocietyId">
         DELETE FROM society_keyword
-        WHERE society_id = #{socId}
+        WHERE soc_id = #{socId}
     </delete>
 </mapper>

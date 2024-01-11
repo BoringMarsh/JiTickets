@@ -85,6 +85,8 @@ public class UserController {
     @GetMapping("/profile/student/get")
     public ResponseEntity<?> getStudentProfile(@RequestParam String username) {
         try {
+            logger.info("start to get student profile");
+            logger.info("Successfully received request: {}", username);
             GetStudentProfileResponse studentProfile = profileService.getStudentProfile(username);
             if (studentProfile != null) {
                 return new ResponseEntity<>(studentProfile, HttpStatus.OK);
@@ -99,6 +101,8 @@ public class UserController {
     @PostMapping("/profile/student/modify")
     public ResponseEntity<?> modifyStudentProfile(@RequestBody ModifyStuProfileReq modifyRequest) {
         try {
+            logger.info("start to modify student profile");
+            logger.info("Successfully received request: {}", modifyRequest);
             profileService.modifyStudentProfile(modifyRequest);
             return new ResponseEntity<>("Student profile updated successfully", HttpStatus.OK);
         } catch (Exception e) {
@@ -109,9 +113,11 @@ public class UserController {
     @GetMapping("/profile/society/info/get")
     public ResponseEntity<?> getSocietyProfileInfo(@RequestParam String username) {
         try {
+            logger.info("start to get society profile");
+            logger.info("Successfully received request: {}", username);
             // Fetch student information using the provided username
             GetSocietyProfileResponse societyProfile = profileService.getSocietyProfileInfo(username);
-
+            logger.info("Successfully get response: {}", societyProfile);
             if (societyProfile != null) {
                 return new ResponseEntity<>(societyProfile, HttpStatus.OK);
             } else {

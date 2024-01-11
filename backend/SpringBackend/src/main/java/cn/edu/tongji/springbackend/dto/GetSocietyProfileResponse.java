@@ -1,6 +1,7 @@
 package cn.edu.tongji.springbackend.dto;
 
 import cn.edu.tongji.springbackend.model.SocietyAdmin;
+import cn.edu.tongji.springbackend.model.SocietyAdminRegistration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,8 @@ public class GetSocietyProfileResponse {
 
     private List<String> socKeywords;
     private List<SocietyAdmin> socAdmins;
+
+    private String socLogoFile; // 接收Base64字符串
+    private List<String> socImageFiles; // 接收Base64字符串列表
+
 }

@@ -9,6 +9,6 @@
     <select id="getSocietyAdmins" resultMap="adminsResultMap">
         SELECT keyword
         FROM society_keyword
-        WHERE society_id = #{socId}
+        WHERE soc_id = #{socId}
     </select>
 </mapper>
