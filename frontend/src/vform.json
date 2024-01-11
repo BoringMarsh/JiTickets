@@ -147,40 +147,84 @@
                 "multipleLimit": 6,
                 "optionItems": [
                   {
-                    "value": "学术",
-                    "label": "学术"
+                    "value": "媒体",
+                    "label": "媒体"
                   },
                   {
-                    "value": "文艺",
-                    "label": "文艺"
+                    "value": "学习",
+                    "label": "学习"
+                  },
+                  {
+                    "value": "研究",
+                    "label": "研究"
+                  },
+                  {
+                    "value": "健康",
+                    "label": "健康"
+                  },
+                  {
+                    "value": "中医",
+                    "label": "中医"
+                  },
+                  {
+                    "value": "汽车",
+                    "label": "汽车"
+                  },
+                  {
+                    "value": "游戏",
+                    "label": "游戏"
+                  },
+                  {
+                    "value": "模型",
+                    "label": "模型"
+                  },
+                  {
+                    "value": "语言",
+                    "label": "语言"
+                  },
+                  {
+                    "value": "心理",
+                    "label": "心理"
+                  },
+                  {
+                    "value": "天文",
+                    "label": "天文"
+                  },
+                  {
+                    "value": "建筑",
+                    "label": "建筑"
+                  },
+                  {
+                    "value": "艺术",
+                    "label": "艺术"
+                  },
+                  {
+                    "value": "技术",
+                    "label": "技术"
+                  },
+                  {
+                    "value": "数据分析",
+                    "label": "数据分析"
+                  },
+                  {
+                    "value": "开源",
+                    "label": "开源"
+                  },
+                  {
+                    "value": "国际交流",
+                    "label": "国际交流"
                   },
                   {
                     "value": "体育",
                     "label": "体育"
                   },
                   {
-                    "value": "零食",
-                    "label": "零食"
+                    "value": "文化传承",
+                    "label": "文化传承"
                   },
                   {
-                    "value": "社会服务和义工",
-                    "label": "社会服务和义工"
-                  },
-                  {
-                    "value": "科技和创新",
-                    "label": "科技和创新"
-                  },
-                  {
-                    "value": "文化和国际交流",
-                    "label": "文化和国际交流"
-                  },
-                  {
-                    "value": "娱乐和休闲",
-                    "label": "娱乐和休闲"
-                  },
-                  {
-                    "value": "领导力和培训",
-                    "label": "领导力和培训"
+                    "value": "公益",
+                    "label": "公益"
                   }
                 ],
                 "required": true,
@@ -385,7 +429,7 @@
                 "name": "regStartTime",
                 "label": "📆报名开始日期",
                 "labelAlign": "label-center-align",
-                "type": "date",
+                "type": "datetime",
                 "defaultValue": null,
                 "placeholder": "",
                 "columnWidth": "100px",
@@ -397,8 +441,8 @@
                 "hidden": false,
                 "clearable": false,
                 "editable": false,
-                "format": "YYYY-MM-DD",
-                "valueFormat": "YYYY-MM-DD",
+                "format": "YYYY-MM-DD HH:mm:ss",
+                "valueFormat": "YYYY-MM-DD HH:mm:ss",
                 "required": true,
                 "requiredHint": "",
                 "validation": "",
@@ -450,7 +494,7 @@
                 "name": "regEndTime",
                 "label": "📆报名截止日期",
                 "labelAlign": "label-center-align",
-                "type": "date",
+                "type": "datetime",
                 "defaultValue": null,
                 "placeholder": "",
                 "columnWidth": "200px",
@@ -462,8 +506,8 @@
                 "hidden": false,
                 "clearable": false,
                 "editable": false,
-                "format": "YYYY-MM-DD",
-                "valueFormat": "YYYY-MM-DD",
+                "format": "YYYY-MM-DD HH:mm:ss",
+                "valueFormat": "YYYY-MM-DD HH:mm:ss",
                 "required": true,
                 "requiredHint": "",
                 "validation": "",
@@ -515,7 +559,7 @@
                 "name": "actTime",
                 "label": "📆活动时间",
                 "labelAlign": "label-center-align",
-                "type": "date",
+                "type": "datetime",
                 "defaultValue": null,
                 "placeholder": "",
                 "columnWidth": "200px",
@@ -527,8 +571,8 @@
                 "hidden": false,
                 "clearable": false,
                 "editable": false,
-                "format": "YYYY-MM-DD",
-                "valueFormat": "YYYY-MM-DD",
+                "format": "YYYY-MM-DD HH:mm:ss",
+                "valueFormat": "YYYY-MM-DD HH:mm:ss",
                 "required": true,
                 "requiredHint": "",
                 "validation": "",

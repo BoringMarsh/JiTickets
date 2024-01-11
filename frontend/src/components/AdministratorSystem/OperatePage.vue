@@ -50,17 +50,17 @@
       :default-sort="{ prop: 'userId', order: 'ascending' }"
       >
       <el-table-column label="用户图片" width="200" v-if="type=='1'">
-        <template #default="scope">
+        <!-- <template #default="scope">
           <div style="display: flex; align-items: center">
-            <!-- <el-image
+             <el-image
               style="width: 180px; height: 90px"
               :src="getUrl(scope.$index)"
               :zoom-rate="1.2"
               :initial-index="0"
               fit="fill"
-            /> -->
+            /> 
           </div>
-        </template>
+        </template> -->
       </el-table-column>
       <el-table-column prop="username" label="用户名字"> </el-table-column>
       <el-table-column prop="userId" sortable="custom" label="用户ID">

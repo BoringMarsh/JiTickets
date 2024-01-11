@@ -45,7 +45,7 @@
   const vFormRef = ref(null)
   const router=useRouter();
   const route=useRoute();
-  const socId = sessionStorage.getItem('userId') as string;
+  const socId = sessionStorage.getItem('socId') as string;
 
   const submitForm = () => {
     console.log('vFormRef',vFormRef)
@@ -79,6 +79,30 @@
 
     })
   }
+
+  const getKeywordsRemote = (query) => {
+  return new Promise((resolve, reject) => {
+    axios.get('/api/keywords/getkeywords', {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      }
+    }).then(response => {
+      console.log(response.data)
+      const keywords = response.data.keywords;
+      const formattedKeywords = keywords.map(keyword => {
+        return {
+          value: keyword,
+          label: keyword
+        };
+      });
+      resolve(formattedKeywords);
+      console.log(formattedKeywords);
+    }).catch((error) => {
+      console.log('An error occurred:', error);
+      reject(error);
+    });
+  });
+}
 
   const returnDetailPage = () =>{
     console.log(socId);
