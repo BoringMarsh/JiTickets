@@ -19,14 +19,17 @@ public class OrderController {
     @Resource
     private OrderService orderService;
 
-    @GetMapping("/appeal/page/{page}")
-    public ResponseEntity<?> getAppealPage(@PathVariable("page") int page) {
+    @GetMapping("/appeal/page")
+    public ResponseEntity<?> getAppealPage(
+            @RequestParam("TIME_ORDER") int timeOrder,
+            @RequestParam("BEGIN_NUM") int beginNum,
+            @RequestParam("END_NUM") int endNum) {
         try {
-            GetAppealPageResponse getAppealPageResponse = orderService.getAppealPage(page);
+            GetAppealPageResponse getAppealPageResponse = orderService.getAppealPage(timeOrder, beginNum, endNum);
             return new ResponseEntity<>(getAppealPageResponse, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("get appeal page " + page + " failed", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("get appeal page failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

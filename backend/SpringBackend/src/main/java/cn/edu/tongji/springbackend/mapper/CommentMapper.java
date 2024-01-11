@@ -10,6 +10,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface CommentMapper {
+    Comment getByCmtId(@Param("cmtId") int cmtId);
     List<Comment> getByActId(@Param("actId") int actId);
     void add(Comment comment);
 }

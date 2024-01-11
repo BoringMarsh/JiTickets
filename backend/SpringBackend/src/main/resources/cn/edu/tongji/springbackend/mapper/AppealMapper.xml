@@ -13,7 +13,15 @@
 
     <select id="getByPage" resultType="appeal">
         SELECT * FROM appeal
-        LIMIT #{pageSize} OFFSET #{offset};
+        ORDER BY
+        <if test="timeOrder == 0">
+            app_time ASC
+        </if>
+        <if test="timeOrder == 1">
+            app_time DESC
+        </if>
+        LIMIT #{length} OFFSET #{start};
+
     </select>
 
     <insert id="add" parameterType="appeal" useGeneratedKeys="true" keyProperty="appId">

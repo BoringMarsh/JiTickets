@@ -22,6 +22,7 @@ public class AppealDetailedInfo {
     private Integer userId;
     private Integer actId;
     private Integer cmtId;
+    private String cmtContent;
     private Integer complainantId;
     private List<String> images;
 }
