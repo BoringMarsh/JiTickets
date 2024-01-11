@@ -23,3 +23,4 @@ public class Activity {
     private Integer ratingNum;
     private Integer socId;
 }
+

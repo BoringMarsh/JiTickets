@@ -13,5 +13,6 @@ public interface StudentMapper {
     Student getStudentById(Integer stuId);
     void insertStudent(Student student);
     void updateStudent(Student student);
+    List<Student> getStudentListByRange(@Param("startRow") int startRow, @Param("pageSize") int pageSize);
     // Add other methods as needed
 }

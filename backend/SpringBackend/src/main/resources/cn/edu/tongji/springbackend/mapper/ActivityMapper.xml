@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.ActivityMapper">
+    <insert id="insertActivity" parameterType="activity" useGeneratedKeys="true" keyProperty="act_id">
+        INSERT INTO activity (act_name, act_intro, act_location, ticket_price, upload_time,
+                              reg_start_time, reg_end_time, act_time, act_capacity, act_left,
+                              act_rating, rating_num, soc_id)
+        VALUES (#{actName}, #{actIntro}, #{actLocation}, #{ticketPrice}, #{uploadTime},
+                #{regStartTime}, #{regEndTime}, #{actTime}, #{actCapacity}, #{actLeft},
+                #{actRating}, #{ratingNum}, #{socId})
+    </insert>
     <select id="getCount" resultType="int">
         SELECT COUNT(*)
         FROM activity
@@ -60,4 +68,12 @@
         </set>
         WHERE act_id = #{actId};
     </update>
+
+    <resultMap id="activityResultMap" type="activity">
+        <!-- Add result mappings for each field in the Student class -->
+    </resultMap>
+    <select id="getActivityListByRange" resultMap="activityResultMap">
+        SELECT * FROM activity
+        LIMIT #{pageSize} OFFSET #{startRow}
+    </select>
 </mapper>

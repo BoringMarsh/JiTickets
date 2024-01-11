@@ -6,4 +6,13 @@
         SELECT * FROM activity_keyword
         WHERE act_id = #{id};
     </select>
+    <insert id="insertActivityKeyword" parameterType="activityKeyword">
+        INSERT INTO activity_keyword (act_id, keyword)
+        VALUES (#{actId}, #{keyword})
+    </insert>
+    <select id="getActivityKeywords" resultType="java.lang.String">
+        SELECT keyword
+        FROM activity_keyword
+        WHERE act_id = #{actId}
+    </select>
 </mapper>

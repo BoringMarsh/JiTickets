@@ -139,10 +139,10 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
     }
 
     @Override
-    public void deleteFavour(FavourRequest favourRequest) {
+    public void deleteFavour(int stuId, int actId) {
         favourMapper.delete(Favour.builder()
-                .actId(favourRequest.getActId())
-                .stuId(favourRequest.getStuId())
+                .actId(actId)
+                .stuId(stuId)
                 .build()
         );
     }

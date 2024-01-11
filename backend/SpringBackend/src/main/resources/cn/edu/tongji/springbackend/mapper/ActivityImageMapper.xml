@@ -2,8 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.ActivityImageMapper">
+    <insert id="insertActivityImage" parameterType="activityImage">
+        INSERT INTO activity_image (act_id, act_image)
+        VALUES (#{actId}, #{actImage})
+    </insert>
     <select id="getById" resultType="activityImage">
         SELECT * FROM activity_image
         WHERE act_id = #{id};
+    </select>
+
+    <resultMap id="activityImageResultMap" type="ActivityImage">
+        <result column="act_id" property="actId" />
+        <result column="act_image" property="actImage" />
+    </resultMap>
+    <select id="getActivityImagesByActId" resultMap="activityImageResultMap">
+        SELECT * FROM activity_image WHERE act_id = #{actId}
     </select>
 </mapper>

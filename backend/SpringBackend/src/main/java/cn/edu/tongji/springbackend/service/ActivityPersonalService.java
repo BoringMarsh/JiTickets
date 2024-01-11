@@ -11,7 +11,7 @@ public interface ActivityPersonalService {
     void addBrowse(AddBrowseRequest addBrowseRequest);
     List<ActivityShortInfo> getFavour(int stuId);
     void addFavour(FavourRequest favourRequest);
-    void deleteFavour(FavourRequest favourRequest);
+    void deleteFavour(int stuId, int actId);
     GetIndentPageResponse getIndentPage(GetIndentPageRequest getIndentPageRequest);
     IndentDetailedInfo getIndent(int indId);
     void addIndent(AddIndentRequest addIndentRequest);

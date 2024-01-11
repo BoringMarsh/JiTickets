@@ -47,4 +47,9 @@
             soc_type = #{socType}
         WHERE soc_id = #{socId}
     </update>
+
+    <select id="getSocietyListByRange" resultMap="societyResultMap">
+        SELECT * FROM society
+        LIMIT #{pageSize} OFFSET #{startRow}
+    </select>
 </mapper>

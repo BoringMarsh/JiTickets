@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface ActivityKeywordMapper {
     List<ActivityKeyword> getById(@Param("id") int id);
+    void insertActivityKeyword(ActivityKeyword activityKeyword);
+    List<String> getActivityKeywords(Integer actId);
 }

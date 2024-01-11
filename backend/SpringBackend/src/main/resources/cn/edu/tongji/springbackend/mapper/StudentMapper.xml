@@ -26,4 +26,9 @@
             stu_notes = #{stuNotes}
         WHERE stu_id = #{stuId}
     </update>
+
+    <select id="getStudentListByRange" resultMap="studentResultMap">
+        SELECT * FROM student
+        LIMIT #{pageSize} OFFSET #{startRow}
+    </select>
 </mapper>

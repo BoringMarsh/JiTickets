@@ -5,6 +5,7 @@ import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.AppealImageMapper;
 import cn.edu.tongji.springbackend.mapper.AppealMapper;
+import cn.edu.tongji.springbackend.mapper.CommentMapper;
 import cn.edu.tongji.springbackend.model.Appeal;
 import cn.edu.tongji.springbackend.model.AppealImage;
 import cn.edu.tongji.springbackend.service.OrderService;
@@ -31,33 +32,39 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private AppealImageMapper appealImageMapper;
     @Resource
+    private CommentMapper commentMapper;
+    @Resource
     private FileStorageProperties fileStorageProperties;
 
     @Override
-    public GetAppealPageResponse getAppealPage(int page) {
-        final int pageSize = 30;
-        final int totalPage = (int) Math.ceil((double) appealMapper.getCount() / pageSize);
+    public GetAppealPageResponse getAppealPage(int timeOrder, int beginNum, int endNum) throws IOException {
+        List<AppealDetailedInfo> appealDetailedInfos = new ArrayList<>();
+        List<String> images = new ArrayList<>();
 
-        if (totalPage == 0)
-            return new GetAppealPageResponse(0, 0, new ArrayList<>());
+        for (Appeal appeal : appealMapper.getByPage(timeOrder, endNum - beginNum + 1, beginNum - 1)) {
+            for (AppealImage image : appealImageMapper.getById(appeal.getAppId())) {
+                images.add(getImage(image.getAppImage()));
+            }
 
-        page = (page > totalPage) ? totalPage - 1 : page - 1;
-        List<AppealShortInfo> appealShortInfos = new ArrayList<>();
-
-        for (Appeal appeal : appealMapper.getByPage(pageSize, page * pageSize)) {
-            appealShortInfos.add(new AppealShortInfo(
+            appealDetailedInfos.add(new AppealDetailedInfo(
                     appeal.getAppId(),
                     appeal.getAppTime(),
                     appeal.getAppMatters(),
                     appeal.getAppContent(),
-                    appeal.getComplainantId()
+                    appeal.getUserId(),
+                    appeal.getActId(),
+                    appeal.getCmtId(),
+                    appeal.getCmtId() == null ? "" : commentMapper.getByCmtId(appeal.getCmtId()).getCmtContent(),
+                    appeal.getComplainantId(),
+                    images
             ));
+
+            images.clear();
         }
 
         return new GetAppealPageResponse(
-                page + 1,
-                totalPage,
-                appealShortInfos
+                appealMapper.getCount(),
+                appealDetailedInfos
         );
     }
 
@@ -78,6 +85,7 @@ public class OrderServiceImpl implements OrderService {
                 appeal.getUserId(),
                 appeal.getActId(),
                 appeal.getCmtId(),
+                appeal.getCmtId() == null ? "" : commentMapper.getByCmtId(appeal.getCmtId()).getCmtContent(),
                 appeal.getComplainantId(),
                 images
         );

@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.CommentMapper">
+    <select id="getByCmtId" resultType="comment">
+        SELECT * FROM comment
+        WHERE cmt_id = #{cmtId};
+    </select>
+
     <select id="getByActId" resultType="comment">
         SELECT * FROM comment
         WHERE act_id = #{actId};

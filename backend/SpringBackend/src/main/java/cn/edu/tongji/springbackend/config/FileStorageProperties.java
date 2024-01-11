@@ -18,7 +18,7 @@ public class FileStorageProperties {
     // 直接硬编码路径，而不是使用 @Value 注解
     private String logoUploadDir = "D:/软件工程项目/backend/upload_images/society_logo/";
     private String imageUploadDir = "D:/软件工程项目/backend/upload_images/society_image/";
-
+    private String actImageDir = "D:/软件工程项目/backend/upload_images/act_image/";
 
     @Value("${file.upload.appeal-image-dir}")
     private String appealImageDir;
@@ -26,6 +26,10 @@ public class FileStorageProperties {
     public String getLogoUploadDir() {
         logger.info("Successfully get dir");
         return logoUploadDir;
+    }
+
+    public String getActImageDir() {
+        return actImageDir;
     }
 
     public String getImageUploadDir() {
