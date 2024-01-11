@@ -1,19 +1,19 @@
 <template>
   <el-dialog v-model="dialogVisible" title="信息确认" draggable>
-    <el-tag>{{'用户ID: '+ resVerificate.CUS_ID }}</el-tag>
+    <el-tag>{{'报名者学号: '+ resVerificate.indStuNo }}</el-tag>
+    <el-tag>{{'报名者姓名: '+ resVerificate.indName }}</el-tag>
     <el-table :data="resVerificate.LIST" border style="width: 100%" height="150">
 
-        <el-table-column prop="IND_ID" label="订单ID">
+        <el-table-column prop="indId" label="订单ID">
 
         </el-table-column>
-        <el-table-column prop="COM_ID" label="商品ID" >
+        <el-table-column prop="actId" label="活动ID" >
           <template #default="scope">
-            <el-tag @click="router.push('/view?com_id='+resVerificate.LIST[scope.$index].COM_ID)">{{ resVerificate.LIST[scope.$index].COM_ID }}</el-tag>
+            <el-tag @click="router.push('/view?com_id='+resVerificate.LIST[scope.$index].actId)">{{ resVerificate.LIST[scope.$index].actId }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="IND_QUANTITY" label="订单数量" />
-        <el-table-column prop="COM_NAME" label="商品名称" />
-        <el-table-column prop="IND_ID" label="订单ID" />
+        <el-table-column prop="indPrice" label="订单金额" />
+        <!-- <el-table-column prop="COM_NAME" label="商品名称" /> -->
     </el-table>
     <template #footer>
       <span class="dialog-footer">
@@ -26,7 +26,7 @@
 <el-card>
 <el-row :gutter="20">
 <el-col :span="8">
-<el-input placeholder="请输入核销码" clearable v-model="query" :disabled="Boolean(state)" />
+<el-input placeholder="请输入核销码" clearable v-model="indVerifyCode" :disabled="Boolean(state)" />
   </el-col>
   <el-button type="danger" icon="search" @click="verificate" :disabled="Boolean(state)" />
   <el-col :span="2"/>
@@ -37,7 +37,7 @@
     </el-radio-group>
     </el-col>
   <el-col :span="8">
-    <el-input placeholder="请输入电话号" clearable v-model="phone" />
+    <el-input placeholder="请输入报名者学号" clearable v-model="indStuNo" />
     <!-- <el-button type="primary" icon="search" @click="getVerificationsList"/> -->
   </el-col>
   <el-button type="danger" icon="search" @click="getVerificationsList"/>
@@ -70,9 +70,9 @@
 
   <el-tab-pane>
     <template #label>
-      <span class="custom-tabs-label"  @click="state=-1,getVerificationsList()">
+      <span class="custom-tabs-label"  @click="state=2,getVerificationsList()">
         <el-icon><CircleClose /></el-icon>
-        <span>过期未取</span>
+        <span>已退款</span>
       </span>
     </template>
   </el-tab-pane>
@@ -96,21 +96,21 @@
             <el-icon :style="iconStyle">
                 <user />
             </el-icon>
-            用户名
+            报名者姓名
             </div>
         </template>
-        {{ item.CUS_NICKNAME }}
+        {{ item.indName }}
         </el-descriptions-item>
         <el-descriptions-item>
         <template #label>
             <div class="cell-item">
             <el-icon :style="iconStyle">
-                <iphone />
+                <iindStuNo />
             </el-icon>
-            电话
+            报名者学号
             </div>
         </template>
-        {{item.USER_PHONE}}
+        {{item.indStuNo}}
         </el-descriptions-item>
         <el-descriptions-item>
         <template #label>
@@ -118,10 +118,10 @@
             <el-icon :style="iconStyle">
                 <location />
             </el-icon>
-            用户ID
+            报名者ID
             </div>
         </template>
-        {{item.CUS_ID}}
+        {{item.stuId}}
         </el-descriptions-item>
         <el-descriptions-item>
         <template #label>
@@ -132,7 +132,7 @@
             订单创建时间
             </div>
         </template>
-        <el-tag size="small" type="warning">{{item.IND_CREATIONTIME}}</el-tag>
+        <el-tag size="small" type="warning">{{item.indCreateTime}}</el-tag>
         </el-descriptions-item>
         
     </el-descriptions>
@@ -154,7 +154,7 @@
                     {{ '商品图片' }}
                     <el-tooltip
                         effect="dark"
-                        :content="item.BOX[scope.$index].IND_NOTES"
+                        :content="item.BOX[scope.$index].indNotes"
                         placement="top"
                     >
                         <el-icon style="margin-left: 4px" :size="12">
@@ -163,23 +163,23 @@
                     </el-tooltip>
             </template>
           </el-table-column> -->
-            <el-table-column prop="IND_ID" label="订单ID">
+            <el-table-column prop="indId" label="订单ID">
 
             </el-table-column>
-            <el-table-column prop="COM_ID" label="商品ID">
+            <el-table-column prop="actId" label="活动ID">
               <template #default="scope">
-                <el-tag @click="router.push('/view?com_id='+item.BOX[scope.$index].COM_ID)">{{ item.BOX[scope.$index].COM_ID }}</el-tag>
+                <el-tag @click="router.push('/view?com_id='+item.BOX[scope.$index].actId)">{{ item.BOX[scope.$index].actId }}</el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="IND_QUANTITY" label="订单数量" />
-            <el-table-column prop="IND_MONEY" label="订单金额" />
-            <el-table-column prop="COM_NAME" label="商品名称" />
-            <el-table-column prop="IND_NOTES" label="用户评论" >
+            <!-- <el-table-column prop="IND_QUANTITY" label="订单数量" /> -->
+            <el-table-column prop="indPrice" label="订单金额" />
+            <!-- <el-table-column prop="COM_NAME" label="商品名称" /> -->
+            <el-table-column prop="indNotes" label="用户备注" >
                 <template #default="scope">
-                    {{ item.BOX[scope.$index].IND_NOTES }}
+                    {{ item.BOX[scope.$index].indNotes }}
                 </template>
             </el-table-column>
-            <el-table-column prop="IND_RATING" label="订单评分" />
+            <el-table-column prop="indRating" label="评分" />
         </el-table>
     </el-card>
     </el-col>
@@ -210,115 +210,116 @@ import { it } from 'element-plus/es/locale';
 const tabPosition = ref('right')
 const dialogVisible=ref(false);
 const router=useRouter();
-const sto_id=sessionStorage.getItem('sto_id') as string;
-const query=ref('');
+console.log("sessionStorage",sessionStorage)
+const socId=sessionStorage.getItem('socId') as string;
+const indVerifyCode=ref('');
 const loading=ref(false);
 const verificationsList=ref([
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 },
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 },
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 },
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 },
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 },
 {
-"CUS_ID": 1000001,
-"IND_CREATIONTIME": "2023-08-11 15:14:56",
-"USER_PHONE": "17879683110",
-"CUS_NICKNAME": "张翔",
+"stuId": 1000001,
+"indCreateTime": "2023-08-11 15:14:56",
+"indStuNo": "17879683110",
+"indName": "张翔",
 "BOX": [
   {
-    "IND_ID": 1,
-    "COM_ID": 263,
+    "indId": 1,
+    "actId": 263,
     "IND_QUANTITY": 2,
-    "IND_MONEY": 70,
+    "indPrice": 70,
     "COM_NAME": "test1",
     "COM_IMAGE": ".\\wwwroot\\commodity_image\\263\\com_image_0.jpg",
-    "IND_NOTES": "",
-    "IND_RATING": "-1"
+    "indNotes": "",
+    "indRating": "-1"
   }
 ]
 }
@@ -330,35 +331,44 @@ const pagesize=ref(6);
 
 
 const order=ref(0);
-const phone=ref('');
+const indStuNo=ref('');
 const state=ref(0);
 const getVerificationsList=async()=>{
-loading.value=Boolean(true);
-verificationsList.value.length=0;
-console.log(sto_id);
-var Phone=phone.value;
-if(Phone.length==0)
-Phone="null";
-axios.get('api/storeindentlist/indentwithbox?STO_ID='+sto_id+'&TIME_ORDER='+order.value+'&BOX_BEGIN='+(pagesize.value*(pagenum.value-1)+1)+'&BOX_END='+(pagesize.value*pagenum.value)+"&USER_PHONE="+Phone+"&IND_STATE="+state.value) 
-.then(response=>{
-  console.log(pagesize.value*(pagenum.value-1)+1);
-  console.log(pagesize.value*pagenum.value);
-  console.log(state.value);
-  verificationsList.value=JSON.parse(JSON.stringify(response.data));
-  for(var i=0;i<verificationsList.value.length;++i)
-    for(var j=0;j<verificationsList.value[i].BOX.length;++j){
-        // console.log(verificationsList.value[i].BOX[j].IND_RATING);
-        if(verificationsList.value[i].BOX[j].IND_RATING=='-1')
-          verificationsList.value[i].BOX[j].IND_RATING="无评分"
-    }
-  console.log(verificationsList.value);
   loading.value=Boolean(false);
-})
+  verificationsList.value.length=0;
+  console.log(socId);
+  // var indStuNo=indStuNo;
+  console.log(indStuNo);
+  if(indStuNo.value.length==0)
+  indStuNo.value="null";
+  axios.get('/api/society/indentlist',{
+    params:{
+    socId:socId,
+    order:order.value,
+    boxBegin:(pagesize.value*(pagenum.value-1)+1),
+    boxEnd:(pagesize.value*pagenum.value),
+    indStuNo:indStuNo.value,
+    indState:state.value}
+  }) 
+  .then(response=>{
+    console.log(pagesize.value*(pagenum.value-1)+1);
+    console.log(pagesize.value*pagenum.value);
+    console.log(state.value);
+    verificationsList.value=JSON.parse(JSON.stringify(response.data));
+    for(var i=0;i<verificationsList.value.length;++i)
+      for(var j=0;j<verificationsList.value[i].BOX.length;++j){
+          // console.log(verificationsList.value[i].BOX[j].indRating);
+          if(verificationsList.value[i].BOX[j].indRating=='-1')
+            verificationsList.value[i].BOX[j].indRating="无评分"
+      }
+    console.log(verificationsList.value);
+    loading.value=Boolean(false);
+  })
 }
 
 
 onMounted(()=>{
-//sto_id.value = route.query.sto_id as string;
+//socId.value = route.indVerifyCode.socId as string;
   getVerificationsList();
 });
 
@@ -375,21 +385,23 @@ pagenum.value=val;
 getVerificationsList();
 }
 const resVerificate=ref({
-  "CUS_ID": 1000001,
+  "indStuNo": 1000001,
+  "indName":"hhl",
   "LIST": [
     {
-      "IND_ID": 1,
-      "COM_ID": 263,
-      "COM_NAME": "test1",
-      "IND_QUANTITY": 2
+      "indId": 1,
+      "actId": 263,
+      //"COM_NAME": "test1",
+      "indPrice": 2
     }
   ]
 })
 const verificate=()=>{
-axios.post('api/verficate?'+"IND_VERFICATIONCODE="+query.value)
+axios.post('/api/society/activity/verficate',{params:{indVerifyCode:indVerifyCode.value}})
   .then(response=>{
-    console.log(response.data);
-    if(response.data=='核销失败'){
+    console.log('response',response);
+    // if(response.data=='核销失败'){
+    if(response.status!=200){
       ElNotification({
         title: 'Error',
         message: '核销失败',

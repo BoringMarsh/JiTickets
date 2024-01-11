@@ -62,32 +62,32 @@
             <span>社团信息</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="router.push({path:'/UserInfoPage',query:{id:sto_id}})" index="1-1">社团信息</el-menu-item>
-            <el-menu-item @click="router.push({path:'/ModifySocietyInfoPage',query:{id:sto_id}})" index="1-2">修改信息</el-menu-item>
+            <el-menu-item @click="router.push({path:'/UserInfoPage',query:{socId:socId}})" index="1-1">社团信息</el-menu-item>
+            <el-menu-item @click="router.push({path:'/ModifySocietyInfoPage',query:{socId:socId}})" index="1-2">修改信息</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
             <el-menu-item index="1-3" @click="dialogVisible = true">公告发布</el-menu-item>
           </el-menu-item-group>
           <el-sub-menu index="1-4">
             <template #title>聊天相关</template>
-            <el-menu-item @click="router.push({path:'/ChatPage',query:{id:sto_id}})" index="1-4-1">聊天入口</el-menu-item>
+            <el-menu-item @click="router.push({path:'/ChatPage',query:{stuId:1000000, socId:socId, userType:1}})" index="1-4-1">聊天入口</el-menu-item>
           </el-sub-menu>
         </el-sub-menu>
-        <el-menu-item index="2" @click="router.push({path:'/detail',query:{sto_id:sto_id}})">
+        <el-menu-item index="2" @click="router.push({path:'/detail',query:{socId:socId}})">
           <el-icon><document /></el-icon>
           <span>活动总览</span>
         </el-menu-item>
-        <el-menu-item index="3" @click="router.push({path:'/upload',query:{sto_id:sto_id}})">
+        <el-menu-item index="3" @click="router.push({path:'/upload',query:{socId:socId}})">
           <el-icon><edit /></el-icon>
           <span>发布活动</span>
         </el-menu-item>
 
-        <el-menu-item index="4" @click="router.push({path:'/verification',query:{sto_id:sto_id}})">
+        <el-menu-item index="4" @click="router.push({path:'/verification',query:{socId:socId}})">
           <el-icon><Warning /></el-icon>
           <span>待核销活动</span>
         </el-menu-item>
 
-        <el-menu-item index="5" @click="router.push({path:'/refund',query:{sto_id:sto_id}})">
+        <el-menu-item index="5" @click="router.push({path:'/refund',query:{socId:socId}})">
           <el-icon><CircleClose /></el-icon>
           <span>已退款订单</span>
         </el-menu-item>
@@ -124,7 +124,7 @@
   const route=useRoute();
   const dialogVisible = ref(false)
   const text=ref('');
-  const sto_id=ref('');
+  const socId=ref('');
   import {
   Document,
   Menu as IconMenu,
@@ -144,7 +144,7 @@
   }
   const noticeUpload=()=>{
     axios.post('api/uploadNotice',{
-      STO_ID:sto_id.value,
+      STO_ID:socId.value,
       NTC_CONTENT:text.value})
     .then(response=>{
       ElNotification.success({
@@ -165,8 +165,8 @@
     })
   }
   onMounted(() => {
-    //sto_id.value = route.query.sto_id as string;
-    sto_id.value = sessionStorage.getItem('sto_id') as string;
+    //socId.value = route.query.socId as string;
+    socId.value = sessionStorage.getItem('socId') as string;
     console.log(router.currentRoute.value.path);
     if (router.currentRoute.value.path === '/') {
       router.push('/store/detail');
@@ -199,7 +199,7 @@
     router.push({
       path:'/UserInfoPage',
       query:{
-        id:sto_id.value
+        id:socId.value
       }
     });
   }
@@ -209,7 +209,7 @@
         path:'/ChatPage',
         query:{
           cus_id:"1000000",
-          sto_id:sto_id.value,
+          socId:socId.value,
           user_type:"1"
         }
       })
@@ -219,7 +219,7 @@
     router.push({
       path:'/ModifySocietyInfoPage',
       query:{
-        id:sto_id.value
+        id:socId.value
       }
     })
   }

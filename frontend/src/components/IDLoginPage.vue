@@ -66,6 +66,7 @@ import { useRouter } from 'vue-router';
                   sessionStorage.removeItem("user_role");
                   sessionStorage.setItem("username", loginUsername.value);
                   sessionStorage.setItem("user_role", response.data.role);
+                  sessionStorage.setItem("socId", response.data.id);
                     router.push({
                       path:'/society'
                   });
@@ -77,6 +78,7 @@ import { useRouter } from 'vue-router';
                   sessionStorage.removeItem("user_role");
                   sessionStorage.setItem("username", loginUsername.value);
                   sessionStorage.setItem("user_role", response.data.role);
+                  sessionStorage.setItem("stuId", response.data.id);
                   console.log("loginUsername.value:"+loginUsername.value)
                   /*获取用户账号*/
                   user_id.value = response.data.user_ID;
