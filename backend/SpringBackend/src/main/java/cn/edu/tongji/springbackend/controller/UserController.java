@@ -117,7 +117,6 @@ public class UserController {
             logger.info("Successfully received request: {}", username);
             // Fetch student information using the provided username
             GetSocietyProfileResponse societyProfile = profileService.getSocietyProfileInfo(username);
-            logger.info("Successfully get response: {}", societyProfile);
             if (societyProfile != null) {
                 return new ResponseEntity<>(societyProfile, HttpStatus.OK);
             } else {
@@ -128,45 +127,13 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile/society/logo/get")
-    public ResponseEntity<?> getSocietyProfileLogo(@RequestParam String username) {
-        try {
-            // Fetch student information using the provided username
-            GetStudentProfileResponse studentProfile = registerService.getStudentProfile(username);
-
-            if (studentProfile != null) {
-                return new ResponseEntity<>(studentProfile, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to retrieve student profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/profile/society/images/get")
-    public ResponseEntity<?> getSocietyProfileImages(@RequestParam String username) {
-        try {
-            // Fetch student information using the provided username
-            GetStudentProfileResponse studentProfile = registerService.getStudentProfile(username);
-
-            if (studentProfile != null) {
-                return new ResponseEntity<>(studentProfile, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to retrieve student profile: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/profile/society/modify")
-    public ResponseEntity<?> modifySocietyProfile(@RequestParam String username, @RequestBody ModifyStuProfileReq modifyRequest) {
+    public ResponseEntity<?> modifySocietyProfile(@RequestBody ModifySocProfileReq modifyRequest) {
         try {
-            // Perform validation on updateRequest if needed
-
+            logger.info("start to get society profile");
+            logger.info("Successfully received request: {}", modifyRequest);
             // Update student information using the provided username and updateRequest
-            registerService.modifyStudentProfile(username, modifyRequest);
+            profileService.modifySocietyProfile(modifyRequest);
 
             return new ResponseEntity<>("Student profile updated successfully", HttpStatus.OK);
         } catch (Exception e) {

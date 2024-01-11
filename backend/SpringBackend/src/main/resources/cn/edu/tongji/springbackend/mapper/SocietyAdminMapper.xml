@@ -3,12 +3,25 @@
 
 <!--namespace指向mapper.xml所对应的Mapper接口-->
 <mapper namespace="cn.edu.tongji.springbackend.mapper.SocietyAdminMapper">
-    <resultMap id="adminsResultMap" type="societyAdmin">
-        <!-- Add result mappings for each field in the Student class -->
+    <resultMap id="adminsResultMap" type="SocietyAdmin">
+        <!-- 添加结果映射，将数据库字段与实体类属性对应 -->
+        <result property="socId" column="soc_id"/>
+        <result property="socAdminNo" column="soc_admin_no"/>
+        <result property="socAdminName" column="soc_admin_name"/>
+        <result property="socAdminPhone" column="soc_admin_phone"/>
+        <result property="socAdminEmail" column="soc_admin_email"/>
+        <!-- 添加其他属性映射，根据需要 -->
     </resultMap>
+
+    <!-- 编写查询社团管理员信息的SQL语句 -->
     <select id="getSocietyAdmins" resultMap="adminsResultMap">
-        SELECT keyword
-        FROM society_keyword
+        SELECT soc_id, soc_admin_no, soc_admin_name, soc_admin_phone, soc_admin_email
+        FROM society_admin
         WHERE soc_id = #{socId}
     </select>
+
+    <delete id="deleteAdminsBySocietyId">
+        DELETE FROM society_admin
+        WHERE soc_id = #{socId}
+    </delete>
 </mapper>

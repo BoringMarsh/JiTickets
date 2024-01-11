@@ -10,10 +10,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface StudentKeywordMapper {
-
     List<String> getStudentKeywords(Integer stuId);
-
     void insertStudentKeyword(StudentKeyword studentKeyword);
-
     void deleteKeywordsByStudentId(Integer stuId);
 }
