@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAppealPageResponse {
-    private Integer currentPage;
-    private Integer totalPage;
-    private List<AppealShortInfo> appealList;
+    private Integer appealCount;
+    private List<AppealDetailedInfo> appealList;
 }

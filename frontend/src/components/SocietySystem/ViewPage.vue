@@ -2,7 +2,7 @@
   <el-row>
 <el-page-header :icon="ArrowLeft" title="返回" @back="goBack" >
  <template #content>
-   <span class="text-large font-600 mr-3"> 商品详情 </span>
+   <span class="text-large font-600 mr-3"> 活动详情 </span>
  </template>
 </el-page-header>
 
@@ -58,10 +58,10 @@
        <el-statistic :value="rating" :precision="3">
          <template #title>
            <div style="display: inline-flex; align-items: center; font-size: 13px;">
-             商品评分
+             活动评分
              <el-tooltip
                effect="dark"
-               content="该商品目前的评分以及评分的变化情况"
+               content="该活动目前的评分以及评分的变化情况"
                placement="top"
              >
                <el-icon style="margin-left: 4px" :size="12">
@@ -71,17 +71,6 @@
            </div>
          </template>
        </el-statistic>
-       <!-- <div class="statistic-footer">
-         <div class="footer-item">
-           <span>与昨日相比</span>
-           <span class="green">
-             24%
-             <el-icon>
-               <CaretTop />
-             </el-icon>
-           </span>
-         </div>
-       </div> -->
      </div>
      </div>
    </el-card>
@@ -99,7 +88,7 @@
              <Calendar />
              
            </el-icon>
-           商品剩余保质期
+           活动报名截至倒计时
          </div>
          
        </template>
@@ -117,10 +106,10 @@
        <el-statistic :value="left">
          <template #title>
            <div style="display: inline-flex; align-items: center; font-size: 13px;">
-             商品余量
+             活动剩余名额
              <el-tooltip
                effect="dark"
-               content="该商品目前的余量以及余量的变化情况"
+               content="该活动目前的剩余名额以及剩余名额的变化情况"
                placement="top"
              >
                <el-icon style="margin-left: 4px" :size="12">
@@ -130,17 +119,6 @@
            </div>
          </template>
        </el-statistic>
-       <!-- <div class="statistic-footer">
-         <div class="footer-item">
-           <span>与昨日相比</span>
-           <span class="red">
-             -30%
-             <el-icon>
-               <CaretBottom />
-             </el-icon>
-           </span>
-         </div>
-       </div> -->
      </div>
      </div>
    </el-card>
@@ -168,7 +146,7 @@
          <el-icon :style="iconStyle">
            <Goods />
          </el-icon>
-         商品ID
+         活动ID
        </div>
      </template>
      <el-tag>{{ id }}</el-tag>
@@ -180,7 +158,7 @@
          <el-icon :style="iconStyle">
            <Goods />
          </el-icon>
-         商品名称
+         活动名称
        </div>
      </template>
      <div class="textStyle">{{ name }}</div>
@@ -191,7 +169,7 @@
          <el-icon :style="iconStyle">
            <Coin />
          </el-icon>
-         商品原价 /元
+         活动票价 /元
        </div>
      </template>
      {{ oriprice}}
@@ -202,7 +180,7 @@
          <el-icon :style="iconStyle">
            <Timer />
          </el-icon>
-         商品上传日期
+         活动发布日期
        </div>
      </template>
      <el-tag type="warning">{{ uploaddate }}</el-tag>
@@ -214,7 +192,7 @@
          <el-icon :style="iconStyle">
            <AlarmClock />
          </el-icon>
-         商品预计过期日期
+         活动报名截止日期
        </div>
      </template>
      <el-tag type="danger">{{ expirationdate }}</el-tag>
@@ -226,15 +204,10 @@
          <el-icon :style="iconStyle">
            <tickets />
          </el-icon>
-         商品类别
+         活动关键词
        </div>
      </template>
      <el-tag type="success" class="desTag" size="small" v-for="item in categories" :key="item">{{ item }}</el-tag>
-     <!-- <el-descriptions-item v-for="(item, key) in items" :key="key" :label="item.key">
-       <template v-slot>
-         <span>{{ item.val }}</span>
-       </template>
-     </el-descriptions-item> -->
    </el-descriptions-item>
    <el-descriptions-item :class-name="introduction">
      <template #label>
@@ -242,7 +215,7 @@
          <el-icon :style="iconStyle">
            <office-building />
          </el-icon>
-         商品简介
+         活动简介
        </div>
      </template>
      <div class="textStyle">{{ introduction }}</div>
@@ -259,7 +232,7 @@
 
 
 
-<el-dialog title="商品评论" :modelValue="cmtVisible"  width="90%" @update:modelValue="cmtVisible = $event"
+<el-dialog title="活动评论" :modelValue="cmtVisible"  width="90%" @update:modelValue="cmtVisible = $event"
    >
 
 
@@ -306,8 +279,8 @@
       <el-row>
         <el-col :span="18">
           <h3>{{ comment.cmt_name }}
-            <el-tag v-if="comment.user_type === 0" type="success" size="mini">用户</el-tag>
-            <el-tag v-if="comment.user_type === 1" type="warning" size="mini">商家</el-tag>
+            <el-tag v-if="comment.user_type === 0" type="success" size="mini">学生</el-tag>
+            <el-tag v-if="comment.user_type === 1" type="warning" size="mini">社团</el-tag>
             <p style="font-size: 15px; color: #ac2a2a;">已购买次数：{{ comment.buying_times }}</p>
           </h3>
 
@@ -505,7 +478,7 @@ import { ArrowLeft } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 import * as echarts from 'echarts';
 import baseURL from '../../../router/baseURL.js';
-const com_id=ref('');
+const act_id=ref('');
 const router=useRouter();
 const route=useRoute();
 const items=ref([
@@ -573,16 +546,16 @@ const changeState = (newState: string) => {
 var myChart;
 
 const data=ref({
-   "com_id": 1,
-   "com_name": "薯条",
-   "com_introduction": "好好好",
-   "com_oriprice": 14,
-   "com_expirationdate": "2023-10-01",
-   "com_uploaddate": "2023-07-20",
-   "com_left": 3,
-   "com_rating": 0.9,
-   "com_categories": [
-       "小食"
+   "act_id": 1,
+   "act_name": "薯条",
+   "act_introduction": "好好好",
+   "ticket_price": 14,
+   "reg_end_time": "2023-10-01",
+   "upload_time": "2023-07-20",
+   "act_left": 3,
+   "act_rating": 0.9,
+   "keyword": [
+       "体育"
    ],
    "com_pc_time": [
        "2023-09-01"
@@ -590,25 +563,11 @@ const data=ref({
    "com_pc_price": [
        5.6
    ],
-   "com_image": [
+   "act_image": [
      ".\\wwwroot\\commodity_image\\2\\com_image_0.png",
    ]
 });
 
-const trans=ref({
-   "com_id": "商品ID",
-   "com_name": "商品名称",
-   "com_introduction": "商品简介",
-   "com_oriprice": "商品原价",
-   "com_expirationdate": "商品预计过期时间",
-   "com_uploaddate": "商品上传时间",
-   "com_left": "商品剩余量",
-   "com_rating": "商品评级",
-   "com_categories": "商品类别",
-   "com_pc_time": "价值曲线时间",
-   "com_pc_price": "价值曲线价格",
-   "com_image": "图片地址"
-})
 
 const name=ref('薯条');
 const oriprice=ref(1.1);
@@ -622,48 +581,48 @@ const left=ref(666);
 
 const timeValue = ref(dayjs().add(1, 'month').startOf('month'))
 onMounted(()=>{
-   com_id.value=route.query.com_id as string; 
-   console.log(com_id.value);
-   // console.log(trans.value['com_categories']);
-   axios.get('api/getDetail/1?com_id='+parseInt(com_id.value))
+   act_id.value=route.query.act_id as string; 
+   console.log('act_id',act_id.value);
+   // console.log(trans.value['keyword']);
+   axios.get('/api/activity-personal/activity/'+parseInt(act_id.value))
        .then(response => {
 
            console.log('Details Got successfully.');
            const keyValuePairs = Object.entries(JSON.parse(JSON.stringify(response.data)));
            data.value=JSON.parse(JSON.stringify(response.data));
-
-           name.value=data.value.com_name;
-           oriprice.value=data.value.com_oriprice;
-           uploaddate.value=data.value.com_uploaddate;
-           categories.value=data.value.com_categories;
-           id.value=data.value.com_id;
-           expirationdate.value=data.value.com_expirationdate;
-           introduction.value=data.value.com_introduction;
-           rating.value=data.value.com_rating;
-           left.value=data.value.com_left;
-           if(data.value.com_pc_time[0]!=data.value.com_uploaddate){
-             data.value.com_pc_time.unshift(data.value.com_uploaddate);
-             data.value.com_pc_price.unshift(data.value.com_oriprice);
+           console.log('data',data.value);
+           name.value=data.value.act_name;
+           oriprice.value=data.value.ticket_price;
+           uploaddate.value=data.value.upload_time;
+           categories.value=data.value.keyword;
+           id.value=data.value.act_id;
+           expirationdate.value=data.value.reg_end_time;
+           introduction.value=data.value.act_introduction;
+           rating.value=data.value.act_rating;
+           left.value=data.value.act_left;
+           if(data.value.com_pc_time[0]!=data.value.upload_time){
+             data.value.com_pc_time.unshift(data.value.upload_time);
+             data.value.com_pc_price.unshift(data.value.ticket_price);
            }
            data.value.com_pc_time.push(dayjs(expirationdate.value).add(1,'day').format('YYYY-MM-DD'))
            data.value.com_pc_price.push(0);
            timeValue.value=dayjs(expirationdate.value);
            if(left.value==0){
              resultIcon.value='error';
-             resultTitle.value='商品已售完，请及时补货';
+             resultTitle.value='活动报名人数已满';
            }
            else if(dayjs().isAfter(dayjs(expirationdate.value).add(1,'day'))){
             resultIcon.value='error';
-            resultTitle.value='商品已过期'
+            resultTitle.value='活动报名已截至'
            }
            else{
              resultIcon.value='success';
-             resultTitle.value='商品正常在售';
+             resultTitle.value='活动报名中';
            }
 
-          //  srcList.value=data.value.com_image;
+          //  srcList.value=data.value.act_image;
           //  url.value=change(srcList.value)[0];
-            srcList.value=change(data.value.com_image);
+            srcList.value=change(data.value.act_image);
             url.value=srcList.value[0];
             console.log("new : "+ url.value);
           //  console.log(url.value);
@@ -699,7 +658,7 @@ onMounted(()=>{
 
        axios.get(baseURL + `/api/commodity/detail`, {
          params: {
-           com_id: com_id.value,
+           act_id: act_id.value,
            cus_id: Number(sessionStorage.getItem("sto_id")),
          }
        })
@@ -767,20 +726,20 @@ interface Comment {
 }
 
 interface Commodity {
- com_images: string[];
+ act_images: string[];
  com_prices: { com_pc_time: string; com_pc_price: number }[];
  comments: Comment[];
- com_id: number;
- com_name: string;
- com_introduction: string;
- com_oriPrice: number;
- com_expirationDate: string;
- com_uploadDate: string;
- com_left: number;
- com_rating: number;
+ act_id: number;
+ act_name: string;
+ act_introduction: string;
+ ticket_price: number;
+ reg_end_time: string;
+ upload_time: string;
+ act_left: number;
+ act_rating: number;
  sto_name: string;
  sto_id: number;
- com_categories: string[];
+ keyword: string[];
  favor_state: number;
  //present_price:number;
 }
@@ -826,7 +785,7 @@ const replyVisible=ref(false)
          user_id: sessionStorage.getItem("sto_id"),  // 这里使用固定的用户ID，你可以按需修改
          cmt_content: replyContent.value,
          cmt_father: currentComment.value?.cmt_id,
-         com_id: commodity.value?.com_id
+         act_id: commodity.value?.act_id
        });
 
        console.log("response.data.msg:" + response.data.msg)
@@ -842,13 +801,13 @@ const replyVisible=ref(false)
        } else {
          
 
-         const com_id = route.query.com_id
-         console.log("已经接收到com_id=" + com_id)
+         const act_id = route.query.act_id
+         console.log("已经接收到act_id=" + act_id)
      
 
          const response = await axios.get(baseURL + `/api/commodity/detail`, {
            params: {
-             com_id: com_id,
+             act_id: act_id,
              cus_id: sessionStorage.getItem("sto_id")
            }
          });
@@ -909,7 +868,7 @@ const replyVisible=ref(false)
    //       user_id: sessionStorage.getItem("sto_id"), 
    //       cmt_content: replyContent.value,
    //       cmt_father: currentComment.value?.cmt_id,
-   //       com_id: commodity.value?.com_id
+   //       act_id: commodity.value?.act_id
    //     });
 
    //     console.log("response.data.msg:" + response.data.msg)
@@ -1009,7 +968,7 @@ const replyVisible=ref(false)
              user_ID:-1,
              // 其他需要发送的字段
              cmt_ID:selectedCmt.value?.cmt_id,
-             com_ID:-1,
+             act_id:-1,
              
            });
            console.log('Server response:', response.data);

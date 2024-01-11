@@ -11,9 +11,9 @@
       <el-col  v-for="(item,index) in verificationsList" :key="index">
       
         <el-card>
-          {{ "申诉ID : "+item.APP_ID }}
+          {{ "申诉ID : "+item.appId }}
           <el-row :gutter="20" >
-              <el-col :span="5" v-for="(itemm,idx) in item.SCT_IMAGE" :key="idx"><el-image style="width: 200px; height: 100px" :src="itemm" fit="fill" :preview-src-list="[itemm]" /></el-col>
+              <el-col :span="5" v-for="(itemm,idx) in item.images" :key="idx"><el-image style="width: 200px; height: 100px" :src="itemm" fit="fill" :preview-src-list="[itemm]" /></el-col>
               <el-col :span="19">
                 <el-descriptions
             class="margin-top"
@@ -32,7 +32,7 @@
                 申诉时间
                 </div>
             </template>
-            {{item.APP_TIME}}
+            {{item.appTime}}
             </el-descriptions-item>
             <el-descriptions-item>
             <template #label>
@@ -44,7 +44,7 @@
                 </div>
             </template>
             
-            <el-tag size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.APP_USERID,flag:1}})">{{ item.APP_USERID }}</el-tag>
+            <el-tag size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.complainantId,flag:1}})">{{ item.complainantId }}</el-tag>
             </el-descriptions-item>
 
             <el-descriptions-item>
@@ -56,7 +56,7 @@
                 申诉事项
                 </div>
             </template>
-            <el-tag size="small" type="danger">{{item.APP_MATTERS}}</el-tag>
+            <el-tag size="small" type="danger">{{item.appMatters}}</el-tag>
             </el-descriptions-item>
 
             <el-descriptions-item>
@@ -68,8 +68,8 @@
                 申诉活动ID
                 </div>
             </template>
-            <el-tag v-if="item.COM_ID=='无'" >{{'无'}}</el-tag>
-            <el-tag v-else size="small" @click="router.push({path: '/indDetail',query:{com_id:item.COM_ID}});">{{item.COM_ID}}</el-tag>
+            <el-tag v-if="item.actId=='无'" >{{'无'}}</el-tag>
+            <el-tag v-else size="small" @click="router.push({path: '/indDetail',query:{com_id:item.actId}});">{{item.actId}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
             <template #label>
@@ -80,8 +80,8 @@
                 申诉对象ID
                 </div>
             </template>
-            <el-tag v-if="item.USER_ID=='无'" >{{'无'}}</el-tag>
-            <el-tag v-else size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.USER_ID,flag:1}})">{{item.USER_ID}}</el-tag>
+            <el-tag v-if="item.userId=='无'" >{{'无'}}</el-tag>
+            <el-tag v-else size="small" @click="router.push({path:'/UserInfoPage',query:{id:item.userId,flag:1}})">{{item.userId}}</el-tag>
             </el-descriptions-item>
             <el-descriptions-item>
             <template #label>
@@ -92,12 +92,12 @@
                 申诉评论ID
                 </div>
             </template>
-            {{ item.CMT_ID }}
+            {{ item.cmtId }}
               <el-tooltip
                   effect="dark"
-                  :content="item.CMT_CONTENT"
+                  :content="item.cmtContent"
                   placement="top"
-                  v-if="item.CMT_ID!='无'"
+                  v-if="item.cmtId!='无'"
               >
                   <el-icon style="margin-left: 4px" :size="12">
                   <Warning />
@@ -115,7 +115,7 @@
                 申诉内容
                 </div>
             </template>
-            {{item.APP_CONTENT}}
+            {{item.appContent}}
             </el-descriptions-item>
         </el-descriptions>
               </el-col>
@@ -128,7 +128,7 @@
 
   <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
         :current-page="pagenum" :page-sizes="[2, 4, 6, 10, 16, 20]" :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper" :total="800" >
+        layout="total, sizes, prev, pager, next, jumper" :total="appealcount" >
   </el-pagination>
 
 
@@ -181,99 +181,69 @@ const tableLayout = ref('升序')
 
 const verificationsList=ref([
   {
-    "APP_ID": 1,
-    "APP_TIME": "2023-08-25 16:11:24",
-    "SCT_IMAGE": [
+    "appId": 1,
+    "appTime": "2023-08-25 16:11:24",
+    "images": [
       "appeal_image\\1_1.jpg",
       "appeal_image\\1_2.jpg"
     ],
-    "USER_ID": "1000001",
-    "COM_ID": "261",
-    "CMT_ID": "-1",
-    "CMT_CONTENT": "null",
-    "APP_USERID": "1000000",
-    "APP_MATTERS": "1",
-    "APP_CONTENT": "奸商啊啊啊啊"
-  },
-  {
-    "APP_ID": 1,
-    "APP_TIME": "2023-08-25 16:11:24",
-    "SCT_IMAGE": [
-      "appeal_image\\1_1.jpg",
-      "appeal_image\\1_2.jpg"
-    ],
-    "USER_ID": "1000001",
-    "COM_ID": "261",
-    "CMT_ID": "-1",
-    "CMT_CONTENT": "null",
-    "APP_USERID": "1000000",
-    "APP_MATTERS": "1",
-    "APP_CONTENT": "奸商啊啊啊啊"
-  },
-  {
-    "APP_ID": 1,
-    "APP_TIME": "2023-08-25 16:11:24",
-    "SCT_IMAGE": [
-      "appeal_image\\1_1.jpg",
-      "appeal_image\\1_2.jpg"
-    ],
-    "USER_ID": "1000001",
-    "COM_ID": "261",
-    "CMT_ID": "-1",
-    "CMT_CONTENT": "null",
-    "APP_USERID": "1000000",
-    "APP_MATTERS": "1",
-    "APP_CONTENT": "奸商啊啊啊啊"
+    "userId": "1000001",
+    "actId": "261",
+    "cmtId": "-1",
+    "cmtContent": "helloWorld!",
+    "complainantId": "null",
+    "appMatters": "1",
+    "appContent": "奸商啊啊啊啊"
   }
 ])
 
 const pagenum=ref(1);
 const pagesize=ref(6);
-
+var appealcount=ref(0);
 
 
 const order=ref(0);
 const phone=ref('');
 const state=ref(0);
 
-const getVerificationsList2=async()=>{
-  loading.value=Boolean(true);
-  verificationsList.value.length=0;
-  console.log(sto_id);
-  var Phone=phone.value;
-  if(Phone.length==0)
-    Phone="null";
-  axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
-    .then(response=>{
-      console.log(pagesize.value*(pagenum.value-1)+1);
-      console.log(pagesize.value*pagenum.value);
-      console.log(state.value);
-      verificationsList.value=JSON.parse(JSON.stringify(response.data));
-      for(var i=0;i<verificationsList.value.length;++i){
-        if(verificationsList.value[i].CMT_ID=="-1")
-          verificationsList.value[i].CMT_ID='无'
-        if(verificationsList.value[i].COM_ID=='-1')
-          verificationsList.value[i].COM_ID='无'
-        if(verificationsList.value[i].USER_ID=='-1')
-          verificationsList.value[i].USER_ID='无'
-        if(verificationsList.value[i].APP_MATTERS=='1')
-          verificationsList.value[i].APP_MATTERS='商品信息不实'
-        if(verificationsList.value[i].APP_MATTERS=='2')
-          verificationsList.value[i].APP_MATTERS='食品安全问题'
-        if(verificationsList.value[i].APP_MATTERS=='3')
-          verificationsList.value[i].APP_MATTERS='商家资质不全'
-        if(verificationsList.value[i].APP_MATTERS=='4')
-          verificationsList.value[i].APP_MATTERS='恶意评论'
-        if(verificationsList.value[i].APP_MATTERS=='5')
-          verificationsList.value[i].APP_MATTERS='多次退款刷单'
-        if(verificationsList.value[i].APP_MATTERS=='6')
-          verificationsList.value[i].APP_MATTERS='多次恶意评论'
-      }
+// const getVerificationsList2=async()=>{
+//   loading.value=Boolean(true);
+//   verificationsList.value.length=0;
+//   console.log(sto_id);
+//   var Phone=phone.value;
+//   if(Phone.length==0)
+//     Phone="null";
+//   axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
+//     .then(response=>{
+//       console.log(pagesize.value*(pagenum.value-1)+1);
+//       console.log(pagesize.value*pagenum.value);
+//       console.log(state.value);
+//       verificationsList.value=JSON.parse(JSON.stringify(response.data));
+//       for(var i=0;i<verificationsList.value.length;++i){
+//         if(verificationsList.value[i].CMT_ID=="-1")
+//           verificationsList.value[i].CMT_ID='无'
+//         if(verificationsList.value[i].COM_ID=='-1')
+//           verificationsList.value[i].COM_ID='无'
+//         if(verificationsList.value[i].USER_ID=='-1')
+//           verificationsList.value[i].USER_ID='无'
+//         if(verificationsList.value[i].APP_MATTERS=='1')
+//           verificationsList.value[i].APP_MATTERS='商品信息不实'
+//         if(verificationsList.value[i].APP_MATTERS=='2')
+//           verificationsList.value[i].APP_MATTERS='食品安全问题'
+//         if(verificationsList.value[i].APP_MATTERS=='3')
+//           verificationsList.value[i].APP_MATTERS='商家资质不全'
+//         if(verificationsList.value[i].APP_MATTERS=='4')
+//           verificationsList.value[i].APP_MATTERS='恶意评论'
+//         if(verificationsList.value[i].APP_MATTERS=='5')
+//           verificationsList.value[i].APP_MATTERS='多次退款刷单'
+//         if(verificationsList.value[i].APP_MATTERS=='6')
+//           verificationsList.value[i].APP_MATTERS='多次恶意评论'
+//       }
 
-      console.log(verificationsList.value);
-      loading.value=Boolean(false);
-    })
-}
+//       console.log(verificationsList.value);
+//       loading.value=Boolean(false);
+//     })
+// }
 
 const getVerificationsList=async()=>{
   loading.value=Boolean(true);
@@ -282,33 +252,26 @@ const getVerificationsList=async()=>{
   var Phone=phone.value;
   if(Phone.length==0)
     Phone="null";
-  axios.get('api/administrator/appeallist?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
+  axios.get('http://localhost:8084/api/order/appeal/page?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
     .then(response=>{
-      console.log(pagesize.value*(pagenum.value-1)+1);
-      console.log(pagesize.value*pagenum.value);
-      console.log(state.value);
-      verificationsList.value=JSON.parse(JSON.stringify(response.data));
+      verificationsList.value=JSON.parse(JSON.stringify(response.data.appealList));
+      appealcount = response.data.appealCount;
       for(var i=0;i<verificationsList.value.length;++i){
-        if(verificationsList.value[i].CMT_ID=="-1")
-          verificationsList.value[i].CMT_ID='无'
-        if(verificationsList.value[i].COM_ID=='-1')
-          verificationsList.value[i].COM_ID='无'
-        if(verificationsList.value[i].USER_ID=='-1')
-          verificationsList.value[i].USER_ID='无'
-        if(verificationsList.value[i].APP_MATTERS=='1')
-          verificationsList.value[i].APP_MATTERS='商品信息不实'
-        if(verificationsList.value[i].APP_MATTERS=='2')
-          verificationsList.value[i].APP_MATTERS='食品安全问题'
-        if(verificationsList.value[i].APP_MATTERS=='3')
-          verificationsList.value[i].APP_MATTERS='商家资质不全'
-        if(verificationsList.value[i].APP_MATTERS=='4')
-          verificationsList.value[i].APP_MATTERS='恶意评论'
-        if(verificationsList.value[i].APP_MATTERS=='5')
-          verificationsList.value[i].APP_MATTERS='多次退款刷单'
-        if(verificationsList.value[i].APP_MATTERS=='6')
-          verificationsList.value[i].APP_MATTERS='多次恶意评论'
+        if(verificationsList.value[i].cmtId==null)
+          verificationsList.value[i].cmtId='无'
+        if(verificationsList.value[i].actId==null)
+          verificationsList.value[i].actId='无'
+        if(verificationsList.value[i].userId==null)
+          verificationsList.value[i].userId='无'
+        if(verificationsList.value[i].appMatters=='1')
+          verificationsList.value[i].appMatters='举报评论'
+        if(verificationsList.value[i].appMatters=='2')
+          verificationsList.value[i].appMatters='举报活动'
+        if(verificationsList.value[i].appMatters=='3')
+          verificationsList.value[i].appMatters='举报社团'
+        if(verificationsList.value[i].appMatters=='4')
+          verificationsList.value[i].appMatters='举报个人用户'
       }
-
       console.log(verificationsList.value);
       loading.value=Boolean(false);
     })
