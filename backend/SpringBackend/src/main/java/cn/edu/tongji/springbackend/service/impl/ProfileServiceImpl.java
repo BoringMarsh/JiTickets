@@ -161,6 +161,64 @@ public class ProfileServiceImpl implements ProfileService {
         }
     }
 
+    @Override
+    public void modifySocietyProfile(ModifySocProfileReq modifyRequest) {
+        int userId = modifyRequest.getUserId();
+        User user = userMapper.getUserById(userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        Society society = societyMapper.getSocietyById(userId);
+        if (society == null) {
+            throw new NotFoundException("Society not found");
+        }
+
+        // Update student attributes based on the modifyRequest
+        user.setEmail(modifyRequest.getEmail());
+        user.setPhone(modifyRequest.getPhone());
+        user.setCampus(modifyRequest.getCampus());
+        society.setSocName(modifyRequest.getSocName());
+        society.setSocIntro(modifyRequest.getSocIntro());
+        society.setSocType(modifyRequest.getSocType());
+        logger.info("start to update keywords");
+        processSocietyKeywords(userId, modifyRequest.getSocKeywords());
+        logger.info("done update keywords");
+        logger.info("start to update admins");
+        processSocietyAdmins(userId, modifyRequest.getSocAdminRegs());
+        logger.info("done update admins");
+        societyMapper.updateSociety(society);
+        userMapper.updateUser(user);
+        logger.info("done update user");
+    }
+    private void processSocietyKeywords(Integer socId, List<String> socKeywords) {
+        // Delete existing keywords for the society
+        societyKeywordMapper.deleteKeywordsBySocietyId(socId);
+        if (socKeywords != null) {
+            for (String keyword : socKeywords) {
+                SocietyKeyword societyKeyword = new SocietyKeyword();
+                societyKeyword.setSocId(socId);
+                societyKeyword.setKeyword(keyword);
+                societyMapper.insertSocietyKeyword(societyKeyword);
+            }
+        }
+    }
+    // Helper methods for processing society admins, images, and keywords
+    private void processSocietyAdmins(Integer socId, List<SocietyAdminRegistration> socAdminRegs) {
+        // Delete existing admins for the society
+        societyAdminMapper.deleteAdminsBySocietyId(socId);
+        // Insert new admins
+        if (socAdminRegs != null) {
+            for (SocietyAdminRegistration adminReg : socAdminRegs) {
+                SocietyAdmin admin = new SocietyAdmin();
+                admin.setSocId(socId);
+                admin.setSocAdminNo(adminReg.getSocAdminNo());
+                admin.setSocAdminName(adminReg.getSocAdminName());
+                admin.setSocAdminEmail(adminReg.getSocAdminEmail());
+                admin.setSocAdminPhone(adminReg.getSocAdminPhone());
+                societyMapper.insertSocietyAdmin(admin);
+            }
+        }
+    }
 
 }
 

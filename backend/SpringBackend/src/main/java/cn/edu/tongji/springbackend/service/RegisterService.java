@@ -10,7 +10,5 @@ import org.springframework.stereotype.Service;
 public interface RegisterService {
     int registerStudent(RegStudentRequest registrationRequest);
     int registerSociety(RegSocietyRequest registrationRequest);
-    GetStudentProfileResponse getStudentProfile(String username);
 
-    void modifyStudentProfile(String username, ModifyStuProfileReq modifyRequest);
 }

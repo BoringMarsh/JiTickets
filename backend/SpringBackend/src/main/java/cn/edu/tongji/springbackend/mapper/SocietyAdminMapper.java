@@ -13,5 +13,5 @@ import java.util.List;
 public interface SocietyAdminMapper {
 
     List<SocietyAdmin> getSocietyAdmins(Integer socId);
-
+    void deleteAdminsBySocietyId(Integer socId);
 }

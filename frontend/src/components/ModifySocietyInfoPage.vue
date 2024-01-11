@@ -51,6 +51,7 @@
           </el-col>
         </el-row>
         <br>
+        <!--
         <el-row :gutter="25">
           <el-col :span="3">
             <span class="label">
@@ -62,7 +63,7 @@
             <el-input v-model="basicInfo.password" type="password" :disabled="flag!=null"></el-input>
           </el-col>
         </el-row>
-        <br>
+        <br> -->
         <div style="border-bottom: 1px solid gray; padding: 10px;">
           <div style="display: flex; align-items: center;">
             <img src="../assets/icons8-store-64.png" alt="商户信息">
@@ -119,7 +120,7 @@
             </span>
           </el-col>
           <el-col :span="9">
-            <el-select v-model="basicInfo.soc_type" placeholder="请选择社团类型">
+            <el-select v-model="basicInfo.socType" placeholder="请选择社团类型">
             <!-- 遍历社团类型选项，options 是一个数组，包含每个社团类型的信息 -->
             <el-option v-for="option in socTypeOptions" :key="option.value" :label="option.label" :value="option.value"></el-option>
           </el-select>
@@ -167,10 +168,11 @@
             </span>
           </el-col>
           <el-col :span="21">
-            <el-input v-model="basicInfo.soc_introduction"></el-input>
+            <el-input v-model="basicInfo.socIntro"></el-input>
           </el-col>
         </el-row>
         <br>
+        <!--
         <el-row :gutter="25">
           <el-col :span="3">
             <span class="label">
@@ -179,14 +181,14 @@
             </span>
           </el-col>
           <el-col :span="21">
-            <!-- <el-row :gutter="10">
+             <el-row :gutter="10">
               <el-col :xs="4" :sm="4" :md="4" :lg="4">
                 <div class="image-container">
                   <img :src="logoImage" alt="Logo Image" width="100" height="100" />
                   <el-button type="danger" @click="deleteLogoImage()" size="mini" :disabled="flag!=null">删除</el-button>
                 </div>
               </el-col>
-            </el-row> -->
+            </el-row> 
             <el-upload v-model:file-list='fileList_logo' class="upload-demo"
               action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :auto-upload="false" :limit="1" :on-exceed="handleExceed" :disabled="flag!=null">
               <template #trigger>
@@ -195,7 +197,8 @@
             </el-upload>
           </el-col>
         </el-row>
-        <br>
+        <br> -->
+        <!--
         <el-row :gutter="25">
           <el-col :span="3">
             <span class="label">
@@ -220,7 +223,7 @@
             </el-upload>
           </el-col>
         </el-row>
-        <br>
+        <br> -->
         <!-- 管理员信息 -->
         <el-row>
         <el-table :data="adminData" v-show="adminData.length > 0">
@@ -308,12 +311,7 @@ const socTypeOptions = ref([
       });
   }
 
-  /*           */
-//加入百度地图组件
-/* eslint-disable */
-// let map: BMapGL.Map;
-// let geoc: BMapGL.Geocoder;
-// const addressInput = ref('');     //地址搜索框绑定变量
+
 const flag=route.query.flag;
 
 onMounted(async () => {
@@ -323,105 +321,17 @@ onMounted(async () => {
   const basic_response = await axios.get('/api/user/profile/society/info/get', { params: { username:username } });
   if (basic_response.status === 200) {
     basicInfo.value = basic_response.data;
-    storedImages.value = basicInfo.value.base64SocImages.map(pic => ({
-      fullUrl: 'http://localhost:5000\\' + pic,
-      relativePath: pic
-    }));
-    adminData.value = basicInfo.value.socAdmin;
-    console.log('adminData',adminData.value);
+    soc_keyword.value = basicInfo.value.socKeywords;
     console.log('basicInfo',basicInfo.value);
+    adminData.value = basicInfo.value.socAdmins;
+    console.log('adminData',adminData.value);
     } else {
     console.error(`Error: HTTP status code ${basic_response.status}`);
   }
-
-    // map = new BMapGL.Map("baiduMap"); 
-    // geoc = new BMapGL.Geocoder();
-    // //const map = new BMapGL.Map("baiduMap"); 
-    // const point = new BMapGL.Point(116.404, 39.915);  // 创建点坐标
-    // map.centerAndZoom(point, 15);                     // 初始化地图，设置中心点坐标和地图级别
-    // map.enableScrollWheelZoom(true);                  // 开启鼠标滚轮缩放
-    // addressInput.value = basicInfo.value.user_address;
-    // // 创建地址解析器实例
-    // const myGeo = new BMapGL.Geocoder();
-    // // 将地址解析结果显示在地图上，并调整地图视野
-    // myGeo.getPoint(basicInfo.value.user_address, function(point) {
-    //   if (point) {
-    //     map.centerAndZoom(point, 16);
-    //     map.addOverlay(new BMapGL.Marker(point));
-    //   } else {
-    //     alert("您选择地址没有解析到结果!");
-    //   }
-    // });
-
-    // // 添加地图点击事件监听
-    // map.addEventListener("click", function (e: any) {
-    //   const pt = e.latlng;
-    //   //alert('点击的经纬度：' + e.latlng.lng + ', ' + e.latlng.lat);
-    //   geoc.getLocation(pt, function (rs: any) {
-    //     console.log('Complete geocoding result:', rs);
-    //     const addComp = rs.addressComponents;
-    //     addressInput.value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-    //     //alert(form.user_address);
-    //     //form.sto_lng = pt.lng.toString();
-    //     //form.sto_lat = pt.lat.toString();
-    //     //alert('点击的经纬度：' + pt.lng.toString() + ', ' + pt.lat.toString());
-    //     basicInfo.value.user_address = addressInput.value;
-    //     var marker = new BMapGL.Marker(pt);  // 创建标注
-    //     map.clearOverlays(); // 清除所有覆盖物
-    //     map.addOverlay(marker); // 将标注添加到地图中
-    //     //marker.enableDragging(); // 可拖拽
-    //   });
-    // });
   
-  // const response = await axios.get('/api/getinformation/store', { params: { sto_ID: sto_ID } });
-  // if (response.status === 200) {
-  //   userInfo.value = response.data;
-  // } else {
-  //   console.error(`Error: HTTP status code ${response.status}`);
-  // }
-    // 获取已有的商家图片
-  // const imgResponse = await axios.get('/api/getinformation/storeimg', { params: { sto_ID: sto_ID } });
-  // if (imgResponse.status === 200) {
-  //   storedImages.value = imgResponse.data.imageURL.map(pic => ({
-  //     fullUrl: 'http://localhost:5000\\' + pic,
-  //     relativePath: pic
-  //   }));
-  //   console.log(storedImages.value);
-  // } else {
-  //   console.error(`Error: HTTP status code ${imgResponse.status}`);
-  // }
-
-
-//   const response_categoty = await axios.get('/api/category/getcategories');
-//     if (response_categoty.status === 200) {
-//       categories.value = response_categoty.data.categorylist;
-//     } else {
-//       console.error(`Error: HTTP status code ${response_categoty.status}`);
-//     }
 });
 
-//删除社团图片
-const deleteStoredImage = (imageIndex) => {
-  try {
-    // 删除图片在storedImages中的引用
-    storedImages.value.splice(imageIndex, 1);
-    ElMessage.success('图片删除成功');
-  } catch (error) {
-    console.error(error);
-    ElMessage.error('删除失败');
-  }
-};
-//删除社团logo图片
-// const deleteLogoImage = () => {
-//   try {
-//     // 删除图片在storedImages中的引用
-//     logoImage.value.splice(0, 1);
-//     ElMessage.success('图片删除成功');
-//   } catch (error) {
-//     console.error(error);
-//     ElMessage.error('删除失败');
-//   }
-// }
+
 const addAdminRow = () => {
   adminData.value.push({ socAdminNo: '', socAdminName: '', socAdminPhone: '', socAdminEmail: '' });
 };
@@ -438,76 +348,29 @@ const goBack = () => {
       router.push('/administrator');
   };
 
-// const searchLocation = () => { // 搜索地点
-//     const local = new BMapGL.LocalSearch(map, {
-//       renderOptions: { map: map, autoViewport: true, selectFirstResult: false },
-//       pageCapacity: 8,
-//     });
-//     // 搜索回调
-//     local.setSearchCompleteCallback(results => {
-//       if (local.getStatus() === BMAP_STATUS_SUCCESS) {
-//         const pt = results.getPoi(0).point;
-//         //form.sto_locationPoint = `${pt.lng},${pt.lat}`;
-//         // 更新输入框地址
-//         geoc.getLocation(pt, rs => {
-//           const addComp = rs.addressComponents;
-//           addressInput.value = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-//           basicInfo.value.user_address = addressInput.value;
-//           //form.sto_lng = pt.lng.toString();
-//           //form.sto_lat = pt.lat.toString();
-//         });
 
-//       } else {
-//         ElMessage.error('未找到相关地址！');
-//       }
-//     });
-
-//     local.search(addressInput.value);
-//   };
-const handleExceed = (files, fileList_logo) => {
-  ElMessage.warning('只能上传一张图片！');
-  };
 const modifyUser = async () => {
   try {
-    if (fileList_pic.value.length + storedImages.value.length < 1 || fileList_pic.value.length + storedImages.value.length > 9) {
-      alert('商家图片数量必须在1-9张之间！');
-      return;
-    }
-  let formData = {
+    let requestData = {
+      userId: basicInfo.value.userId,
       username: basicInfo.value.username,
-      password: basicInfo.value.password,
       email: basicInfo.value.email,
       phone: basicInfo.value.phone,
       campus: basicInfo.value.campus,
       socName: basicInfo.value.socName,
-      socIntro: basicInfo.value.soc_introduction,
-      socType: basicInfo.value.soc_type,
+      socIntro: basicInfo.value.socIntro,
+      socType: basicInfo.value.socType,
       socKeywords: soc_keyword.value,
-      socAdminRegs: adminData.value, //包含管理员信息
-      socLogoFile: '',
-      socImageFiles: []
+      socAdmins: adminData.value, // 包含管理员信息
     };
 
-    // 确保 fileList 中的第一个元素存在且有 raw 属性
-    if (fileList_logo.value.length > 0 && fileList_logo.value[0].raw) {
-      formData.socLogoFile = await toBase64(fileList_logo.value[0]);
-    }
-    // 遍历 fileList1 以获取其他图片
-    for (let fileObj of fileList_pic.value) {
-      if (fileObj.raw) {
-        formData.socImageFiles.push(await toBase64(fileObj));
+    console.log('requestData',requestData);
+    // 发送 JSON 格式的请求数据到后端
+    const societyResponse = await axios.post('/api/user/profile/society/modify', requestData, {
+      headers: {
+        'Content-Type': 'application/json' // 指定请求头为 JSON 格式
       }
-    }
-
-
-    // for (let category of basicInfo.value.categories) {
-    //   formData.push('categories', category);
-    // }
-    // basicInfo.value.categories.forEach((category: string) => {
-    //   formData.append('categories', category);
-    // });
-    console.log('formData',formData);
-    const societyResponse = await axios.post('/api/user/profile/society/modify', formData);
+    });
     console.log('postResponese',societyResponse);
     if (societyResponse.status === 200) {
       ElMessage.success('修改成功');

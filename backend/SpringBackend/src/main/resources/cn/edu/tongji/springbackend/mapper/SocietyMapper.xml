@@ -38,4 +38,13 @@
     <select id="getSocietyImagesBySocietyId" resultMap="societyImageResultMap">
         SELECT * FROM society_image WHERE soc_id = #{socId}
     </select>
+
+    <update id="updateSociety" parameterType="society">
+        UPDATE society
+        SET
+            soc_name = #{socName},
+            soc_intro = #{socIntro},
+            soc_type = #{socType}
+        WHERE soc_id = #{socId}
+    </update>
 </mapper>

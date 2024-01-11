@@ -249,20 +249,4 @@ public class RegisterServiceImpl implements RegisterService {
         }
     }
 
-
-
-    @Override
-    public GetStudentProfileResponse getStudentProfile(String username) {
-        //User user = userMapper.getUserByUsername(username);
-
-        //if (user != null) {
-            //return studentMapper.getStudentByUserId(user.getId());
-        //}
-        return null; // Return null if the user or student is not found
-    }
-
-    @Override
-    public void modifyStudentProfile(String username, ModifyStuProfileReq modifyRequest) {
-
-    }
 }
