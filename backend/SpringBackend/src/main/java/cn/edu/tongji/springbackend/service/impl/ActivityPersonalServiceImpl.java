@@ -135,10 +135,10 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
     }
 
     @Override
-    public void addFavour(FavourRequest favourRequest) {
+    public void addFavour(int stuId, int actId) {
         favourMapper.add(Favour.builder()
-                .actId(favourRequest.getActId())
-                .stuId(favourRequest.getStuId())
+                .actId(actId)
+                .stuId(stuId)
                 .build()
         );
     }

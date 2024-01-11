@@ -73,9 +73,9 @@ public class ActivityPersonalController {
     }
 
     @PostMapping("/favour")
-    public ResponseEntity<?> addFavour(@RequestBody FavourRequest favourRequest) {
+    public ResponseEntity<?> addFavour(@RequestParam("stuId") int stuId, @RequestParam("actId") int actId) {
         try {
-            activityPersonalService.addFavour(favourRequest);
+            activityPersonalService.addFavour(stuId, actId);
             return new ResponseEntity<>("successfully add favour", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
