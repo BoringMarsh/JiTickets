@@ -4,6 +4,25 @@
     <v-form-render :form-json="formJson" :form-data="formData" :option-data="optionData" ref="vFormRef">
     </v-form-render>
     <el-row>
+    <el-col :span="14" :offset="3">
+      <el-form-item label="🧩社团图片">
+        <el-upload
+          v-model:file-list='fileList_pic'
+          class="upload-demo"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :auto-upload="false"
+          :multiple="true"
+          :limit="9"
+          :before-upload="beforeImageUpload"
+          :on-exceed="handleExceed">
+          <template #trigger>
+            <el-button type="primary">select file</el-button>
+          </template>
+        </el-upload>
+      </el-form-item>
+    </el-col>
+  </el-row>
+    <el-row>
       <el-col :span="11"/>
     <el-button type="danger" size="large" plain  @click="submitForm">提交信息</el-button>
   </el-row>
@@ -18,35 +37,42 @@
   import axios from 'axios';
   import vformjson from '../../vform.json'
   import { useRouter,useRoute } from 'vue-router';
-  const formJson = reactive(vformjson )
-
+  const formJson = reactive(vformjson)
+  const fileList_pic = ref([]); // 用于保存活动图片的文件列表
   
   const formData = reactive({})
   const optionData = reactive({})
   const vFormRef = ref(null)
   const router=useRouter();
   const route=useRoute();
-  const sto_ID = sessionStorage.getItem('sto_id') as string;
+  const socId = sessionStorage.getItem('userId') as string;
 
   const submitForm = () => {
+    console.log('vFormRef',vFormRef)
     vFormRef.value.getFormData().then(async formData => {
-      console.log(formData);
-      formData.STO_ID = sto_ID;
-      console.log("为了传商品基本信息获取IMAGE_KEY"+localStorage.getItem('IMAGE_KEY'));
+      console.log('formData',formData);
+      formData.socId = socId;
+      formData.base64ActImages = [];
+      for (let fileObj of fileList_pic.value) {
+        if (fileObj.raw) {
+          formData.base64ActImages.push(await toBase64(fileObj));
+        }
+      }
+      //console.log("为了传商品基本信息获取IMAGE_KEY"+localStorage.getItem('IMAGE_KEY'));
       
-      delete formData.com_image_upload;
-      formData.IMAGE_KEY = localStorage.getItem('IMAGE_KEY');
-      console.log("往后端传商品Json"+JSON.stringify(formData));
-      const response = await axios.post("/api/uploadcommodity/basic",JSON.stringify(formData),
+      //delete formData.com_image_upload;
+      //formData.IMAGE_KEY = localStorage.getItem('IMAGE_KEY');
+      console.log("往后端传活动Json"+JSON.stringify(formData));
+      const response = await axios.post("/api/society/activity/upload",JSON.stringify(formData),
       { headers: {'Content-Type': 'application/json'} } );
-      console.log("商品上传成功后获得ID"+response.data);
+      console.log("活动上传成功后获得ID",response.data);
       
       ElMessage({
         showClose: true,
-        message: '上传成功！您的商品ID：'+response.data,
+        message: '上传成功！您的活动ID：'+response.data.actId,
         type: 'success',
       })
-      location.reload();
+      //location.reload();
     }).catch(error => {
       // Form Validation failed
       ElMessage.error(error)
@@ -55,13 +81,36 @@
   }
 
   const returnDetailPage = () =>{
-    console.log(sto_ID);
+    console.log(socId);
   router.push({
       path: '/detail',
       query:{
-          sto_id:sto_ID
+        userId:socId
       }
   });
 }
+const beforeImageUpload = (file: File) => {
+    if (fileList_pic.value.length >= 9) {
+      ElMessage.error('You can only upload up to 9 images.');
+      return false;
+    }
+    return true;
+};
 
+const handleExceed = () => {
+    ElMessage.warning('You can only upload up to 9 images.');
+};
+// 修改 toBase64 方法以接收包含文件的对象
+function toBase64(fileObj) {
+  return new Promise((resolve, reject) => {
+    if (fileObj && fileObj.raw instanceof File) {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileObj.raw);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    } else {
+      reject(new Error("No file object found"));
+    }
+  });
+}
 </script>
