@@ -72,9 +72,9 @@ public class ActivityPersonalController {
     }
 
     @DeleteMapping("/favour")
-    public ResponseEntity<?> deleteFavour(@RequestBody FavourRequest favourRequest) {
+    public ResponseEntity<?> deleteFavour(@RequestParam("stuId") int stuId, @RequestParam("actId") int actId) {
         try {
-            activityPersonalService.deleteFavour(favourRequest);
+            activityPersonalService.deleteFavour(stuId, actId);
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             e.printStackTrace();
