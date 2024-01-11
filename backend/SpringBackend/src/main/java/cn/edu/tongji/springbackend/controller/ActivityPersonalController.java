@@ -2,6 +2,7 @@ package cn.edu.tongji.springbackend.controller;
 
 import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.ActivityFullException;
+import cn.edu.tongji.springbackend.model.Browse;
 import cn.edu.tongji.springbackend.service.ActivityPersonalService;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,17 @@ public class ActivityPersonalController {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("get activity failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/browse")
+    public ResponseEntity<?> getBrowse(@RequestParam("userId") int userId) {
+        try {
+            List<Browse> browses = activityPersonalService.getBrowse(userId);
+            return new ResponseEntity<>(browses, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("get browse failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

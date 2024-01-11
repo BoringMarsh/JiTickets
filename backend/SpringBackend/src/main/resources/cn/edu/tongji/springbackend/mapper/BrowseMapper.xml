@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.BrowseMapper">
+    <select id="getByBrowserId" resultType="browse">
+        SELECT * FROM browse
+        WHERE browser_id = #{browserId};
+    </select>
+
     <insert id="add" parameterType="browse">
         INSERT INTO browse
         VALUES (#{broTimeStart}, #{actId}, #{browserId}, #{whetherBuy});

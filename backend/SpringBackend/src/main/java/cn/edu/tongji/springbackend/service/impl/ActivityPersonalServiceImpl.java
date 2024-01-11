@@ -99,6 +99,11 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
     }
 
     @Override
+    public List<Browse> getBrowse(int browserId) {
+        return browseMapper.getByBrowserId(browserId);
+    }
+
+    @Override
     public void addBrowse(AddBrowseRequest addBrowseRequest) {
         browseMapper.add(Browse.builder()
                 .broTimeStart(addBrowseRequest.getBroTimeStart())
