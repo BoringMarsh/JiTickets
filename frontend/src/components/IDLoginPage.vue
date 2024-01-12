@@ -89,7 +89,15 @@ import { useRouter } from 'vue-router';
                   //     console.error('Fetch location data failed:', error);
                   //   });
                 }
-
+                else if (response.data.role == '2') {
+                  sessionStorage.removeItem("username");
+                  sessionStorage.removeItem("user_role");
+                  sessionStorage.setItem("username", loginUsername.value);
+                  sessionStorage.setItem("user_role", response.data.role);
+                  router.push({
+                      path:'/administrator'
+                  });
+                }
               }
               else {
                 ElMessageBox.alert(response.data.message, '登录失败', {

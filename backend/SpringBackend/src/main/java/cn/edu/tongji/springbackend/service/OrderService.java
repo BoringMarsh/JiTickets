@@ -2,14 +2,11 @@ package cn.edu.tongji.springbackend.service;
 
 
 import cn.edu.tongji.springbackend.dto.AddAppealRequest;
-import cn.edu.tongji.springbackend.dto.AppealDetailedInfo;
 import cn.edu.tongji.springbackend.dto.GetAppealPageResponse;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface OrderService {
-    GetAppealPageResponse getAppealPage(int timeOrder, int beginNum, int endNum) throws IOException;
-    AppealDetailedInfo getAppeal(int appId) throws Exception;
+    GetAppealPageResponse getAppealPage(int timeOrder, int beginNumber, int endNumber) throws IOException;
     void addAppeal(AddAppealRequest addAppealRequest);
 }

@@ -5,7 +5,6 @@ import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.AppealImageMapper;
 import cn.edu.tongji.springbackend.mapper.AppealMapper;
-import cn.edu.tongji.springbackend.mapper.CommentMapper;
 import cn.edu.tongji.springbackend.model.Appeal;
 import cn.edu.tongji.springbackend.model.AppealImage;
 import cn.edu.tongji.springbackend.service.OrderService;
@@ -32,15 +31,13 @@ public class OrderServiceImpl implements OrderService {
     @Resource
     private AppealImageMapper appealImageMapper;
     @Resource
-    private CommentMapper commentMapper;
-    @Resource
     private FileStorageProperties fileStorageProperties;
 
     @Override
-    public GetAppealPageResponse getAppealPage(int timeOrder, int beginNum, int endNum) throws IOException {
+    public GetAppealPageResponse getAppealPage(int timeOrder, int beginNumber, int endNumber) throws IOException {
         List<AppealDetailedInfo> appealDetailedInfos = new ArrayList<>();
 
-        for (Appeal appeal : appealMapper.getByPage(timeOrder, endNum - beginNum + 1, beginNum - 1)) {
+        for (Appeal appeal : appealMapper.getByPage(timeOrder, endNumber - beginNumber + 1, beginNumber - 1)) {
             List<String> images = new ArrayList<>();
 
             for (AppealImage image : appealImageMapper.getById(appeal.getAppId())) {
@@ -55,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
                     appeal.getUserId(),
                     appeal.getActId(),
                     appeal.getCmtId(),
-                    appeal.getCmtId() == null ? "" : commentMapper.getByCmtId(appeal.getCmtId()).getCmtContent(),
+                    appeal.getCmtId() == null ? "" : appeal.getCmtId().toString(),
                     appeal.getComplainantId(),
                     images
             ));
@@ -64,29 +61,6 @@ public class OrderServiceImpl implements OrderService {
         return new GetAppealPageResponse(
                 appealMapper.getCount(),
                 appealDetailedInfos
-        );
-    }
-
-    @Override
-    public AppealDetailedInfo getAppeal(int appId) throws Exception {
-        Appeal appeal = appealMapper.getById(appId);
-        List<String> images = new ArrayList<>();
-
-        for (AppealImage image : appealImageMapper.getById(appId)) {
-            images.add(getImage(image.getAppImage()));
-        }
-
-        return new AppealDetailedInfo(
-                appeal.getAppId(),
-                appeal.getAppTime(),
-                appeal.getAppMatters(),
-                appeal.getAppContent(),
-                appeal.getUserId(),
-                appeal.getActId(),
-                appeal.getCmtId(),
-                appeal.getCmtId() == null ? "" : commentMapper.getByCmtId(appeal.getCmtId()).getCmtContent(),
-                appeal.getComplainantId(),
-                images
         );
     }
 

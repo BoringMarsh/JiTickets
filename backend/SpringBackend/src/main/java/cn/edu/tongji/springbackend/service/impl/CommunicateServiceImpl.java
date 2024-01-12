@@ -2,18 +2,12 @@ package cn.edu.tongji.springbackend.service.impl;
 
 import cn.edu.tongji.springbackend.dto.AddCommentRequest;
 import cn.edu.tongji.springbackend.dto.CommentInfo;
-import cn.edu.tongji.springbackend.dto.RateActivityRequest;
 import cn.edu.tongji.springbackend.dto.ReplyCommentRequest;
-import cn.edu.tongji.springbackend.mapper.ActivityMapper;
 import cn.edu.tongji.springbackend.mapper.CommentMapper;
-import cn.edu.tongji.springbackend.mapper.IndentMapper;
-import cn.edu.tongji.springbackend.model.Activity;
 import cn.edu.tongji.springbackend.model.Comment;
-import cn.edu.tongji.springbackend.model.Indent;
 import cn.edu.tongji.springbackend.service.CommunicateService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -21,10 +15,6 @@ import java.util.*;
 public class CommunicateServiceImpl implements CommunicateService {
     @Resource
     private CommentMapper commentMapper;
-    @Resource
-    private IndentMapper indentMapper;
-    @Resource
-    private ActivityMapper activityMapper;
 
     private void getCommentRecursive(List<CommentInfo> list, final Map<Integer, List<Comment>> commentMap, final int fatherId) {
         List<Comment> comments = commentMap.get(fatherId);
@@ -68,6 +58,11 @@ public class CommunicateServiceImpl implements CommunicateService {
     }
 
     @Override
+    public String getCommentByCmtId(int cmtId) {
+        return commentMapper.getByCmtId(cmtId).getCmtContent();
+    }
+
+    @Override
     public void addComment(AddCommentRequest addCommentRequest) {
         commentMapper.add(Comment.builder()
                 .cmtFather(0)
@@ -87,44 +82,6 @@ public class CommunicateServiceImpl implements CommunicateService {
                 .cmtTime(replyCommentRequest.getCmtTime())
                 .actId(replyCommentRequest.getActId())
                 .userId(replyCommentRequest.getUserId())
-                .build()
-        );
-    }
-
-    @Override
-    @Transactional
-    public void rateActivity(RateActivityRequest rateActivityRequest) {
-        indentMapper.update(Indent.builder()
-                .indId(rateActivityRequest.getIndId())
-                .indRating(rateActivityRequest.getIndRating())
-                .build()
-        );
-
-        Activity activity = activityMapper.getByActId(indentMapper.getActIdByIndId(rateActivityRequest.getIndId()));
-        activityMapper.update(Activity.builder()
-                .actId(activity.getActId())
-                .actRating(activity.getActRating() + rateActivityRequest.getIndRating())
-                .ratingNum(activity.getRatingNum() + 1)
-                .build()
-        );
-    }
-
-    @Override
-    @Transactional
-    public void changeRating(RateActivityRequest rateActivityRequest) {
-        Indent indent = indentMapper.getByIndId(rateActivityRequest.getIndId());
-        final double deviation = rateActivityRequest.getIndRating() - indent.getIndRating();
-
-        indentMapper.update(Indent.builder()
-                .indId(rateActivityRequest.getIndId())
-                .indRating(rateActivityRequest.getIndRating())
-                .build()
-        );
-
-        Activity activity = activityMapper.getByActId(indent.getActId());
-        activityMapper.update(Activity.builder()
-                .actId(activity.getActId())
-                .actRating(activity.getActRating() + deviation)
                 .build()
         );
     }

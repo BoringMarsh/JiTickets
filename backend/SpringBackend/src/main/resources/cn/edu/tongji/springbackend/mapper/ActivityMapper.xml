@@ -10,9 +10,16 @@
                 #{regStartTime}, #{regEndTime}, #{actTime}, #{actCapacity}, #{actLeft},
                 #{actRating}, #{ratingNum}, #{socId})
     </insert>
+
     <select id="getCount" resultType="int">
         SELECT COUNT(*)
         FROM activity
+    </select>
+
+    <select id="getCountBySocId" resultType="int">
+        SELECT COUNT(*)
+        FROM activity
+        WHERE soc_id = #{socId};
     </select>
 
     <select id="getByActId" resultType="activity">
@@ -103,4 +110,9 @@
             LIMIT #{pageSize} OFFSET #{page * pageSize}
     </select>
 
+    <select id="getByPageAndSocId" resultType="activity">
+        SELECT * FROM activity
+        WHERE soc_id = #{socId}
+        LIMIT #{pageSize} OFFSET #{startRow};
+    </select>
 </mapper>

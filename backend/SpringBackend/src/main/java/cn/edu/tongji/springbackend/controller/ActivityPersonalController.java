@@ -161,4 +161,12 @@ public class ActivityPersonalController {
             return new ResponseEntity<>("change indent notes failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public void rateActivity(int indId, double indRating) {
+        activityPersonalService.rateActivity(indId, indRating);
+    }
+
+    public void changeRating(int indId, double indRating) {
+        activityPersonalService.changeRating(indId, indRating);
+    }
 }

@@ -56,4 +56,7 @@ public class SocietyActivityController {
         }
     }
 
+    public GetSocietyActivityListResponse getSocietyActivityList(int socId, int beginNumber, int endNumber) {
+        return societyActivityService.getSocietyActivityList(socId, beginNumber, endNumber);
+    }
 }

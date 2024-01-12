@@ -14,11 +14,11 @@ import java.util.Map;
 public interface ActivityMapper {
     int insertActivity(Activity activity);
     int getCount();
+    int getCountBySocId(@Param("socId") int socId);
     Activity getByActId(@Param("actId") int actId);
     List<Activity> getByPage(@Param("pageSize") int pageSize, @Param("offset") int offset);
     void update(Activity activity);
-
     List<Activity> getActivityListByRange(@Param("startRow") int startRow, @Param("pageSize") int pageSize);
-
     List<Activity> getSocActivities(Map<String, Object> params);
+    List<Activity> getByPageAndSocId(@Param("socId") int socId, @Param("startRow") int startRow, @Param("pageSize") int pageSize);
 }

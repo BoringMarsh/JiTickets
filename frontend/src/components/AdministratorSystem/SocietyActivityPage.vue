@@ -36,50 +36,41 @@
         </el-col>
         <el-button type="primary" icon="search" @click="getGoods"/>
         <el-col :span="10"></el-col>
-        <el-col :span="5">
-        
-          <el-radio-group v-model="tableLayout">
-            <el-radio-button label="在售" @click="checkLeft"/>
-            <el-radio-button label="售罄" @click="checkLeft1"/>
-            <el-radio-button label="过期" @click="checkLeft2"/>
-          </el-radio-group>
-              
-        </el-col>
       </el-row>
   
       <el-row>
     <el-table
       v-loading="loading"
-     :data="goodsList"
+     :data="activityList"
       style="width: 100%" max-height="1000" 
       border 
       @sort-change="changeSort"
-      :default-sort="{ prop: 'com_id', order: 'ascending' }"
+      :default-sort="{ prop: 'actId', order: 'ascending' }"
       :row-style="changeStyle"
       >
       <el-table-column label="活动图片" width="200">
         <template #default="scope">
           <div style="display: flex; align-items: center">
             <el-image
+              v-for="(item, index) in scope.row.images" :key="index"
               style="width: 180px; height: 90px"
-              :src="getUrl(scope.$index)"
+              :src="'data:image/png;base64,' + item"
               :zoom-rate="1.2"
               :initial-index="0"
               fit="fill"
-              @click="getSrcList(scope.$index)"
             />
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="com_name" label="活动名字"> </el-table-column>
-      <el-table-column prop="com_id" sortable="custom" label="活动ID"></el-table-column>
-      <el-table-column prop="com_curr_price" label="当前票价"></el-table-column>
+      <el-table-column prop="actName" label="活动名字"> </el-table-column>
+      <el-table-column prop="actId" sortable="custom" label="活动ID"></el-table-column>
+      <el-table-column prop="ticketPrice" label="当前票价"></el-table-column>
       <el-table-column
-      prop="com_left"
+      prop="actLeft"
       label="活动票余量"
       ></el-table-column>
       <el-table-column
-      prop="com_categories"
+      prop="keywords"
       label="活动类别"
       width="225"
       >
@@ -105,7 +96,7 @@
       </div>
       </template>
     </el-table-column>
-    <el-table-column prop="com_uploaddate" label="上传日期" width="160">
+    <el-table-column prop="uploadTime" label="上传日期" width="160">
       <template #header>
         <div class="categoryStyle">
         {{'上传日期'}}
@@ -122,7 +113,39 @@
           </div>
         </template>
     </el-table-column>
-    <el-table-column prop="com_expirationdate" label="过期日期" width="160">
+    <el-table-column prop="regStartTime" label="开始报名日期" width="160">
+      <template #header>
+        <div class="categoryStyle">
+        {{'过期日期'}}
+            <el-date-picker
+              v-model="expirationDate"
+              type="date"
+              placeholder="Pick a day"
+              :shortcuts="shortcuts"
+              size="default"
+              style="width: 150px"
+              value-format="YYYY-MM-DD"
+            />
+          </div>
+        </template>
+    </el-table-column>
+    <el-table-column prop="regEndTime" label="报名结束日期" width="160">
+      <template #header>
+        <div class="categoryStyle">
+        {{'过期日期'}}
+            <el-date-picker
+              v-model="expirationDate"
+              type="date"
+              placeholder="Pick a day"
+              :shortcuts="shortcuts"
+              size="default"
+              style="width: 150px"
+              value-format="YYYY-MM-DD"
+            />
+          </div>
+        </template>
+    </el-table-column>
+    <el-table-column prop="actTime" label="活动日期" width="160">
       <template #header>
         <div class="categoryStyle">
         {{'过期日期'}}
@@ -169,7 +192,7 @@
     <el-row>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :current-page="pagenum" :page-sizes="[1, 3, 5, 10, 15, 20]" :page-size="pagesize"
-            layout="total, sizes, prev, pager, next, jumper" :total="800">
+            layout="total, sizes, prev, pager, next, jumper" :total="activitycount">
     </el-pagination>
   </el-row>
   
@@ -189,34 +212,36 @@
     const router=useRouter();
     const pagenum=ref(1);
     const pagesize=ref(5);
+    const activitycount=ref(0);
     const query=ref('');
     const haveQuery=ref('');
-    const tableLayout = ref('在售')
     const uploadDate=ref('');
     const expirationDate=ref('')
     const loading=ref(false);
     const ableEdit = ref([true]);
     const isEmpty = ref([true]) //是否售空
     const isOverDate = ref([true]) //是否过期
-    const sto_id=ref('');
+    const soc_id=ref('');
     const route=useRoute();
     const admi=ref('0');
     const dialogVisible = ref(false)
     const text=ref('');
     const idx=ref(1);
-    const goodsList=ref([
+    const activityList=ref([
       {
-          "com_id": 1,
-          "com_name": "商品1",
-          "com_left": 1,
-          "com_uploaddate":'',
-          "com_expirationdate":'',
-          "com_curr_price": 0.01,
-          "com_categories": [
+          "actId": 1,
+          "actName": "商品1",
+          "actLeft": 1,
+          "uploadDate":'',
+          "regStartTime":'',
+          "regEndTime":'',
+          "actTime":'',
+          "ticketPrice": 0.01,
+          "keywords": [
               "苹果"
           ],
-          "com_image": [
-              ".\\wwwroot\\commodity_image\\1\\com_image_0.jpg"
+          "images": [
+              ""
           ]
       }
   ]);
@@ -260,62 +285,39 @@
     }
   ]);
   
-  const status=ref(1);  //1 在售 0 售罄/下架 -1 过期
   const order=ref(0);
   const category=ref([]);
-  const getGoodsList=async()=>{
+  const getSocietyActivityList=async()=>{
     loading.value=Boolean(true);
-    goodsList.value.length=0;
-    axios.post('api/searchCommodity?STO_ID='+sto_id.value+'&com_begin_n='+(pagesize.value*(pagenum.value-1)+1)+'&com_end_n='+(pagesize.value*pagenum.value),{
-      "status":status.value,
-      "order":order.value,
-      "category":category.value,
-      "query":query.value,
-      'COM_UPLOADDATE':uploadDate.value,
-      'COM_EXPIRATIONDATE':expirationDate.value
-    }) 
+    activityList.value.length=0;
+    axios.get('http://localhost:8084/api/order/society-activitylist?SOC_ID='+soc_id.value+'&BEGIN_NUMBER='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUMBER='+(pagesize.value*pagenum.value)) 
       .then(response=>{
-        console.log(pagesize.value*(pagenum.value-1)+1);
-        console.log(pagesize.value*pagenum.value);
-        goodsList.value=JSON.parse(JSON.stringify(response.data));
+        activitycount.value = response.data.count;
+        activityList.value=JSON.parse(JSON.stringify(response.data.list));
         isEmpty.value = []
         isOverDate.value=[]
-        for(var i = 0; i < goodsList.value.length;i++){
-          if(status.value==1){
-            isEmpty.value.push(false);
-            isOverDate.value.push(false);
-          }
-          else if (status.value==0){
-            isEmpty.value.push(true);
-            isOverDate.value.push(false);
-          }
-          else{ if(status.value==-1)
-            if(goodsList.value[i].com_left !=0)  {isEmpty.value.push(false);}
-            else {isEmpty.value.push(true);}
-            isOverDate.value.push(true);
-          }
-        }
+        // for(var i = 0; i < activityList.value.length;i++){
+        //   if(status.value==1){
+        //     isEmpty.value.push(false);
+        //     isOverDate.value.push(false);
+        //   }
+        //   else if (status.value==0){
+        //     isEmpty.value.push(true);
+        //     isOverDate.value.push(false);
+        //   }
+        //   else{ if(status.value==-1)
+        //     if(activityList.value[i].com_left !=0)  {isEmpty.value.push(false);}
+        //     else {isEmpty.value.push(true);}
+        //     isOverDate.value.push(true);
+        //   }
+        // }
         loading.value=Boolean(false);
       })
   }
-  
-  const checkLeft=()=>{
-    status.value=1;
-    getGoodsList();
-  }
-  
-  const checkLeft1=()=>{
-    status.value=0;
-    getGoodsList();
-  }
-  
-  const checkLeft2=()=>{
-    status.value=-1;
-    getGoodsList();
-  }
+
   
   const getGoods=async()=>{
-    getGoodsList().then(()=>
+    getSocietyActivityList().then(()=>
     ElNotification.success({
       title: 'Success',
       message: '搜索成功',
@@ -336,28 +338,8 @@
       str+=query.value[i];
     console.log(str);
     query.value=haveQuery.value;
-    getGoodsList();
+    getSocietyActivityList();
     query.value=str;
-  }
-  
-  function change(strr :string[]){
-    var arr=[''];
-      for(var i=0;i<strr.length;i++)
-        arr.push(strr[i]);
-      for(i=1;i<arr.length;i++){
-        var str=arr[i].split('\\');
-        arr[i]='/';
-        for(var j=2;j<str.length;j++){
-          arr[i]+=str[j];
-          if(j!=str.length-1)
-            arr[i]+='/'
-        }
-        // console.log(arr[i]);
-      }
-  
-      // srcList.value=arr;
-      // console.log(arr.length)
-      return arr[1];
   }
   
   
@@ -365,53 +347,50 @@
     "/commodity_image\\1\\com_image_0.jpg",
     ]);
   const url = 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg';
-  const getUrl=(index:number)=>{
-    return change(goodsList.value[index].com_image);
-  }
   
   const goBack=()=>{
     history.back();
   }
   onMounted(()=>{
-      //sto_id.value = route.query.sto_id as string;
-      if(route.query.sto_id==null)
-        sto_id.value = sessionStorage.getItem('sto_id') as string;
+      //soc_id.value = route.query.soc_id as string;
+      if(route.query.soc_id==null)
+        soc_id.value = sessionStorage.getItem('soc_id') as string;
       else
-        sto_id.value = route.query.sto_id as string;
+        soc_id.value = route.query.soc_id as string;
   
       if(route.query.admi!=null)
         admi.value='1';
-      console.log(sto_id.value);
-        getGoodsList();
+      console.log(soc_id.value);
+        getSocietyActivityList();
     });
   
   onBeforeUpdate(()=>{
-    if(route.query.sto_id==null)
-        sto_id.value = sessionStorage.getItem('sto_id') as string;
+    if(route.query.soc_id==null)
+        soc_id.value = sessionStorage.getItem('soc_id') as string;
       else
-        sto_id.value = route.query.sto_id as string;
-      console.log(sto_id.value);
-        getGoodsList();
+        soc_id.value = route.query.soc_id as string;
+      console.log(soc_id.value);
+        getSocietyActivityList();
   })
     const viewDetail=(index: number)=>{
         // router.push('/view');
-        console.log(goodsList.value[index].com_id);
+        console.log(activityList.value[index].com_id);
         router.push({
           path: '/indDetail',
           query:{
-              com_id:goodsList.value[index].com_id
+              com_id:activityList.value[index].com_id
           }
       });
     }
   var durationTime=2000;
   const viewUpdate=(index: number)=>{
         // router.push('/view');
-        console.log(goodsList.value[index].com_id);
+        console.log(activityList.value[index].com_id);
         router.push({
           path: '/updateCommodity',
           query:{
-              com_id:goodsList.value[index].com_id,
-              sto_id:sto_id.value
+              com_id:activityList.value[index].com_id,
+              soc_id:soc_id.value
           }
       });
     }
@@ -445,34 +424,13 @@
   
     const handleSizeChange=(val:number)=>{
       pagesize.value=val;
-      getGoodsList();
+      getSocietyActivityList();
     }
   
     const handleCurrentChange=(val:number)=>{
       pagenum.value=val;
       
-      getGoodsList();
-    }
-  
-    const getSrcList=(index:number)=>{
-      var arr: string[];
-      // arr=goodsList.value[index].com_image;
-      arr=[];
-      for(var i=0;i<goodsList.value[index].com_image.length;i++)
-        arr.push(goodsList.value[index].com_image[i]);
-      for(i=0;i<arr.length;i++){
-        var str=arr[i].split('\\');
-        arr[i]='/';
-        for(var j=2;j<str.length;j++){
-          arr[i]+=str[j];
-          if(j!=str.length-1)
-            arr[i]+='/'
-        }
-        console.log(arr[i]);
-      }
-  
-      srcList.value=arr;
-      // url.value=srcList.value[0];
+      getSocietyActivityList();
     }
   
     const tableRowClassName = ({
@@ -512,7 +470,7 @@
   }
   const noticeUpload=()=>{
     dialogVisible.value = false;
-    axios.post('api/UploadCommodity/deleteCommodity?COM_ID='+goodsList.value[idx.value].com_id)
+    axios.post('api/UploadCommodity/deleteCommodity?COM_ID='+activityList.value[idx.value].com_id)
           .then(response=>{
             console.log(response);
             ElNotification.success({
@@ -522,7 +480,7 @@
             })
             var str=query.value;
             query.value=haveQuery.value;
-            getGoodsList();
+            getSocietyActivityList();
             query.value=str;
           })
           .catch((error)=>{

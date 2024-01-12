@@ -4,8 +4,8 @@
     <el-row :gutter="20">
       <el-col :span="3"><el-tag>按申诉时间排序方式：</el-tag></el-col>
       <el-radio-group v-model="tableLayout">
-        <el-radio-button label="升序" @click="order=0,getVerificationsList()"/>
-        <el-radio-button label="降序" @click="order=1,getVerificationsList()"/>
+        <el-radio-button label="升序" @click="order=0,getAppealList()"/>
+        <el-radio-button label="降序" @click="order=1,getAppealList()"/>
       </el-radio-group>
 
       <el-col  v-for="(item,index) in verificationsList" :key="index">
@@ -13,7 +13,6 @@
         <el-card>
           {{ "申诉ID : "+item.appId }}
           <el-row :gutter="20" >
-              <el-col :span="5" v-for="(itemm,idx) in item.images" :key="idx"><el-image style="width: 200px; height: 100px" :src="'data:image/png;base64,' + itemm" fit="fill" /></el-col>
               <el-col :span="19">
                 <el-descriptions
             class="margin-top"
@@ -119,6 +118,8 @@
             </el-descriptions-item>
         </el-descriptions>
               </el-col>
+              <el-col :span="5" v-for="(itemm,idx) in item.images" :key="idx"><el-image style="width: 200px; height: 100px" :src="'data:image/png;base64,' + itemm" fit="fill" /></el-col>
+              
           </el-row>
           
 
@@ -206,7 +207,7 @@ const order=ref(0);
 const phone=ref('');
 const state=ref(0);
 
-// const getVerificationsList2=async()=>{
+// const getAppealList2=async()=>{
 //   loading.value=Boolean(true);
 //   verificationsList.value.length=0;
 //   console.log(sto_id);
@@ -245,14 +246,14 @@ const state=ref(0);
 //     })
 // }
 
-const getVerificationsList=async()=>{
+const getAppealList=async()=>{
   loading.value=Boolean(true);
   verificationsList.value.length=0;
   console.log(sto_id);
   var Phone=phone.value;
   if(Phone.length==0)
     Phone="null";
-  axios.get('http://localhost:8084/api/order/appeal/page?TIME_ORDER='+order.value+'&BEGIN_NUM='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUM='+(pagesize.value*pagenum.value)) 
+  axios.get('http://localhost:8084/api/order/appeal/page?TIME_ORDER='+order.value+'&BEGIN_NUMBER='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUMBER='+(pagesize.value*pagenum.value)) 
     .then(response=>{
       verificationsList.value=JSON.parse(JSON.stringify(response.data.appealList));
       appealcount = response.data.appealCount;
@@ -280,20 +281,20 @@ const getVerificationsList=async()=>{
 
 onMounted(()=>{
   //sto_id.value = route.query.sto_id as string;
-    getVerificationsList();
+    getAppealList();
 });
 
 
 
 const handleSizeChange=(val:number)=>{
   pagesize.value=val;
-  getVerificationsList();
+  getAppealList();
 }
 
 const handleCurrentChange=(val:number)=>{
   pagenum.value=val;
   
-  getVerificationsList();
+  getAppealList();
 }
 const resVerificate=ref({
     "CUS_ID": 1000001,
@@ -330,7 +331,7 @@ const verificate=()=>{
         dialogVisible.value=true;
       }
 
-      getVerificationsList();
+      getAppealList();
     })
 }
 

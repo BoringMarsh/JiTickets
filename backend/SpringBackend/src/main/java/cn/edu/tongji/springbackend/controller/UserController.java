@@ -143,4 +143,23 @@ public class UserController {
         }
     }
 
+    public GetStudentPageResponse getStudentProfileList(int beginNumber, int endNumber) {
+        return profileService.getStudentProfileList(beginNumber, endNumber);
+    }
+
+    public GetSocietyPageResponse getSocietyProfileList(int beginNumber, int endNumber) {
+        return profileService.getSocietyProfileList(beginNumber, endNumber);
+    }
+
+    public void setUserProhibitedStatus(int userId, boolean ifProhibited) {
+        profileService.setUserProhibitedStatus(userId, ifProhibited);
+    }
+
+    public void passRegRequest(int userId) {
+        profileService.passRegRequest(userId);
+    }
+
+    public void refuseRegRequest(int userId) {
+        profileService.refuseRegRequest(userId);
+    }
 }
