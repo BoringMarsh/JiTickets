@@ -2,8 +2,6 @@ package cn.edu.tongji.springbackend.service.impl;
 
 import cn.edu.tongji.springbackend.config.FileStorageProperties;
 import cn.edu.tongji.springbackend.controller.KeywordsController;
-import cn.edu.tongji.springbackend.dto.GetStudentProfileResponse;
-import cn.edu.tongji.springbackend.dto.ModifyStuProfileReq;
 import cn.edu.tongji.springbackend.dto.RegSocietyRequest;
 import cn.edu.tongji.springbackend.dto.RegStudentRequest;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
@@ -12,6 +10,7 @@ import cn.edu.tongji.springbackend.mapper.StudentKeywordMapper;
 import cn.edu.tongji.springbackend.mapper.StudentMapper;
 import cn.edu.tongji.springbackend.mapper.UserMapper;
 import cn.edu.tongji.springbackend.model.*;
+import cn.edu.tongji.springbackend.service.EncryptService;
 import cn.edu.tongji.springbackend.service.RegisterService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -19,14 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
@@ -37,6 +33,8 @@ import java.util.stream.Collectors;
 public class RegisterServiceImpl implements RegisterService {
     private static final Logger logger = LoggerFactory.getLogger(KeywordsController.class);
     @Resource
+    private EncryptService encryptService;
+    @Resource
     private UserMapper userMapper;
     @Resource
     private StudentMapper studentMapper;
@@ -44,7 +42,7 @@ public class RegisterServiceImpl implements RegisterService {
     private StudentKeywordMapper studentKeywordMapper;
     @Resource
     private SocietyMapper societyMapper;
-    @Autowired
+    @Resource
     private FileStorageProperties fileStorageProperties;
 
     @Override
@@ -53,14 +51,14 @@ public class RegisterServiceImpl implements RegisterService {
 
         User user = new User();
         user.setUsername(registrationRequest.getUsername());
-        user.setPassword(registrationRequest.getPassword());
+        user.setPassword(encryptService.encryptPassword(registrationRequest.getPassword()));
         user.setEmail(registrationRequest.getEmail());
         user.setPhone(registrationRequest.getPhone());
         user.setCampus(registrationRequest.getCampus());
         user.setLoginStatus(0);
-        user.setAccountStatus(1);
+        user.setAccountStatus(2);
         user.setBalance(0.0);
-        user.setPayPassword(registrationRequest.getPayPassword());
+        user.setPayPassword(encryptService.encryptPassword(registrationRequest.getPayPassword()));
         user.setRegTime(LocalDateTime.now());  // Set regTime to current time
         user.setRole(0);  // Assuming 0 is the role for normal users
         logger.info("Successfully set user info: {}", user);
@@ -107,19 +105,20 @@ public class RegisterServiceImpl implements RegisterService {
     }
 
     // Add other methods as needed
+    @Override
     @Transactional
     public int registerSociety(RegSocietyRequest registrationRequest) {
         try{
             User user = new User();
             user.setUsername(registrationRequest.getUsername());
-            user.setPassword(registrationRequest.getPassword());
+            user.setPassword(encryptService.encryptPassword(registrationRequest.getPassword()));
             user.setEmail(registrationRequest.getEmail());
             user.setPhone(registrationRequest.getPhone());
             user.setCampus(registrationRequest.getCampus());
             user.setLoginStatus(0);
             user.setAccountStatus(2);
             user.setBalance(0.0);
-            user.setPayPassword(registrationRequest.getPayPassword());
+            user.setPayPassword(encryptService.encryptPassword(registrationRequest.getPayPassword()));
             user.setRegTime(LocalDateTime.now());  // Set regTime to current time
             user.setRole(1);
             logger.info("Successfully set user info: {}", user);

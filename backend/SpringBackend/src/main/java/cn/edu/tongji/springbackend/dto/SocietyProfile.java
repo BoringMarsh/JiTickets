@@ -1,7 +1,6 @@
 package cn.edu.tongji.springbackend.dto;
 
 import cn.edu.tongji.springbackend.model.SocietyAdmin;
-import cn.edu.tongji.springbackend.model.SocietyAdminRegistration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetSocietyProfileResponse {
+public class SocietyProfile {
     //User attributes
     private Integer userId;
     private String username;

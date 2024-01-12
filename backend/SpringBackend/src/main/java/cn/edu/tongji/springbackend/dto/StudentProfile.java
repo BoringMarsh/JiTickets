@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetStudentProfileResponse {
+public class StudentProfile {
     //User attributes
     private Integer userId;
     private String username;

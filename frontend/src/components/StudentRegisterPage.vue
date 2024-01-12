@@ -232,7 +232,7 @@
   };
   
   const get_keywords = () => {
-      axios.get('/api/keywords/getkeywords'
+      axios.get('http://localhost:8084/api/keywords/getkeywords'
       ,{
         headers: {
               //'Content-Type': 'application/json', 
@@ -275,7 +275,7 @@
 
       console.log(registerForm);
 
-      const response = await axios.post('/api/user/register/student', registerForm);
+      const response = await axios.post('http://localhost:8084/api/user/register/student', registerForm);
 
       console.log(response);
 

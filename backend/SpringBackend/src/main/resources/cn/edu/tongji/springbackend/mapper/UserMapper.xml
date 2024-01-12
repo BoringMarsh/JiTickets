@@ -30,4 +30,14 @@
             account_status = #{accountStatus}
         WHERE id = #{id}
     </update>
+
+    <delete id="deleteUserById">
+        DELETE FROM user
+        WHERE id = #{userId};
+    </delete>
+
+    <select id="getCountByUserRole" resultType="int">
+        SELECT COUNT(*) FROM user
+        WHERE role = #{role};
+    </select>
 </mapper>

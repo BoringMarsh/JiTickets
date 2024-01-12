@@ -28,7 +28,7 @@ public class OrderController {
             @RequestParam(name = "END_NUMBER", required = false) Integer endNumber) {
         try {
             // 调用 profileService 的 getStudentProfileList 方法，并传递 beginNumber 和 endNumber 参数
-            List<GetStudentProfileResponse> studentList = profileService.getStudentProfileList(beginNumber, endNumber);
+            GetStudentPageResponse studentList = profileService.getStudentProfileList(beginNumber, endNumber);
             // 返回获取到的学生列表
             return new ResponseEntity<>(studentList, HttpStatus.OK);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class OrderController {
             @RequestParam(name = "BEGIN_NUMBER", required = false) Integer beginNumber,
             @RequestParam(name = "END_NUMBER", required = false) Integer endNumber) {
         try {
-            List<GetSocietyProfileResponse> societyList = profileService.getSocietyProfileList(beginNumber, endNumber);
+            GetSocietyPageResponse societyList = profileService.getSocietyProfileList(beginNumber, endNumber);
             // 返回获取到的学生列表
             return new ResponseEntity<>(societyList, HttpStatus.OK);
         } catch (Exception e) {
@@ -119,6 +119,28 @@ public class OrderController {
                     (ifProhibited ? "prohibit" : "unblock") + " user failed",
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
+        }
+    }
+
+    @PutMapping("/reg-request")
+    public ResponseEntity<?> passRegRequest(@RequestParam("USER_ID") int userId) {
+        try {
+            profileService.passRegRequest(userId);
+            return new ResponseEntity<>("successfully pass register request", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("pass register request failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/reg-request")
+    public ResponseEntity<?> refuseRegRequest(@RequestParam("USER_ID") int userId) {
+        try {
+            profileService.refuseRegRequest(userId);
+            return new ResponseEntity<>("successfully refuse register request", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("refuse register request failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

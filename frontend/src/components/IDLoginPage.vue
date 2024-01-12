@@ -4,7 +4,7 @@
       <div id="hiddenContainer1" style="display:none;"></div>  -->
     <div>
     <el-form label-width="100px" style="max-width: 460px;position: relative;margin: auto;">
-      <el-form-item label="账号ID" >
+      <el-form-item label="账号" >
         <el-input type="tel" v-model="loginUsername" placeholder="请输入账号" required/>
       </el-form-item>
       <el-form-item label="密码">
@@ -34,16 +34,7 @@ import { useRouter } from 'vue-router';
 
 
   const login_id = async ()=> {
-          axios.post('/api/user/login',  JSON.stringify({ 
-          username:loginUsername.value,
-          password:loginPassword.value,
-          //login_type:"0" 
-        }), {
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          // baseURL: 'http://127.0.0.1:4523/m1/3653807-0-default'
-          })
+          axios.get('http://localhost:8084/api/user/login?USERNAME='+loginUsername.value+'&PASSWORD='+loginPassword.value)
           .then(response => {
             // console.log('Request URL:', response.config.baseURL + response.config.url);
             console.log("username",loginUsername.value);
