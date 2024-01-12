@@ -487,7 +487,7 @@ const items=ref([
      // more 
 ]);
 const resultIcon=ref('success');
-const resultTitle=ref('商品正常在售');
+const resultTitle=ref('活动报名中');
 const size=ref('default');
 const iconStyle = computed(() => {
  const marginMap = {
