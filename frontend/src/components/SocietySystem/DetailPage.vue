@@ -251,37 +251,36 @@ const getGoodsList=async()=>{
   //   tot.value=response.data;
   // });
   // 获取某社团活动
-  axios.get('/api/society/activities', {
-        params: {
-          username: soc_id.value,
-          status: status.value,
-          order: order.value,
-          keyword: keyword.value,
-          query: query.value,
-          upload_time: upload_time.value,
-          reg_end_time: reg_end_time.value,
-          page: pagenum,
-          pageSize: pagesize,
-        },
+  axios.post('/api/society/activity/activities', {
+        socId: soc_id.value,
+        status: status.value,
+        order: order.value,
+        keyword: keyword.value,
+        query: query.value,
+        upload_time: upload_time.value,
+        reg_end_time: reg_end_time.value,
+        page: pagenum.value,
+        pageSize: pagesize.value,
       })
       .then(response => {
         console.log('response',response.data)
         goodsList.value = response.data;
         loading.value=Boolean(false);
         for(var i = 0; i < goodsList.value.length;i++){
-        if(status.value==1){
-          isEmpty.value.push(false);
-          isOverDate.value.push(false);
-        }
-        else if (status.value==0){
-          isEmpty.value.push(true);
-          isOverDate.value.push(false);
-        }
-        else{ if(status.value==-1)
-          if(goodsList.value[i].act_left !=0)  {isEmpty.value.push(false);}
-          else {isEmpty.value.push(true);}
-          isOverDate.value.push(true);
-        }
+          if(status.value==1){
+            isEmpty.value.push(false);
+            isOverDate.value.push(false);
+          }
+          else if (status.value==0){
+            isEmpty.value.push(true);
+            isOverDate.value.push(false);
+          }
+          else if(status.value==-1)
+          {
+            if(goodsList.value[i].act_left !=0)  {isEmpty.value.push(false);}
+            else {isEmpty.value.push(true);}
+            isOverDate.value.push(true);
+          }
       }
       })
       .catch(error => {
@@ -398,7 +397,7 @@ const goBack=()=>{
 onMounted(()=>{
     //sto_id.value = route.query.sto_id as string;
     
-    soc_id.value = sessionStorage.getItem('username') as string;
+    soc_id.value = sessionStorage.getItem('socId') as string;
     console.log('soc_id_inDetailPage',soc_id.value);
       getGoodsList();
   });

@@ -15,4 +15,7 @@
         FROM activity_keyword
         WHERE act_id = #{actId}
     </select>
+    <delete id="deleteActivityKeywords" parameterType="java.lang.Integer">
+        DELETE FROM activity_keyword WHERE act_id = #{actId}
+    </delete>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.edu.tongji.springbackend.mapper.ActivityMapper">
-    <insert id="insertActivity" parameterType="activity" useGeneratedKeys="true" keyProperty="act_id">
+    <insert id="insertActivity" parameterType="activity" useGeneratedKeys="true" keyProperty="actId">
         INSERT INTO activity (act_name, act_intro, act_location, ticket_price, upload_time,
                               reg_start_time, reg_end_time, act_time, act_capacity, act_left,
                               act_rating, rating_num, soc_id)
@@ -77,30 +77,42 @@
         LIMIT #{pageSize} OFFSET #{startRow}
     </select>
 
-    <select id="getSocActivities" resultMap="activityResultMap" parameterType="java.util.Map">
-        SELECT a.*
-        FROM activity a
-                 LEFT JOIN activity_keyword ak ON a.act_id = ak.act_id
-        WHERE
-          (
-            (CASE
-              WHEN 0 = a.act_left THEN 0
-              WHEN NOW() > a.reg_end_time THEN -1
-              ELSE 1
-            END) = #{status}
-            OR #{status} IS NULL
-          )
-          AND (ak.keyword = #{keyword} OR #{keyword} IS NULL)
-          AND (a.act_name LIKE CONCAT('%', #{query}, '%') OR #{query} IS NULL)
-          AND (DATE(a.upload_time) = DATE(#{uploadTime}) OR #{uploadTime} IS NULL)
-          AND (DATE(a.reg_end_time) = DATE(#{regEndTime}) OR #{regEndTime} IS NULL)
-        ORDER BY
-            CASE
-                WHEN #{order} = 1 THEN a.upload_time
-                WHEN #{order} = 2 THEN a.reg_end_time
-                ELSE a.act_id
-                END
-            LIMIT #{pageSize} OFFSET #{page * pageSize}
+    <!-- 获取社团活动的SQL查询 -->
+    <select id="getSocActivities" resultType="activity">
+        SELECT * FROM activity
+        WHERE 1=1
+        <if test="socId != null">
+            AND soc_id = #{socId}
+        </if>
+        <if test="keyword != null and !keyword.isEmpty()">
+            AND act_id IN (
+            SELECT act_id FROM activity_keyword
+            WHERE keyword IN
+            <foreach item="item" collection="keyword" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="query != null and !query.isEmpty()">
+            AND (act_name LIKE CONCAT('%', #{query}, '%') OR
+            act_intro LIKE CONCAT('%', #{query}, '%'))
+        </if>
+        <!-- 其他条件 -->
     </select>
 
+    <update id="updateActivity" parameterType="activity">
+        UPDATE activity
+        <set>
+            <if test="actName != null">act_name = #{actName},</if>
+            <if test="actIntro != null">act_intro = #{actIntro},</if>
+            <if test="actLocation != null">act_location = #{actLocation},</if>
+            <if test="ticketPrice != null">ticket_price = #{ticketPrice},</if>
+            <if test="regStartTime != null">reg_start_time = #{regStartTime},</if>
+            <if test="regEndTime != null">reg_end_time = #{regEndTime},</if>
+            <if test="actTime != null">act_time = #{actTime},</if>
+            <if test="actCapacity != null">act_capacity = #{actCapacity},</if>
+            <!-- 添加其他需要更新的字段 -->
+        </set>
+        WHERE act_id = #{actId}
+    </update>
 </mapper>

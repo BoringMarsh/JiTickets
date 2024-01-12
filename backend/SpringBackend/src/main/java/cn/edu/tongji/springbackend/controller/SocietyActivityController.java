@@ -2,6 +2,7 @@ package cn.edu.tongji.springbackend.controller;
 
 import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.model.Activity;
+import cn.edu.tongji.springbackend.model.ActivitySearchCriteria;
 import cn.edu.tongji.springbackend.service.SocietyActivityService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class SocietyActivityController {
     public ResponseEntity<?> uploadActivity(@RequestBody UploadActReq uploadActReq) {
         try {
             logger.info("start to upload activity");
-            logger.info("Successfully received request: {}", uploadActReq);
+            logger.info("Successfully received request");
             int actId = societyActivityService.uploadActivity(uploadActReq);
             return new ResponseEntity<>("successfully upload activity", HttpStatus.OK);
         } catch (Exception e) {
@@ -32,22 +33,23 @@ public class SocietyActivityController {
         }
     }
 
-    @GetMapping("/activities")
-    public ResponseEntity<?> getSocActivities(
-            @RequestParam(name = "socId") int socId,
-            @RequestParam(name = "status") int status,
-            @RequestParam(name = "order") int order,
-            @RequestParam(name = "keyword") List<String> keyword,
-            @RequestParam(name = "query") String query,
-            @RequestParam(name = "upload_time") String uploadTime,
-            @RequestParam(name = "reg_end_time") String regEndTime,
-            @RequestParam(name = "page") int page,
-            @RequestParam(name = "pageSize") int pageSize
-    ) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateActivity(@RequestBody ActivityUpdateRequest request) {
         try {
+            societyActivityService.updateActivity(request);
+            return ResponseEntity.ok().body("Activity updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/activities")
+    public ResponseEntity<?> getSocActivities(@RequestBody ActivitySearchCriteria criteria) {
+        try {
+            logger.info("start to upload activity");
+            logger.info("Successfully received request: {}", criteria);
             // 调用 SocietyActivityService 中的方法来获取社团活动数据
-            List<Activity> activities = societyActivityService.getSocActivities(socId, status, order,
-                    keyword, query, uploadTime, regEndTime, page, pageSize);
+            List<SocActivityResponse> activities = societyActivityService.getSocActivities(criteria);
             // 返回获取的社团活动数据
             return ResponseEntity.ok(activities);
         } catch (Exception e) {

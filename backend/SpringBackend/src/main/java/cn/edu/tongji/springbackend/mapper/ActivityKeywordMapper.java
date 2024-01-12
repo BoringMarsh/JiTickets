@@ -13,4 +13,6 @@ public interface ActivityKeywordMapper {
     List<ActivityKeyword> getById(@Param("id") int id);
     void insertActivityKeyword(ActivityKeyword activityKeyword);
     List<String> getActivityKeywords(Integer actId);
+
+    void deleteActivityKeywords(Integer actId);
 }

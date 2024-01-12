@@ -3,6 +3,8 @@ package cn.edu.tongji.springbackend.service.impl;
 import cn.edu.tongji.springbackend.config.FileStorageProperties;
 import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.ActivityDetailedInfo;
+import cn.edu.tongji.springbackend.dto.ActivityUpdateRequest;
+import cn.edu.tongji.springbackend.dto.SocActivityResponse;
 import cn.edu.tongji.springbackend.dto.UploadActReq;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.ActivityImageMapper;
@@ -17,14 +19,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SocietyActServiceImpl implements SocietyActivityService {
@@ -42,6 +48,7 @@ public class SocietyActServiceImpl implements SocietyActivityService {
     @Transactional
     public int uploadActivity(UploadActReq uploadActReq) {
         try {
+            logger.info("upload activity service!");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             // 将字符串转换为 LocalDateTime 对象
             LocalDateTime regStartTime = LocalDateTime.parse(uploadActReq.getRegStartTime(), formatter);
@@ -58,7 +65,7 @@ public class SocietyActServiceImpl implements SocietyActivityService {
                     .actLeft(uploadActReq.getActCapacity())
                     .actRating(5.0)
                     .ratingNum(0)
-                    .socId(uploadActReq.getSocID())
+                    .socId(uploadActReq.getSocId())
                     .regStartTime(regStartTime)
                     .regEndTime(regEndTime)
                     .actTime(actTime)
@@ -77,7 +84,7 @@ public class SocietyActServiceImpl implements SocietyActivityService {
                 logger.error("Failed to insert activity");
             }
             
-            processActivityKeywords(activity.getActId(), uploadActReq.getActKeywords());
+            processActivityKeywords(activity.getActId(), uploadActReq.getKeyword());
             logger.info("Successfully inserted actKeywords with ID: {}", activity.getActId());
 
             processActivityImages(activity.getActId(), uploadActReq.getBase64ActImages());
@@ -205,32 +212,158 @@ public class SocietyActServiceImpl implements SocietyActivityService {
         }
     }
 
+    @Override
+    public void updateActivity(ActivityUpdateRequest request) {
+        // 将请求数据转换为模型类对象
+        Activity activity = Activity.builder()
+                .actId(request.getActId())
+                .actName(request.getActName())
+                .actIntro(request.getActIntro())
+                .actLocation(request.getActLocation())
+                .ticketPrice(request.getTicketPrice())
+                .regStartTime(request.getRegStartTime())
+                .regEndTime(request.getRegEndTime())
+                .actTime(request.getActTime())
+                .actCapacity(request.getActCapacity())
+                .build();
+
+        // 更新活动基本信息
+        activityMapper.updateActivity(activity);
+
+        // 更新活动关键词
+        updateActivityKeywords(request.getActId(), request.getActKeywords());
+
+        // 更新活动图片
+        updateActivityImages(request.getActId(), request.getBase64ActImages());
+
+    }
+
+    private void updateActivityKeywords(Integer actId, List<String> actKeywords) {
+        activityKeywordMapper.deleteActivityKeywords(actId); // Assuming this method exists
+        processActivityKeywords(actId, actKeywords);
+    }
+
+    private void updateActivityImages(Integer actId, List<String> base64Images) {
+        deleteOldActivityImages(actId); // Deletes images from filesystem and database
+        processActivityImages(actId, base64Images);
+    }
+
+    private void deleteOldActivityImages(Integer actId) {
+        List<ActivityImage> existingImages = activityImageMapper.getActivityImagesByActId(actId);
+        for (ActivityImage image : existingImages) {
+            Path path = Paths.get(image.getActImage());
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                // Handle the exception, e.g., log it
+            }
+        }
+        activityImageMapper.deleteActivityImages(actId); // Assuming this method exists
+    }
+
+
+
 
     @Override
-    public List<Activity> getSocActivities(int socId, int status, int order, List<String> keyword,
-                                        String query, String uploadTime, String regEndTime,
-                                        int page, int pageSize) {
+    public List<SocActivityResponse> getSocActivities(@RequestBody ActivitySearchCriteria criteria) {
         try {
-            // 构建查询条件
-            Map<String, Object> params = new HashMap<>();
-            params.put("socId", socId);
-            params.put("status", status);
-            params.put("order", order);
-            params.put("keyword", keyword);
-            params.put("query", query);
-            params.put("uploadTime", uploadTime);
-            params.put("regEndTime", regEndTime);
-            params.put("page", page);
-            params.put("pageSize", pageSize);
+            // 首先根据socId, keyword, query获取活动列表
+            List<Activity> initialActivities = activityMapper.getSocActivities(criteria.getSocId(),
+                    criteria.getKeyword(), criteria.getQuery());
+            logger.info("Successfully received records: {}", initialActivities);
+            // 根据其他条件进行筛选
+            List<Activity> filterActivities = filterActivities(initialActivities, criteria);
 
-            // 调用 activityMapper 的方法执行查询
-            List<Activity> activities = activityMapper.getSocActivities(params);
-
-            // 返回查询结果
-            return activities;
+            // 转换为ActivityResponse列表
+            return convertToActivityResponse(filterActivities);
         } catch (Exception ex) {
             logger.error("Error occurred in getActivities: " + ex.getMessage(), ex);
             throw ex; // Re-throw the exception if you want to propagate it up the call stack
         }
     }
+
+    private List<SocActivityResponse> convertToActivityResponse(List<Activity> activities) {
+        List<SocActivityResponse> responses = new ArrayList<>();
+        for (Activity activity : activities) {
+            SocActivityResponse response = new SocActivityResponse();
+            response.setAct_id(activity.getActId());
+            response.setAct_name(activity.getActName());
+            response.setAct_left(activity.getActLeft());
+            response.setUpload_time(activity.getUploadTime().toString());
+            response.setRegEnd_time(activity.getRegEndTime().toString());
+            response.setTicket_price(activity.getTicketPrice().intValue());
+
+            // 获取并设置关键词和图片
+            List<String> keywords = activityKeywordMapper.getActivityKeywords(activity.getActId());
+            response.setKeyword(keywords);
+
+            // 获取图片对象列表并转换为Base64字符串列表
+            List<ActivityImage> activityImages = activityImageMapper.getActivityImagesByActId(activity.getActId());
+            List<String> imageBase64Strings = activityImages.stream()
+                    .map(ActivityImage::getActImage)
+                    .map(this::readAndConvertToBase64)
+                    .map(base64 -> "data:image/jpg;base64," + base64)
+                    .collect(Collectors.toList());
+
+            response.setAct_image(imageBase64Strings.get(0));
+
+            responses.add(response);
+        }
+        return responses;
+    }
+
+    private boolean meetsCriteria(Activity activity, ActivitySearchCriteria criteria) {
+        // 处理状态条件
+        if (criteria.getStatus() != null) {
+            int status = determineStatus(activity);
+            logger.info("Successfully calculated status: {}", status);
+            logger.info("Successfully arrived 1");
+            if (criteria.getStatus() != status) return false;
+        }
+
+        // 处理uploadTime条件
+        if (criteria.getUploadTime() != null) {
+            LocalDate uploadDate = LocalDate.parse(criteria.getUploadTime());
+            logger.info("Successfully arrived 2");
+            if (!activity.getUploadTime().toLocalDate().isEqual(uploadDate)) return false;
+        }
+
+        // 处理regEndTime条件
+        if (criteria.getRegEndTime() != null) {
+            LocalDate regEndDate = LocalDate.parse(criteria.getRegEndTime());
+            logger.info("Successfully arrived 3");
+            if (!activity.getRegEndTime().toLocalDate().isEqual(regEndDate)) return false;
+        }
+        logger.info("Successfully arrived 4");
+        return true;
+    }
+
+    private int determineStatus(Activity activity) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(activity.getRegEndTime())) {
+            return -1; // 报名截止
+        } else if (activity.getActLeft().equals(0)) {
+            return 0; // 报名人满
+        } else {
+            return 1; // 活动报名中
+        }
+    }
+
+
+    private List<Activity> filterActivities(List<Activity> activities, ActivitySearchCriteria criteria) {
+        Stream<Activity> filteredStream = activities.stream()
+                .filter(activity -> meetsCriteria(activity, criteria));
+
+        // 应用分页
+        if (criteria.getPage() != null && criteria.getPageSize() != null) {
+            int page = criteria.getPage();
+            int pageSize = criteria.getPageSize();
+            filteredStream = filteredStream.skip((long) (page - 1) * pageSize)
+                    .limit(pageSize);
+        }
+
+        return filteredStream.collect(Collectors.toList());
+    }
+
+
 }
