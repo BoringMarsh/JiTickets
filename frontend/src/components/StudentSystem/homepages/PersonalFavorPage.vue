@@ -55,7 +55,7 @@
         </el-pagination> -->
 
     </el-card>
-    <el-button @click="getFavorList">test</el-button>
+    <!-- <el-button @click="getFavorList">test</el-button> -->
 </template>
 <script setup lang="ts">
 import {reactive,onMounted, computed,ref,onActivated} from 'vue';
@@ -68,10 +68,6 @@ import {
   StarFilled
 } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus';
-const router=useRouter()
-
-
-const loading=ref(true)
 
 const user_id=ref();
 
@@ -95,9 +91,10 @@ const favorListOnDisplay=ref([
     uploadTime: "2023-12-24 21:55:53",
 }
     ]);
-const stu_id=ref(1);
+
 
 function getFavorList(){
+    user_id.value = sessionStorage.getItem('stuId') as string;
     console.log("userId:"+user_id.value)
     axios.get(baseURL + `/api/activity-personal/favour/${user_id.value}`)
     .then(res=>{
@@ -108,6 +105,7 @@ function getFavorList(){
 }
 
 function deleteFavor(actId){
+    user_id.value = sessionStorage.getItem('stuId') as string;
     axios.delete(baseURL + `/api/activity-personal/favour?stuId=${user_id.value}&actId=${actId}`)
     .then(res=>{
         favorListOnDisplay.value = res.data;
@@ -117,27 +115,10 @@ function deleteFavor(actId){
 }
 //显示的收藏
 onMounted(()=>{
-    user_id.value=sessionStorage.getItem("cus_id")
+    user_id.value=sessionStorage.getItem("stuId")
+    console.log("user_id:", user_id)
     getFavorList();
 })
-
-
-function ex_color(expiration_date:string){
-    var expirationDate = new Date(expiration_date.replace(/-/g,"/"));
-    var dateNow = new Date();
-    var dateDiff = expirationDate.getTime() - dateNow.getTime();//时间差的毫秒数
-    var dayDiff = Math.ceil(dateDiff / (24 * 3600 * 1000));//计算出相差天数，向下取整
-    var type;
-    if(dayDiff<1)
-        type="red";
-    else if(dayDiff<3)
-        type="#e67300";
-    else if(dayDiff<7)
-        type="#b88230";
-    else
-        type="green";
-    return type
-}
 
 
 

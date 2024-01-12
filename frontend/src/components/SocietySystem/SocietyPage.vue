@@ -29,11 +29,11 @@
     <!-- 头部区域 -->
     <el-header height="80px">
       <div>
-        <img src="StoreLogo.jpg" alt="" style="width: 150px; padding-right: 10px;"/>
+        <img src="Logo.png" alt="" style="width: 150px; padding-right: 10px;"/>
         <span>社团系统</span>
       </div>
       <!-- <el-button type="info"  @click="dialogVisible = true">发布公告</el-button> -->
-      <el-button type="danger" style="background-color:#c45656;"  @click="logout">退出登录</el-button>
+      <el-button type="danger" style="background-color:rgb(222, 214, 187);"  @click="logout">退出登录</el-button>
     </el-header>
 	<el-container >
     <div class="layout-container-demo">
@@ -41,19 +41,19 @@
           <el-menu
           background-color="#f89898"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#ce7438"
         >
           <!-- 一级菜单 -->
           <el-menu
-        active-text-color="#ffd04b"
-        background-color=" #c45656"
+        active-text-color="#ce7438"
+        background-color=" #eee5da"
         class="el-menu-vertical-demo"
         default-active="2"
-        text-color="#fff"
+        text-color="#712727"
         @open="handleOpen"
         @close="handleClose"
       >
-      <el-menu-item-group style="background-color: #fde2e2;">
+      <el-menu-item-group style="background-color: #fffbf7;">
 
       </el-menu-item-group>
         <el-sub-menu index="1">
@@ -254,12 +254,12 @@
     color: #fff;
   } */
   .el-header {
-  background-color: #A80E0E;
+  background-color: #eeebe4;
   display: flex;
   justify-content: space-between;
   /* padding-left: 100px; */
   align-items: center;
-  color: #fff;
+  color: #5a0808;
   font-size: 22px;
   > div {
     display: flex;
@@ -294,7 +294,7 @@
   align-items: center;
 } */
 .el-main{
-  background-color :  #fef0f0
+  background-color :  #fffbf7
 }
 .layout-container-demo{
   height: 100%;
@@ -309,12 +309,12 @@
   /* margin-right: 5px; */
   height: 820px;
   width: 250px;
-  background-color:  #c45656;
+  background-color:  #eeebe4;
 }
 
 .layout-container-demo .el-menu {
   border-right: none;
-  background-color:  #c45656;
+  background-color:  #eeebe4;
 }
 .layout-container-demo .toolbar {
   display: inline-flex;

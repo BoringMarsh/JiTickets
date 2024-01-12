@@ -1,28 +1,28 @@
 <template >
-    <el-container style="background-color: #fef0f0;">
+    <el-container style="background-color: #fffbf7;">
       <el-header >
         <el-menu
           mode="horizontal"
           router= true
 
-          background-color="#aa0d0d"
+          background-color="#eeebe4"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#c5ce61"
 
 
           :default-active="store.activePath"
         >
         <el-image
-              :src="require('../../assets/logo_short.png')"
-              style="height: 60px;"
+              :src="require('../../../public/Logo.png')"
+              style="height: 60px;width: 180px;"
               ></el-image>
           <div class="flex-grow" />
           <el-menu-item index='/home/recommendation'  class="menuItem" > <el-icon><Present /></el-icon> 首页</el-menu-item>
-          <el-menu-item index='/home/search' class="menuItem"><el-icon><Search /></el-icon> 搜索</el-menu-item>
+          <!-- <el-menu-item index='/home/search' class="menuItem"><el-icon><Search /></el-icon> 搜索</el-menu-item> -->
           <el-menu-item index='/home/personalFavor' class="menuItem"> <el-icon><Star /></el-icon>收藏夹</el-menu-item>
-          <el-menu-item index='/ChatPage' class="menuItem"><el-icon><ChatLineRound /></el-icon> 消息</el-menu-item>
+          <!-- <el-menu-item index='/ChatPage' class="menuItem"><el-icon><ChatLineRound /></el-icon> 消息</el-menu-item> -->
           <el-menu-item index='/home/history' class="menuItem"> <el-icon><View /></el-icon>浏览记录</el-menu-item>
-          <el-menu-item index='/home/cart' class="menuItem" route="cart" > <el-icon><ShoppingCart /></el-icon>购物车 <el-badge :value="store.cartNum" style="display:flex;"></el-badge></el-menu-item>
+          <!-- <el-menu-item index='/home/cart' class="menuItem" route="cart" > <el-icon><ShoppingCart /></el-icon>购物车 <el-badge :value="store.cartNum" style="display:flex;"></el-badge></el-menu-item> -->
           <el-menu-item index='/home/indent' class="menuItem"> <el-icon><MessageBox /></el-icon>我的活动报名记录</el-menu-item>
           <el-menu-item index='/UserInfoPage' class="menuItem"> <el-icon><User /></el-icon>个人信息</el-menu-item>
           <el-menu-item  @click="quit" class="menuItem"> 退出登录</el-menu-item>
@@ -160,8 +160,7 @@
     }
 
     .menuItem{
-      color: white ;
-
+      color: #9f4833 ;
     }
     .menuItem:hover{
       color: #409EFF ;

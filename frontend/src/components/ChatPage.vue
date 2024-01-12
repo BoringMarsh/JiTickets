@@ -2,7 +2,7 @@
   <!-- 头部区域 -->
   <el-header height="80px">
     <div>
-      <img src="StoreLogo.jpg" alt="" style="width: 150px; padding-right: 10px;"/>
+      <img src="../../public/Logo.png" alt="" style="width: 150px; padding-right: 10px;"/>
       <span>聊天系统</span>
       
     </div>
@@ -11,7 +11,7 @@
   </el-header>
   <br>
   <el-container>
-        <el-aside width="350px" style="background-color: #fde2e2;">
+        <el-aside width="350px" style="background-color: #eeebe4;">
           <br>
           <span class="chat-list"> 消息列表 </span>
           <!-- <el-button :icon="House" style="display: flex; margin-top:-27px;" @click="goBacktoPer">返回</el-button> -->
@@ -74,7 +74,7 @@
     <el-card v-if="chat_member!=''" class="box-card" :body-style="{ padding: '0px' }">
       <template #header>
         <div class="card-header">
-          <span style="color: aliceblue;font-size: 20px;width: 400px;">{{chat_member_name}}</span>
+          <span style="color: #9f4833;font-size: 20px;width: 400px;">{{chat_member_name}}</span>
           <span style="display:flex; color:lime;margin-left: -120%;font-size: 10px;margin-top: 5%;">在线</span>
           <span style="color:blanchedalmond;">友善发言，和平上网</span>
         </div>
@@ -487,11 +487,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #A80E0E;
+    background-color: #eeebe4;
   }
   
   .box-card {
-    background-color: #A80E0E;
+    background-color: #eeebe4;
     width: 1105px;
     height:605px;
   }
@@ -507,7 +507,7 @@
   
   .main-card{
     /* background-color:rgba(255, 229, 229,1.80); */
-    background-image: url('../assets/background2.png');
+    background-image: url('../../public/background.png');
     background-size: cover;
     background-position: center;
     height: 500px;
@@ -611,7 +611,7 @@
   }
   
   .el-header {
-    background-color: #A80E0E;
+    background-color: #eeebe4;
     display: flex;
     justify-content: space-between;
     /* padding-left: 100px; */
