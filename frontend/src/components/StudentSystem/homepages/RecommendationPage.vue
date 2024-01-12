@@ -1,7 +1,65 @@
 <template>
+    <el-drawer
+        v-model="showActivityDetail"
+        title="活动详情"
+        direction="rtl"
+        size="50%"
+        
+    >
+    <el-form :model="activityDetailedInfo" label-width="100px">
+        <el-form-item label="活动名称">
+          <el-input v-model="activityDetailedInfo.actName"></el-input>
+        </el-form-item>
+        <el-form-item label="活动介绍">
+          <el-input v-model="activityDetailedInfo.actIntro"></el-input>
+        </el-form-item>
+        <el-form-item label="活动地点">
+          <el-input v-model="activityDetailedInfo.actLocation"></el-input>
+        </el-form-item>
+        <el-form-item label="票价">
+          <el-input-number v-model="activityDetailedInfo.ticketPrice" :precision="2" :step="0.01"></el-input-number>
+        </el-form-item>
+        <el-form-item label="上传时间">
+          <el-date-picker v-model="activityDetailedInfo.uploadTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="活动开始时间">
+          <el-date-picker v-model="activityDetailedInfo.actTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="活动容量">
+          <el-input v-model="activityDetailedInfo.actCapability" :step="1"></el-input>
+        </el-form-item>
+        <el-form-item label="剩余名额">
+          <el-input v-model="activityDetailedInfo.actLeft" :step="1"></el-input>
+        </el-form-item>
+        <el-form-item label="活动评分">
+          <el-rate v-model="activityDetailedInfo.actRating" :max="5" :allow-half="true"></el-rate>
+        </el-form-item>
+        <el-form-item label="评分人数">
+          <el-input v-model="activityDetailedInfo.ratingNum" :step="1"></el-input>
+        </el-form-item>
+        <el-form-item label="社团 ID">
+          <el-input v-model="activityDetailedInfo.socId"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="活动图片">
+        
+        </el-form-item> -->
+        <el-form-item label="关键词">
+          <div>{{ activityDetailedInfo.keywords.join(', ') }}</div>
+        </el-form-item>
+      
+      </el-form>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button @click="apply()" type="success">报名</el-button>
+          <el-button @click="addFavour()" type="primary">收藏</el-button>
+          <el-button @click="closeDrawer()" type="danger">关闭</el-button>
+        </div>
+      </template>
+      
+    </el-drawer>
     <el-row>
     <el-col :span="16" :offset="4">
-    <el-card>
+    <!-- <el-card>
         <el-carousel :interval="5000" arrow="hover" trigger="click" v-loading="car_loading">
             <el-carousel-item v-for="item in carousel" :key="item.commdation" @click="carNav(item)" :label="item.commdation">
                 <el-row justify="center">
@@ -13,91 +71,60 @@
                 </el-row>
             </el-carousel-item>
         </el-carousel>
-    </el-card>
-    <el-divider></el-divider>
-    <el-card>
+    </el-card> -->
 
-        <el-row justify="center">
-        <el-space wrap>
-        <div v-for="item in TagArr" :key="item.tag">
-            <el-check-tag   v-model:checked="item.checked" @change="checkChange(item)">{{ item.tag }}</el-check-tag>
-        </div>
-        </el-space>
-        </el-row>
-    </el-card>
-    <el-divider></el-divider>
-    <el-card>
-        <div v-loading="loading">
-            <div style="display: flex;justify-content: center;align-items: center;" v-show="List.length==0">
-                <h1 class="bg-gray-900">{{ display_str }}</h1>
-            </div>
-            <div v-show="List.length!=0">
-
-            <Waterfall :list="List" v-bind="options" >
-                <template #item="{ item  }" >
-                    <div  class="cardset"  >
-                        <div style="padding: 2%;" @click="handleClickList(item)">
-                            <img :src="item.com_firstImage" class="commodity-img" />
-                            <!-- <LazyImg :url="item.com_firstImage" /> -->
-                        </div>
-                        <div>
-                            
-                            <el-row justify="space-between" > 
-                                    <el-col :span="16" :push="2">
-                                        <el-text  style="font-size: large;font-weight:500;color: black;">
-                                        {{ item.com_name }}
-                                        </el-text>
-                                    </el-col>
-                                    <el-col :span="4" :pull="2" style="display: flex;justify-content: center;align-items: center;padding-bottom: 4px;">
-                                        <el-button type="warning" :icon="item.favor_state? StarFilled:Star" circle @click="favorClick(item)" size="small" />
-                                    </el-col>
-                            </el-row>
-                            <!-- <el-divider></el-divider> -->
-                            <el-row justify="space-between" style="margin-top: 10px;">
-                                <el-col :span="14" :push="2">
-                                    <el-text style="color: rgb(254, 7, 7);font-size:x-large; font-weight: bold;">¥ {{ item.com_price }}</el-text >
-                                    <el-text style="text-decoration:line-through;font-size: medium; margin-left: 10px; color: grey;" >¥ {{ item.com_oriPrice }}</el-text>
-                                </el-col>
-
-                                <!-- <el-col :span="8">
-                                    <el-link  style="font-size:x-small; display: inline-block; vertical-align::bottom"> {{ item.sto_name }}</el-link>
-                                    
-                                </el-col>  -->
-                                
-                            </el-row>
-                            
-                            <el-row justify="space-between" style="margin-top: 15px; padding-bottom: 10px">
-                                <el-col :span="8" :push="1">
-                                    
-                                    <el-text v-if="item.com_status==0" style="color:red;border: solid 1px ; padding: 2px;">售罄</el-text>
-                                    <el-text v-else-if="item.com_left<=5"  style="color:red;border: solid 1px ; padding: 2px;"> 库存紧张</el-text>
-                                </el-col>
-                                <el-col  :span="14" >
-                                    <el-text :style="{ color: item.com_color } " style="border: solid 1px ; padding: 2px;" >
-                                    下架倒计时：{{ item.dayDiff }}天  
-                                    </el-text>
-                                </el-col>
-                                
-                            </el-row>
-                       
-                        </div>
-                    </div>
-                </template>
-            </Waterfall>
-                    <!-- 分页组件 -->
-            <el-pagination 
-                v-model:current-page="queryInfo.pagenum" 
-                :page-size="queryInfo.pagesize" 
-                layout="total, prev, pager, next, jumper"
-                :total="queryInfo.total" 
-                @current-change="handleCurrentChange"
-            >
-            </el-pagination>
-            </div>
-        </div>
-    </el-card>
+    
     </el-col>
     </el-row>
+    <el-card>
+        <!-- 搜索区域 -->
+        <el-row :gutter="20">
+            <el-col :span="8">
+                <el-input 
+                    placeholder="请输入活动名称或社团名称" 
+                    v-model="queryInfo.query" 
+                    clearable
+                    @clear="queryClearReset"
+                >
+                    <template #append>
+                    <el-button @click="queryFavor" type="danger"><el-icon><search/></el-icon></el-button>
+                    </template>
+                </el-input>
+            </el-col>
+
+        </el-row>
+        <!-- 列表区域 -->
+        <el-table :data="activityList" style="width: 100%">
+        <!-- <el-table-column prop="actId" label="活动ID"></el-table-column> -->
+        <el-table-column prop="actName" label="活动名称"></el-table-column>
+        <el-table-column prop="actLocation" label="活动地点"></el-table-column>
+        <el-table-column prop="uploadTime" label="上传时间"></el-table-column>
+        <el-table-column prop="regStartTime" label="报名开始时间"></el-table-column>
+        <el-table-column prop="actTime" label="活动时间"></el-table-column>
+        <el-table-column label="操作" width="250px">
+            <template #default="scope">
+                <el-button
+                type="success"
+                size="medium"
+                @click="getActivityDetail(scope.row.actId)"
+                >详情</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        
+        <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 50]"
+        :page-size="pageSize"
+        :total="totalPage"
+        layout="total, sizes, prev, pager, next, jumper"
+        ></el-pagination>
+
+    
+
+    </el-card>
+    <!-- <el-button @click="getActivityList">test</el-button> -->
 </template>
 <script setup lang="ts">
 interface Commodity_tab {
@@ -127,25 +154,8 @@ interface carousel_item{
     commdation:string
 }
 
-const options = reactive({
-     // WaterFall属性设置
-    hasAroundGutter: true,
-    gutter:10,
-    lazyload: true,
-    //backgroundColor:'#c7edf5',
-    //width:'250px',
-    breakpoints: {
-        1200: { //当屏幕宽度小于等于1200
-            rowPerView: 4,
-        },
-        800: { //当屏幕宽度小于等于800
-            rowPerView: 3,
-        },
-        500: { //当屏幕宽度小于等于500
-            rowPerView: 2,
-        }
-    },
-})
+const activityList = ref([])
+
 
 import { ref, reactive, onMounted,computed, watchEffect,onDeactivated, onActivated} from 'vue';
 import { Waterfall } from "vue-waterfall-plugin-next";
@@ -159,12 +169,14 @@ import {
   StarFilled
 } from '@element-plus/icons-vue'
 
-const router = useRouter();
+
+const target_actId = ref();
 const loading=ref(false);
-const car_loading=ref(false);
+
 const user_id=ref();
 
 const display_str=ref("");//用于错误提示
+const showActivityDetail=ref(false);
 
 const TagArr=ref<Array<{
     tag:string,
@@ -181,7 +193,6 @@ const TagSelected=computed(()=>{
 });//被选中的标签
 
 
-watchEffect(onSearchCom)
 
 const List=reactive<Array<Commodity_tab>>([]);//展示的列表
 
@@ -193,201 +204,13 @@ const queryInfo=reactive({
     categories:[] as Array<string>
 })
 
-const carousel=ref<Array<carousel_item>>([]);
 
 onMounted(()=>{
-    user_id.value=sessionStorage.getItem("cus_id")
+    user_id.value=sessionStorage.getItem("stu_id")
     console.log("user_id.value:"+user_id.value);
 
-    // 首先获得轮播图信息、全部标签和无筛推荐列表
+    getActivityList();
 
-    // 轮播图信息
-    car_loading.value=true
-    // 最新开业商家
-    
-    axios.post(
-            baseURL+'/api/search/storeList',
-              JSON.stringify({
-                cus_id:user_id.value,
-                search_str:"",
-                com_categories:[],
-                begin_pos:0,
-                end_pos:queryInfo.pagesize,
-                sort_order: 2,
-              }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response)=>{
-            console.log('按开业时间排序的商家列表为',response.data.sto_list);
-            let new_sto= response.data.sto_list[0]
-            let carousel_item :carousel_item={
-                image: '',
-                id: undefined,
-                type: 0,
-                commdation: ''
-            };
-            carousel_item.image=baseURL+"/"+new_sto.sto_firstImage;
-            carousel_item.id=new_sto.sto_id;
-            carousel_item.type=1;
-            carousel_item.commdation="最新开业："+new_sto.sto_name;
-            carousel.value?.push(carousel_item)
-            car_loading.value=false
-        }).catch(error => {
-            console.error('最新商家拉取失败', error);
-            display_str.value='最新商家拉取失败'
-        })
-
-    // 最热门商家
-    axios.post(
-            baseURL+'/api/search/storeList',
-              JSON.stringify({
-                cus_id:user_id.value,
-                search_str:"",
-                com_categories:[],
-                begin_pos:0,
-                end_pos:queryInfo.pagesize,
-                sort_order: 0,
-              }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response)=>{
-            console.log('最热门的商家列表为',response.data.sto_list);
-            let new_sto= response.data.sto_list[0]
-            let carousel_item :carousel_item={
-                image: '',
-                id: undefined,
-                type: 0,
-                commdation: ''
-            };
-            carousel_item.image=baseURL+"/"+new_sto.sto_firstImage;
-            carousel_item.id=new_sto.sto_id;
-            carousel_item.type=1;
-            carousel_item.commdation="最热门商家："+new_sto.sto_name;
-            carousel.value?.push(carousel_item)
-            car_loading.value=false
-        }).catch(error => {
-            console.error('最热门商家拉取失败', error);
-            display_str.value='最热门商家拉取失败'
-        })
-
-    // 最受好评商品
-    axios.post(
-        baseURL+'/api/search/commodityList',
-            JSON.stringify({
-            cus_id: user_id.value,
-            search_str:"",
-            sort_order: 0,
-            com_categories:[],
-            begin_pos:0,
-            end_pos:queryInfo.pagesize
-            }), {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then((response)=>{
-        console.log('最受好评的商品列表为',response.data.com_list);
-        let new_com= response.data.com_list[0]
-        let carousel_item :carousel_item={
-            image: '',
-            id: undefined,
-            type: 0,
-            commdation: ''
-        };
-        carousel_item.image=baseURL+"/"+new_com.com_firstImage;
-        carousel_item.id=new_com.com_id;
-        carousel_item.type=0;
-        carousel_item.commdation="最受好评商品："+new_com.com_name;
-        carousel.value?.push(carousel_item)
-        car_loading.value=false
-    }).catch(error => {
-        console.error('最受好评商品拉取失败', error);
-        display_str.value='最受好评商品拉取失败'
-    })
-    
-    
-
-    //无筛推荐列表
-    loading.value=true;
-    axios.post( baseURL+'/api/search/commodityList',
-            JSON.stringify({
-                cus_id: user_id.value,
-                search_str: '',
-                sort_order: 4,
-                com_categories:[],
-                begin_pos:0,
-                end_pos:queryInfo.pagesize
-                
-            }), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-        }).then(response => {
-            if("msg" in response.data){
-                queryInfo.type="商品";
-                console.log(response.data.msg)
-                display_str.value=response.data.msg
-                List.splice(0,List.length);
-            }
-            else if( response.data.com_list.length==0){
-                queryInfo.type="商品";
-                console.log('结果为空')
-                display_str.value='结果为空'
-                List.splice(0,List.length);
-            }
-            else{
-                console.log('列表为',response.data.com_list);
-                queryInfo.total=response.data.total;
-                //queryInfo.type="商品";
-                //queryInfo.categories=[];
-
-                var len=List.length;
-                List.splice(0,len+1, ...response.data.com_list)
-                //处理商品颜色
-                List.forEach((item)=>{
-                    var expirationDate = new Date(item.com_expirationDate.replace(/-/g,"/"));
-                    var dateNow = new Date();
-                    var dateDiff = expirationDate.getTime() - dateNow.getTime();//时间差的毫秒数
-                    var dayDiff = Math.ceil(dateDiff / (24 * 3600 * 1000));//计算出相差天数，向下取整
-                    if(dayDiff<1)
-                        item.com_color="red";
-                    else if(dayDiff<3)
-                        item.com_color="#e67300";
-                    else if(dayDiff<7)
-                        item.com_color="#b88230";
-                    else
-                        item.com_color="green";
-                    //设置显示颜色
-                
-                    item.dayDiff=dayDiff
-                    //设置距离过期相差天数
-                    item.com_firstImage=baseURL+'/'+item.com_firstImage;
-                    //设置图片相对路径
-                })
-            }
-        }).catch(error => {
-                console.error('搜索失败', error);
-                display_str.value='搜索失败'
-        }).finally(()=>{
-                loading.value=false;
-        });
-
-
-    // 全部标签
-    axios.get(baseURL+'/api/search/categories')
-    .then((res)=>{
-        for(let item of res.data.com_categories as Array<string> ){
-            TagArr.value.push({
-                tag:item,
-                checked:false
-            })
-        }
-        console.log(TagArr.value)
-    })
-    .catch(()=>{
-        console.log('标签数组请求失败')
-    })
 })
 
 onActivated(()=>{
@@ -404,131 +227,98 @@ onDeactivated(()=>{
         console.log('推荐算法启动失败')
     })
 })
+const page=ref(1)
 
-function checkChange(item){
-    console.log(item.checked)
-}
-
-function onSearchCom(){
-    console.log(TagSelected.value)
-    loading.value=true;
-    axios.post(
-        baseURL+'/api/search/commodityList',
-        JSON.stringify({
-            cus_id: user_id.value,
-            search_str: "",
-            sort_order: 4,
-            com_categories:TagSelected.value,
-            begin_pos:0,
-            end_pos:queryInfo.pagesize
-            
-        }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
+function getActivityList(){
+    axios.get(
+        baseURL + `/api/activity-personal/activity/page/${page.value}`
     ).then(response => {
-        if("msg" in response.data){
-            queryInfo.type="商品";
-            console.log(response.data.msg)
-            display_str.value=response.data.msg
-            List.splice(0,List.length);
-        }
-        else if( response.data.com_list.length==0){
-            queryInfo.type="商品";
-            console.log('结果为空')
-            display_str.value='搜索结果为空'
-            List.splice(0,List.length);
-            queryInfo.pagenum=1;
-            queryInfo.total=response.data.total;
-        }
-        else{
-            console.log('列表为',response.data);
-            queryInfo.pagenum=1;
-            queryInfo.total=response.data.total;
-
-            var len=List.length;
-            List.splice(0,len+1, ...response.data.com_list)
-            //处理商品颜色
-            List.forEach((item)=>{
-                var expirationDate = new Date(item.com_expirationDate.replace(/-/g,"/"));
-                var dateNow = new Date();
-                var dateDiff = expirationDate.getTime() - dateNow.getTime();//时间差的毫秒数
-                var dayDiff = Math.ceil(dateDiff / (24 * 3600 * 1000));//计算出相差天数，向下取整
-                if(dayDiff<1)
-                    item.com_color="red";
-                else if(dayDiff<3)
-                    item.com_color="#e67300";
-                else if(dayDiff<7)
-                    item.com_color="#b88230";
-                else
-                    item.com_color="green";
-                //设置显示颜色
-            
-                item.dayDiff=dayDiff
-                //设置距离过期相差天数
-                item.com_firstImage=baseURL+'/'+item.com_firstImage;
-                //设置图片相对路径
-            })
-        }
-    }).catch(error => {
-            console.error('搜索失败', error);
-            display_str.value='搜索失败'
-    }).finally(()=>{
-            loading.value=false;
-    });
-}
-
-
-
-function carNav(item:carousel_item){
-    if(item.type===0){
-        //点击商品
-        router.push({ 
-           path: '/home/commodityDetail', 
-           query: { com_id: item.id ,cus_id:user_id.value } 
-       })
-    }
-    else{
-        //点击商家
-        router.push({ 
-           path: '/storeDetail', 
-           query: { sto_id: item.id ,cus_id:user_id.value} 
-       })
-    }
-
-}
-
-function handleClickList(item){
-    console.log(item)
-    console.log("user_id.value:"+user_id.value)
-    router.push({ 
-        path: '/home/commodityDetail', 
-        query: { com_id: item.com_id ,cus_id:user_id.value } 
+        console.log(response.data)
+        activityList.value = response.data.activityList
     })
 }
+let activityDetailedInfo = reactive({
+  "actName": "Sample Activity",
+  "actIntro": "This is a sample activity.",
+  "actLocation": "New York",
+  "ticketPrice": 10.5,
+  "uploadTime": "2022-01-01 10:00:00",
+  "regStartTime": "2022-01-02 12:00:00",
+  "regEndTime": "2022-01-03 12:00:00",
+  "actTime": "2022-01-10 15:00:00",
+  "actCapability": 100,
+  "actLeft": 50,
+  "actRating": 4.5,
+  "ratingNum": 10,
+  "socId": 1,
+  "images": ["image1.jpg", "image2.jpg"],
+  "keywords": ["music", "sports", "outdoor"]
+})
 
-function favorClick(item:Commodity_tab){
-    console.log("点击收藏按钮") 
-    item.favor_state==1?item.favor_state=0:item.favor_state=1
+
+const body = ref({
+    broTimeStart: "2020-05-31 18:37:49", // 浏览起始时间
+    actId: 1,
+    browserId: 1, // 浏览者Id
+    whetherBuy: false // 购买情况 true购买 false未购买
+})
+// 查看活动详情
+async function getActivityDetail(actId){
+    // 把活动详情根据 actId get出来
+    await axios.get(`http://localhost:8084/api/activity-personal/activity/${actId}`)
+    .then(response=>{
+        console.log(response.data)
+        activityDetailedInfo = response.data
+        console.log(activityDetailedInfo)
+        
+    })
+    // 添加浏览记录
+    user_id.value=sessionStorage.getItem("stuId")
+    body.value.browserId = user_id.value
+    body.value.actId = actId
     axios.post(
-        baseURL+'/api/favorite/setFavorState',
-        JSON.stringify({
-            com_id:item.com_id,
-            cus_id:user_id.value,
-            //此处指定收藏的用户，后续更改
-            favor_state: item.favor_state
-        }), {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-    ).then(res =>{
-        console.log(res.data.msg)
-    }).catch(error => {
-        console.error('收藏请求失败', error);
-        item.favor_state==1?item.favor_state=0:item.favor_state=1
-    });
+        baseURL + `/api/activity-personal/browse`,body
+    ).then(response => {
+        console.log(response.data)
+        
+    })
+    showActivityDetail.value = true;
+    target_actId.value = actId
+}
+function closeDrawer(){
+    showActivityDetail.value = false;
+}
+const requestBody=ref({
+  indPrice: 0,
+  indCreateTime: "string",
+  indVerifyCode: "string",
+  indName: "string",
+  indStuNo: "string",
+  indNotes: "string",
+  actId: 0,
+  stuId: 0,
+  socId: 0
+})
+// 报名
+function apply(){
+    requestBody.value.actId = target_actId.value
+    user_id.value = sessionStorage.getItem("stuId")
+    requestBody.value.stuId = user_id.value
+    requestBody.value.indPrice = activityDetailedInfo.ticketPrice
+    // 其他信息从哪里获取？
+    axios.post(baseURL + `/api/activity-personal/indent`, requestBody)
+    .then(res=>{
+        console.log(res.data)
+    })
+}
+// 收藏
+function addFavour(){
+    user_id.value=sessionStorage.getItem("stuId")
+    console.log(user_id.value)
+    axios.post(baseURL + `/api/activity-personal/favour?actId=${target_actId.value}&stuId=${user_id.value}`)
+    .then(res=>{
+        console.log(res.data)
+    })
 }
 
 function handleCurrentChange(){
