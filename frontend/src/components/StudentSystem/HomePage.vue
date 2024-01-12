@@ -18,9 +18,9 @@
               ></el-image>
           <div class="flex-grow" />
           <el-menu-item index='/home/recommendation'  class="menuItem" > <el-icon><Present /></el-icon> 首页</el-menu-item>
-          <!-- <el-menu-item index='/home/search' class="menuItem"><el-icon><Search /></el-icon> 搜索</el-menu-item> -->
+          <el-menu-item index='/home/search' class="menuItem"><el-icon><Search /></el-icon> 搜索</el-menu-item>
           <el-menu-item index='/home/personalFavor' class="menuItem"> <el-icon><Star /></el-icon>收藏夹</el-menu-item>
-          <!-- <el-menu-item index='/ChatPage' class="menuItem"><el-icon><ChatLineRound /></el-icon> 消息</el-menu-item> -->
+          <el-menu-item index='/ChatPage' class="menuItem"><el-icon><ChatLineRound /></el-icon> 消息</el-menu-item>
           <el-menu-item index='/home/history' class="menuItem"> <el-icon><View /></el-icon>浏览记录</el-menu-item>
           <!-- <el-menu-item index='/home/cart' class="menuItem" route="cart" > <el-icon><ShoppingCart /></el-icon>购物车 <el-badge :value="store.cartNum" style="display:flex;"></el-badge></el-menu-item> -->
           <el-menu-item index='/home/indent' class="menuItem"> <el-icon><MessageBox /></el-icon>我的活动报名记录</el-menu-item>
