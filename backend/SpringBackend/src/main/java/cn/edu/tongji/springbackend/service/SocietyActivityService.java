@@ -11,7 +11,6 @@ public interface SocietyActivityService {
     int uploadActivity(UploadActReq uploadActReq);
     List<ActivityDetailedInfo> getActivityList(int beginNumber, int endNumber);
 
-
     List<SocActivityResponse> getSocActivities(@RequestBody ActivitySearchCriteria criteria);
     void updateActivity(ActivityUpdateRequest request);
 

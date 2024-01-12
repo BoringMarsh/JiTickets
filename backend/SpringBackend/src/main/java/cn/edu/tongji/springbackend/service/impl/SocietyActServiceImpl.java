@@ -1,14 +1,10 @@
 package cn.edu.tongji.springbackend.service.impl;
-
 import cn.edu.tongji.springbackend.config.FileStorageProperties;
 import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.ActivityDetailedInfo;
-
 import cn.edu.tongji.springbackend.dto.ActivityUpdateRequest;
 import cn.edu.tongji.springbackend.dto.SocActivityResponse;
-
 import cn.edu.tongji.springbackend.dto.GetSocietyActivityListResponse;
-
 import cn.edu.tongji.springbackend.dto.UploadActReq;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.ActivityImageMapper;
@@ -348,13 +344,16 @@ public class SocietyActServiceImpl implements SocietyActivityService {
 
     private List<SocActivityResponse> convertToActivityResponse(List<Activity> activities) {
         List<SocActivityResponse> responses = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (Activity activity : activities) {
             SocActivityResponse response = new SocActivityResponse();
             response.setAct_id(activity.getActId());
             response.setAct_name(activity.getActName());
             response.setAct_left(activity.getActLeft());
-            response.setUpload_time(activity.getUploadTime().toString());
-            response.setRegEnd_time(activity.getRegEndTime().toString());
+            response.setUpload_time(activity.getUploadTime().format(formatter));
+            response.setReg_end_time(activity.getRegEndTime().format(formatter));
+            //response.setUpload_time(activity.getUploadTime().toString());
+            //response.setRegEnd_time(activity.getRegEndTime().toString());
             response.setTicket_price(activity.getTicketPrice().intValue());
 
             // 获取并设置关键词和图片
@@ -369,7 +368,7 @@ public class SocietyActServiceImpl implements SocietyActivityService {
                     .map(base64 -> "data:image/jpg;base64," + base64)
                     .collect(Collectors.toList());
 
-            response.setAct_image(imageBase64Strings.get(0));
+            response.setAct_image(imageBase64Strings);
 
             responses.add(response);
         }

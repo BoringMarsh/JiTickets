@@ -1,37 +1,29 @@
 <template>
   <el-row>
-<el-page-header :icon="ArrowLeft" title="返回" @back="goBack" >
- <template #content>
-   <span class="text-large font-600 mr-3"> 活动详情 </span>
- </template>
-</el-page-header>
-
-</el-row>
- <el-row :gutter="20">
-   <el-col :span="6">
- <el-card>
-<div class="demo-image__lazy">
-   <!-- <el-image v-for="url in urls" :key="url" :src="url" lazy /> -->
-   <div style="display: flex; align-items: center">
-         <el-image
-           style="width: 300px; height: 300px"
-           :src="url"
-           :zoom-rate="1.2"
-           :preview-src-list="srcList"
-           :initial-index="0"
-           fit="fill"
-         />
-       </div>
-</div>
-</el-card>
-</el-col>
-
-<el-col :span="18">
-<el-card>
- <div id="main" :style="{ width: '1000px', height: '300px' }"></div>
-</el-card>
-</el-col>
-</el-row>
+    <el-page-header :icon="ArrowLeft" title="返回" @back="goBack" >
+      <template #content>
+        <span class="text-large font-600 mr-3"> 活动详情 </span>
+      </template>
+    </el-page-header>
+  </el-row>
+  <!-- 图片展示部分 -->
+  <el-row :gutter="20">
+    <el-col :span="14">
+      <el-card>
+        <el-carousel trigger="click" height="400px">
+          <el-carousel-item v-for="(imageSrc, index) in srcList" :key="index">
+            <div style=".demo-image__lazy">
+              <el-image
+                style="max-width: 100%; max-height: 100%;"
+                :src="imageSrc"
+                fit="contain"
+              />
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </el-card>
+    </el-col>
+  </el-row>
 
 <el-row :gutter="20">
 <el-col :span="10">
@@ -140,16 +132,16 @@
    border
  >
 
- <el-descriptions-item :class-name="id">
+ <el-descriptions-item :class-name="capacity">
      <template #label>
        <div class="cell-item">
          <el-icon :style="iconStyle">
            <Goods />
          </el-icon>
-         活动ID
+         活动容量
        </div>
      </template>
-     <el-tag>{{ id }}</el-tag>
+     {{ capacity}}
    </el-descriptions-item>
 
    <el-descriptions-item :class-name="name">
@@ -237,9 +229,6 @@
 
 
    <el-card>
-
-
-
 <!-- <el-collapse v-model="activeNames">
   <el-collapse-item v-for="(comment, index) in commodity.comments" :name="index.toString()" :key="comment.cmt_id">
     <template #title>
@@ -370,9 +359,6 @@ style="margin-bottom: 10px"
               </el-col>
             </el-row>
 
-
-
-
             <el-row>
               <el-col :span="20" style="text-align: right;">
                 <!-- 绑定 openReplyDialog 函数到回复图标的点击事件上 -->
@@ -399,16 +385,12 @@ style="margin-bottom: 10px"
 
 </el-card>
 
-
-
-
    <template v-slot:footer>
      <span class="dialog-footer">
        <el-button @click="cmtVisible = false" type="danger">确 认</el-button>
      </span>
    </template>
  </el-dialog>
-
 
 
  <el-dialog title="回复评论" :modelValue="replyVisible" @update:modelValue="replyVisible = $event" width="30%"
@@ -423,7 +405,6 @@ style="margin-bottom: 10px"
  </el-dialog>
 
 
-  
 <el-dialog
  title="提交投诉"
  v-model="isComplaintDialogVisible"
@@ -546,26 +527,27 @@ const changeState = (newState: string) => {
 var myChart;
 
 const data=ref({
-   "act_id": 1,
-   "act_name": "薯条",
-   "act_introduction": "好好好",
-   "ticket_price": 14,
-   "reg_end_time": "2023-10-01",
-   "upload_time": "2023-07-20",
-   "act_left": 3,
-   "act_rating": 0.9,
-   "keyword": [
+   "actId": 1,
+   "actName": "薯条",
+   "actIntro": "好好好",
+   "actLocation": "dd",   
+   "ticketPrice": 14.2,
+   "uploadTime": "2023-07-20",
+   "regStartTime": "2023-10-01",
+   "regEndTime": "2023-10-01",
+   "actTime": "2023-10-01",
+   "actCapability": 10,
+   "actLeft": 3,
+   "actRating": 0.9,
+   "ratingNum": 9,
+   "socId": 1,
+   "keywords": [
        "体育"
    ],
-   "com_pc_time": [
-       "2023-09-01"
-   ],
-   "com_pc_price": [
-       5.6
-   ],
-   "act_image": [
+   "images": [
      ".\\wwwroot\\commodity_image\\2\\com_image_0.png",
-   ]
+   ],
+   "com_pc_time": []
 });
 
 
@@ -573,7 +555,7 @@ const name=ref('薯条');
 const oriprice=ref(1.1);
 const uploaddate=ref('2023-07-01')
 const categories=ref(['苹果','面包','饮品']);
-const id=ref(1008611);
+const capacity=ref(11);
 const expirationdate=ref('2023-08-01')
 const introduction=ref('此处省略一万字');
 const rating=ref(7.783);
@@ -591,21 +573,16 @@ onMounted(()=>{
            const keyValuePairs = Object.entries(JSON.parse(JSON.stringify(response.data)));
            data.value=JSON.parse(JSON.stringify(response.data));
            console.log('data',data.value);
-           name.value=data.value.act_name;
-           oriprice.value=data.value.ticket_price;
-           uploaddate.value=data.value.upload_time;
-           categories.value=data.value.keyword;
-           id.value=data.value.act_id;
-           expirationdate.value=data.value.reg_end_time;
-           introduction.value=data.value.act_introduction;
-           rating.value=data.value.act_rating;
-           left.value=data.value.act_left;
-           if(data.value.com_pc_time[0]!=data.value.upload_time){
-             data.value.com_pc_time.unshift(data.value.upload_time);
-             data.value.com_pc_price.unshift(data.value.ticket_price);
-           }
-           data.value.com_pc_time.push(dayjs(expirationdate.value).add(1,'day').format('YYYY-MM-DD'))
-           data.value.com_pc_price.push(0);
+
+           name.value=data.value.actName;
+           oriprice.value=data.value.ticketPrice;
+           uploaddate.value=data.value.uploadTime;
+           categories.value=data.value.keywords;
+           capacity.value=data.value.actCapability;
+           expirationdate.value=data.value.regEndTime;
+           introduction.value=data.value.actIntro;
+           rating.value=data.value.actRating;
+           left.value=data.value.actLeft;
            timeValue.value=dayjs(expirationdate.value);
            if(left.value==0){
              resultIcon.value='error';
@@ -622,8 +599,16 @@ onMounted(()=>{
 
           //  srcList.value=data.value.act_image;
           //  url.value=change(srcList.value)[0];
-            srcList.value=change(data.value.act_image);
-            url.value=srcList.value[0];
+            //srcList.value=change(data.value.images);
+            // 添加前缀并更新srcList
+            srcList.value = data.value.images.map(image => 
+                "data:image/jpg;base64," + image
+            );
+            if (srcList.value && srcList.value.length > 0) {
+                url.value = "data:image/jpg;base64," + srcList.value[0];
+            } else {
+                url.value = ""; // 或设置为默认图片的路径
+            }
             console.log("new : "+ url.value);
           //  console.log(url.value);
 
@@ -1157,5 +1142,17 @@ a {
  margin-bottom: 0px;
  
 }
+
+.demo-image__lazy {
+  width: 100%; /* 改为100%以适应容器宽度 */
+  height: auto; /* 高度自适应 */
+  overflow-y: hidden; /* 隐藏垂直滚动条 */
+}
+.demo-image__lazy .el-image {
+  width: 100%; /* 图片宽度适应容器 */
+  height: auto; /* 图片高度自适应 */
+  margin-bottom: 10px;
+}
+
 </style>
    

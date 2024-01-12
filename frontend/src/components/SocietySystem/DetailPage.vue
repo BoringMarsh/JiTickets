@@ -32,7 +32,7 @@
     v-loading="loading"
    :data="goodsList"
     style="width: 100%" max-height="1000" 
-    border 
+ 
     stripe
     @sort-change="changeSort"
     :default-sort="{ prop: 'act_id', order: 'descending' }"
@@ -387,9 +387,17 @@ const srcList =ref( [
   "/commodity_image\\1\\com_image_0.jpg",
   ]);
 const url = 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg';
-const getUrl=(index:number)=>{
-  return change(goodsList.value[index].act_image);
-}
+//const getUrl=(index:number)=>{
+  //return change(goodsList.value[index].act_image);
+//}
+
+const getUrl = (index) => {
+  const activity = goodsList.value[index];
+  if (activity.act_image && activity.act_image.length > 0) {
+    return activity.act_image[0]; // 返回第一张图片的Base64编码
+  }
+  return ''; // 没有图片时返回空字符串
+};
 
 const goBack=()=>{
   history.back();
