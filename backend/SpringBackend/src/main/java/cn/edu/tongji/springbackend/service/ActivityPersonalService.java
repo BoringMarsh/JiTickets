@@ -20,4 +20,6 @@ public interface ActivityPersonalService {
     void cancelIndent(CancelIndentRequest cancelIndentRequest);
     void writeOffIndent(int indId);
     void changeIndentNotes(ChangeIndentNotesRequest changeIndentNotesRequest);
+    void rateActivity(int indId, double indRating);
+    void changeRating(int indId, double indRating);
 }

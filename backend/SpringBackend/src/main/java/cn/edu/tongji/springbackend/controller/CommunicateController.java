@@ -16,6 +16,8 @@ import java.util.List;
 @RequestMapping("/api/communicate")
 public class CommunicateController {
     @Resource
+    private ActivityPersonalController activityPersonalController;
+    @Resource
     private CommunicateService communicateService;
 
     @GetMapping("/comment/activity/{actId}")
@@ -54,7 +56,7 @@ public class CommunicateController {
     @PutMapping("/rate")
     public ResponseEntity<?> rateActivity(@RequestBody RateActivityRequest rateActivityRequest) {
         try {
-            communicateService.rateActivity(rateActivityRequest);
+            activityPersonalController.rateActivity(rateActivityRequest.getIndId(), rateActivityRequest.getIndRating());
             return new ResponseEntity<>("successfully rate activity", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("rate activity failed", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,11 +66,15 @@ public class CommunicateController {
     @PutMapping("/rate/change")
     public ResponseEntity<?> changeRating(@RequestBody RateActivityRequest rateActivityRequest) {
         try {
-            communicateService.changeRating(rateActivityRequest);
+            activityPersonalController.changeRating(rateActivityRequest.getIndId(), rateActivityRequest.getIndRating());
             return new ResponseEntity<>("successfully change rating", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>("change rating failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public String getComment(int cmtId) {
+        return communicateService.getCommentByCmtId(cmtId);
     }
 }

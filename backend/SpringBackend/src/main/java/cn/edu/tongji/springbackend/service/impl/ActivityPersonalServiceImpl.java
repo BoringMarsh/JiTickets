@@ -279,4 +279,42 @@ public class ActivityPersonalServiceImpl implements ActivityPersonalService {
                 .build()
         );
     }
+
+    @Override
+    @Transactional
+    public void rateActivity(int indId, double indRating) {
+        indentMapper.update(Indent.builder()
+                .indId(indId)
+                .indRating(indRating)
+                .build()
+        );
+
+        Activity activity = activityMapper.getByActId(indentMapper.getActIdByIndId(indId));
+        activityMapper.update(Activity.builder()
+                .actId(activity.getActId())
+                .actRating(activity.getActRating() + indRating)
+                .ratingNum(activity.getRatingNum() + 1)
+                .build()
+        );
+    }
+
+    @Override
+    @Transactional
+    public void changeRating(int indId, double indRating) {
+        Indent indent = indentMapper.getByIndId(indId);
+        final double deviation = indRating - indent.getIndRating();
+
+        indentMapper.update(Indent.builder()
+                .indId(indId)
+                .indRating(indRating)
+                .build()
+        );
+
+        Activity activity = activityMapper.getByActId(indent.getActId());
+        activityMapper.update(Activity.builder()
+                .actId(activity.getActId())
+                .actRating(activity.getActRating() + deviation)
+                .build()
+        );
+    }
 }

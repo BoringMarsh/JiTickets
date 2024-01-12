@@ -8,7 +8,7 @@ import UpdateCommodityPageVue from '@/components/SocietySystem/UpdateCommodityPa
 import VerificationPage from '@/components/SocietySystem/VerificationPage.vue';
 import RefundPage from '@/components/SocietySystem/RefundPage.vue'
 import OperatePage from '@/components/AdministratorSystem/OperatePage.vue';
-import StoreCommodityPage from '@/components/AdministratorSystem/StoreCommodityPage.vue'
+import SocietyActivityPage from '@/components/AdministratorSystem/SocietyActivityPage.vue'
 import StoreIndentPage from '@/components/AdministratorSystem/StoreIndentPage.vue'
 import IndentDetailPage from '@/components/AdministratorSystem/IndentDetailPage.vue';
 import AppealPage from '@/components/AdministratorSystem/AppealPage.vue';
@@ -155,8 +155,8 @@ const router = createRouter({
                     component: OperatePage
                 },
                 {
-                    path: '/commodity',
-                    component: StoreCommodityPage,
+                    path: '/society-activity',
+                    component: SocietyActivityPage,
                     meta: {
                         keepAlive: true
                     }

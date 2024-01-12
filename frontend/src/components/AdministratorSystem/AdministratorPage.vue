@@ -11,7 +11,7 @@
     <el-header height="70px">
       <div>
         <img src="" alt="" />
-        <span>管理员系统</span>
+        <span>管理员系统：{{ account }}</span>
       </div>
       <!-- <el-button type="info"  @click="dialogVisible = true">发布公告</el-button> -->
       <el-button type="info"  @click="logout">退出登录</el-button>
@@ -96,6 +96,7 @@
   import { ArrowLeft } from '@element-plus/icons-vue'
   import { ElMessage, ElMessageBox,ElNotification } from 'element-plus'
   import axios from 'axios';
+  const account=ref('');
   const goodsList=ref([]);
   const router=useRouter();
   const route=useRoute();
@@ -114,6 +115,7 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
   onMounted(() => {
     //sto_id.value = route.query.sto_id as string;
     sto_id.value = sessionStorage.getItem('sto_id') as string;
+    account.value = sessionStorage.getItem('username') as string;
     console.log(router.currentRoute.value.path);
     router.push({path:'/operate',query:{type:1}})
     // if (router.currentRoute.value.path === '/') {

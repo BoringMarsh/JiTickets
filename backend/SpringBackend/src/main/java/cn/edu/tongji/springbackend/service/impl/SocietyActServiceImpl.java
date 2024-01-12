@@ -3,8 +3,12 @@ package cn.edu.tongji.springbackend.service.impl;
 import cn.edu.tongji.springbackend.config.FileStorageProperties;
 import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.ActivityDetailedInfo;
+
 import cn.edu.tongji.springbackend.dto.ActivityUpdateRequest;
 import cn.edu.tongji.springbackend.dto.SocActivityResponse;
+
+import cn.edu.tongji.springbackend.dto.GetSocietyActivityListResponse;
+
 import cn.edu.tongji.springbackend.dto.UploadActReq;
 import cn.edu.tongji.springbackend.exceptions.FileStorageException;
 import cn.edu.tongji.springbackend.mapper.ActivityImageMapper;
@@ -200,6 +204,66 @@ public class SocietyActServiceImpl implements SocietyActivityService {
             throw new RuntimeException("Failed to retrieve student profiles: " + e.getMessage());
         }
     }
+
+    @Override
+    public GetSocietyActivityListResponse getSocietyActivityList(int socId, int beginNumber, int endNumber) {
+        try {
+            // 根据起始和结束索引分页查询列表
+            int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
+            int pageSize = endNumber - beginNumber + 1;  // 检索的数据行数
+            List<Activity> activities = activityMapper.getByPageAndSocId(socId, startRow, pageSize);
+
+            // 处理数据库记录不足的情况
+            if (activities.isEmpty()) {
+                return new GetSocietyActivityListResponse(0, new ArrayList<>()); // 返回一个空列表
+            }
+            // 创建一个存储学生资料响应的列表
+            List<ActivityDetailedInfo> activityList = new ArrayList<>();
+            // 遍历学生列表并获取个人资料
+            for (Activity activity : activities) {
+                Integer actId = activity.getActId();
+                // 创建活动资料响应对象
+                ActivityDetailedInfo activityInfo = new ActivityDetailedInfo();
+                activityInfo.setActName(activity.getActName());
+                activityInfo.setActIntro(activity.getActIntro());
+                activityInfo.setActLocation(activity.getActLocation());
+                activityInfo.setTicketPrice(activity.getTicketPrice());
+                activityInfo.setUploadTime(activity.getUploadTime());
+                activityInfo.setRegStartTime(activity.getRegStartTime());
+                activityInfo.setRegEndTime(activity.getRegEndTime());
+                activityInfo.setActTime(activity.getActTime());
+                activityInfo.setActCapability(activity.getActCapacity());
+                activityInfo.setActLeft(activity.getActLeft());
+                activityInfo.setActRating(activity.getActRating());
+                activityInfo.setRatingNum(activity.getRatingNum());
+                activityInfo.setSocId(activity.getSocId());
+
+                // 获取学生的关键字信息并设置到响应对象中
+                List<String> activityKeywords = activityKeywordMapper.getActivityKeywords(actId);
+                activityInfo.setKeywords(activityKeywords);
+
+                // 查询并读取所有image文件并转换为Base64字符串列表
+                List<String> imageBase64List = new ArrayList<>();
+                List<ActivityImage> activityImages = activityImageMapper.getActivityImagesByActId(actId);
+                for (ActivityImage image : activityImages) {
+                    String imageBase64 = readAndConvertToBase64(image.getActImage());
+                    imageBase64 = "data:image/jpg;base64," + imageBase64;
+                    imageBase64List.add(imageBase64);
+                }
+                activityInfo.setImages(imageBase64List);
+
+                // 将学生资料添加到响应列表
+                activityList.add(activityInfo);
+            }
+
+            return new GetSocietyActivityListResponse(activityMapper.getCountBySocId(socId), activityList);
+        } catch (Exception e) {
+            // 处理异常情况并返回适当的响应
+            logger.error("Failed to retrieve student profiles: {}", e.getMessage());
+            throw new RuntimeException("Failed to retrieve student profiles: " + e.getMessage());
+        }
+    }
+
     // 读取文件并将内容转换为Base64字符串的方法
     private String readAndConvertToBase64(String filePath) {
         try {

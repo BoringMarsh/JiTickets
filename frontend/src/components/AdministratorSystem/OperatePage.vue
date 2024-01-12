@@ -73,7 +73,7 @@
           size="medium"
           color="#ff9966"
           style="color: white;"
-          @click="viewIndent(scope.$index)"
+          @click="router.push({path:'/UserInfoPage',query:{id:userList[scope.$index].userId,flag:1}})"
           v-if= "parseInt(type)"
           ></el-button>
         <el-button
@@ -82,7 +82,7 @@
           size="medium"
           color="#ffcb66"
           style="color: white;"
-          @click="viewCommodity(scope.$index)"
+          @click="viewSocietyActivity(scope.$index)"
           v-if= "parseInt(type)"
           ></el-button>
         <el-button
@@ -292,24 +292,13 @@
       
       getUserList();
     }
-
-  
-  
-  const viewIndent=(index:number)=>{
+    
+  const viewSocietyActivity=(index:number)=>{
     // sessionStorage.setItem('sto_id',userList.value[index].USER_ID.toString());
     router.push({
-        path:'/indent',
+        path:'/society-activity',
         query:{
-            sto_id:userList.value[index].userId
-        }
-    })
-  }
-  const viewCommodity=(index:number)=>{
-    // sessionStorage.setItem('sto_id',userList.value[index].USER_ID.toString());
-    router.push({
-        path:'/commodity',
-        query:{
-            sto_id:userList.value[index].userId,
+            soc_id:userList.value[index].userId,
             admi:1
         }
     })
