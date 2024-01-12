@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface BrowseMapper {
     List<Browse> getByBrowserId(@Param("browserId") int browserId);
-    int add(Browse browse);
+    void add(Browse browse);
 }

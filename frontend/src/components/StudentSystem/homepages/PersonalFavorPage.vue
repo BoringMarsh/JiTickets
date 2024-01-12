@@ -60,7 +60,6 @@
 <script setup lang="ts">
 import {reactive,onMounted, computed,ref,onActivated} from 'vue';
 import {useRouter} from 'vue-router'
-import  baseURL  from "../../../../router/baseURL.js";
 import {store}from '../../../../router/store'
 import axios from 'axios';
 import {
@@ -89,14 +88,13 @@ const favorListOnDisplay=ref([
     actTime: "2023-11-30 14:30:00",
     regStartTime: "2023-11-25 10:00:00",
     uploadTime: "2023-12-24 21:55:53",
-}
-    ]);
+}]);
 
 
 function getFavorList(){
     user_id.value = sessionStorage.getItem('stuId') as string;
     console.log("userId:"+user_id.value)
-    axios.get(baseURL + `/api/activity-personal/favour/${user_id.value}`)
+    axios.get('http://localhost:8084/api/activity-personal/favour/'+user_id.value)
     .then(res=>{
         favorListOnDisplay.value = res.data;
         console.log(res.data)
@@ -106,11 +104,12 @@ function getFavorList(){
 
 function deleteFavor(actId){
     user_id.value = sessionStorage.getItem('stuId') as string;
-    axios.delete(baseURL + `/api/activity-personal/favour?stuId=${user_id.value}&actId=${actId}`)
+    axios.delete('http://localhost:8084/api/activity-personal/favour?stuId='+user_id.value+'&actId='+actId)
     .then(res=>{
         favorListOnDisplay.value = res.data;
         console.log(res.data)
         console.log(favorListOnDisplay.value)
+        getFavorList();
     })
 }
 //显示的收藏
