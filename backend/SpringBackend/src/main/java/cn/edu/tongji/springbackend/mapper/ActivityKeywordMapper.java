@@ -12,7 +12,6 @@ import java.util.List;
 public interface ActivityKeywordMapper {
     List<ActivityKeyword> getById(@Param("id") int id);
     void insertActivityKeyword(ActivityKeyword activityKeyword);
-    List<String> getActivityKeywords(Integer actId);
-
-    void deleteActivityKeywords(Integer actId);
+    List<String> getActivityKeywords(int actId);
+    void deleteActivityKeywords(int actId);
 }

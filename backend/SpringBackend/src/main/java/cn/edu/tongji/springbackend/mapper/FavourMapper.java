@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface FavourMapper {
     List<Favour> getById(@Param("stuId") int stuId);
-    int add(Favour favour);
-    int delete(Favour favour);
+    void add(Favour favour);
+    void delete(Favour favour);
 }

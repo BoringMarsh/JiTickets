@@ -41,7 +41,7 @@ public class SocietyActServiceImpl implements SocietyActivityService {
     private ActivityKeywordMapper activityKeywordMapper;
     @Resource
     private ActivityImageMapper activityImageMapper;
-    @Autowired
+    @Resource
     private FileStorageProperties fileStorageProperties;
 
     @Override

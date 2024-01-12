@@ -257,7 +257,7 @@ let activityDetailedInfo = reactive({
 
 
 const body = ref({
-    broTimeStart: "2020-05-31 18:37:49", // 浏览起始时间
+    broTimeStart: "2024-01-13 08:37:49", // 浏览起始时间
     actId: 1,
     browserId: 1, // 浏览者Id
     whetherBuy: false // 购买情况 true购买 false未购买
@@ -276,8 +276,9 @@ async function getActivityDetail(actId){
     user_id.value=sessionStorage.getItem("stuId")
     body.value.browserId = user_id.value
     body.value.actId = actId
+    console.log(body.value)
     axios.post(
-        baseURL + `/api/activity-personal/browse`,body
+        baseURL + `/api/activity-personal/browse`,body.value
     ).then(response => {
         console.log(response.data)
         
@@ -306,7 +307,7 @@ function apply(){
     requestBody.value.stuId = user_id.value
     requestBody.value.indPrice = activityDetailedInfo.ticketPrice
     // 其他信息从哪里获取？
-    axios.post(baseURL + `/api/activity-personal/indent`, requestBody)
+    axios.post(baseURL + `/api/activity-personal/indent`, requestBody.value)
     .then(res=>{
         console.log(res.data)
     })

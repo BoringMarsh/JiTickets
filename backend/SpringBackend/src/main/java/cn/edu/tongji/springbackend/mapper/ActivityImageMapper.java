@@ -14,6 +14,6 @@ import java.util.List;
 public interface ActivityImageMapper {
     void insertActivityImage(ActivityImage activityImage);
     List<ActivityImage> getById(@Param("id") int id);
-    List<ActivityImage> getActivityImagesByActId(Integer actId);
-    void deleteActivityImages(Integer actId);
+    List<ActivityImage> getActivityImagesByActId(int actId);
+    void deleteActivityImages(int actId);
 }
