@@ -76,4 +76,31 @@
         SELECT * FROM activity
         LIMIT #{pageSize} OFFSET #{startRow}
     </select>
+
+    <select id="getSocActivities" resultMap="activityResultMap" parameterType="java.util.Map">
+        SELECT a.*
+        FROM activity a
+                 LEFT JOIN activity_keyword ak ON a.act_id = ak.act_id
+        WHERE
+          (
+            (CASE
+              WHEN 0 = a.act_left THEN 0
+              WHEN NOW() > a.reg_end_time THEN -1
+              ELSE 1
+            END) = #{status}
+            OR #{status} IS NULL
+          )
+          AND (ak.keyword = #{keyword} OR #{keyword} IS NULL)
+          AND (a.act_name LIKE CONCAT('%', #{query}, '%') OR #{query} IS NULL)
+          AND (DATE(a.upload_time) = DATE(#{uploadTime}) OR #{uploadTime} IS NULL)
+          AND (DATE(a.reg_end_time) = DATE(#{regEndTime}) OR #{regEndTime} IS NULL)
+        ORDER BY
+            CASE
+                WHEN #{order} = 1 THEN a.upload_time
+                WHEN #{order} = 2 THEN a.reg_end_time
+                ELSE a.act_id
+                END
+            LIMIT #{pageSize} OFFSET #{page * pageSize}
+    </select>
+
 </mapper>

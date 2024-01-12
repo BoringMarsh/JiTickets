@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface LoginService {
-
     LoginResponse login(String username, String password);
 }

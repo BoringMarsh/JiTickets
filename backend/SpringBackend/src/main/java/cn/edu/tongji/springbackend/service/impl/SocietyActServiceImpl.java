@@ -27,10 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class SocietyActServiceImpl implements SocietyActivityService {
@@ -208,6 +205,35 @@ public class SocietyActServiceImpl implements SocietyActivityService {
             // 处理文件读取异常
             logger.error("Error reading and converting file to Base64: {}", e.getMessage(), e);
             return null;
+        }
+    }
+
+
+    @Override
+    public List<Activity> getSocActivities(int socId, int status, int order, List<String> keyword,
+                                        String query, String uploadTime, String regEndTime,
+                                        int page, int pageSize) {
+        try {
+            // 构建查询条件
+            Map<String, Object> params = new HashMap<>();
+            params.put("socId", socId);
+            params.put("status", status);
+            params.put("order", order);
+            params.put("keyword", keyword);
+            params.put("query", query);
+            params.put("uploadTime", uploadTime);
+            params.put("regEndTime", regEndTime);
+            params.put("page", page);
+            params.put("pageSize", pageSize);
+
+            // 调用 activityMapper 的方法执行查询
+            List<Activity> activities = activityMapper.getSocActivities(params);
+
+            // 返回查询结果
+            return activities;
+        } catch (Exception ex) {
+            logger.error("Error occurred in getActivities: " + ex.getMessage(), ex);
+            throw ex; // Re-throw the exception if you want to propagate it up the call stack
         }
     }
 }

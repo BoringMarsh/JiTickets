@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -18,4 +19,6 @@ public interface ActivityMapper {
     void update(Activity activity);
 
     List<Activity> getActivityListByRange(@Param("startRow") int startRow, @Param("pageSize") int pageSize);
+
+    List<Activity> getSocActivities(Map<String, Object> params);
 }
