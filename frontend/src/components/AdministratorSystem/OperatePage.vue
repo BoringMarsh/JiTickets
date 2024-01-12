@@ -13,7 +13,7 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="noticeNotUpload">取消</el-button>
-        <el-button type="primary" @click="noticeUpload">
+        <el-button type="primary" @click="changeState(prohibit.id, prohibit.result); noticeUpload();">
           确认
         </el-button>
       </span>
@@ -30,14 +30,6 @@
       <el-input placeholder="请输入内容" clearable v-model="query" />
         </el-col>
         <el-col :span="7"><el-button type="primary" icon="search" @click="getGoods"/></el-col>
-        <el-col :span="3"><el-tag>按名称排序方式：</el-tag></el-col>
-        <el-col :span="4">
-        <el-radio-group v-model="tableLayout">
-          <el-radio-button label="升序" @click="checkLeft"/>
-          <el-radio-button label="默认" @click="checkLeft1"/>
-          <el-radio-button label="降序" @click="checkLeft2"/>
-        </el-radio-group>
-        </el-col>
       </el-row>
       <el-row>
     <el-table
@@ -96,15 +88,27 @@
         <el-button
           type="danger"
           size="medium"
-          @click="changeState(scope.row.userId, true)"
+          @click="storeChangeStateInfo(scope.row.userId, true)"
           v-if= "scope.row.accountStatus == '正常'"
         >封禁</el-button>
         <el-button
           type="primary"
           size="medium"
-          @click="changeState(scope.row.userId, false)"
+          @click="storeChangeStateInfo(scope.row.userId, false)"
           v-if= "scope.row.accountStatus == '封禁'"
         >解封</el-button>
+        <el-button
+          type="success"
+          size="medium"
+          @click="passRegRequest(scope.row.userId)"
+          v-if= "scope.row.accountStatus == '待审核'"
+        >通过</el-button>
+        <el-button
+          type="info"
+          size="medium"
+          @click="refuseRegRequest(scope.row.userId)"
+          v-if= "scope.row.accountStatus == '待审核'"
+        >拒绝</el-button>
         </template>
     </el-table-column>
     </el-table>
@@ -113,7 +117,7 @@
     <el-row>
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :current-page="pagenum" :page-sizes="[1, 3, 5, 10, 15, 20]" :page-size="pagesize"
-            layout="total, sizes, prev, pager, next, jumper" :total="type=='1'? 13:5">
+            layout="total, sizes, prev, pager, next, jumper" :total="usercount">
     </el-pagination>
   </el-row>
   
@@ -129,7 +133,6 @@
     import { useRouter,useRoute } from 'vue-router';
     import { ArrowLeft, User } from '@element-plus/icons-vue'
     import { ElMessage, ElMessageBox,ElNotification } from 'element-plus'
-import { id } from 'element-plus/es/locale';
     const router=useRouter();
     const pagenum=ref(1);
     const pagesize=ref(5);
@@ -146,16 +149,20 @@ import { id } from 'element-plus/es/locale';
     const type=ref('');
     const dialogVisible = ref(false)
     const text=ref('');
-    const userList=ref([
+    var userList=ref([
         {
             "userId": 1000001,
             "username": "张翔",
             "regTime": "2023-08-01",
-            "accountStatus": 1,
+            "accountStatus": "正常",
             //"": "store_image\\1000040_picture.jpg"
         }
     ]);
-
+    var prohibit = ref({
+      id: 0,
+      result: false
+    });
+    var usercount = ref(0);
   
   const status=ref(1);  //1 在售 0 售罄/下架 -1 过期
   const id_order=ref(1);
@@ -172,21 +179,22 @@ import { id } from 'element-plus/es/locale';
     axios.get('http://localhost:8084/api/order/userlist/' + (type.value == '1' ? 'society' : 'student') + '?&BEGIN_NUMBER='+(pagesize.value*(pagenum.value-1)+1)+'&END_NUMBER='+(pagesize.value*pagenum.value)) 
       .then(response=>{
         console.log(response);
-        for(var i=0;i<response.data.length;i++){
-          switch (response.data[i].accountStatus) {
+        usercount.value = response.data.count;
+        for(var i=0;i<response.data.list.length;i++){
+          switch (response.data.list[i].accountStatus) {
             case 0:
-              response.data[i].accountStatus = '封禁';
+              response.data.list[i].accountStatus = '封禁';
               break;
             case 1:
-              response.data[i].accountStatus = '正常';
+              response.data.list[i].accountStatus = '正常';
               break;
             case 2:
-              response.data[i].accountStatus = '待审核';
+              response.data.list[i].accountStatus = '待审核';
               break;
           }
       }
 
-        userList.value=JSON.parse(JSON.stringify(response.data));
+        userList.value=JSON.parse(JSON.stringify(response.data.list));
         // console.log(userList.value[0].USER_REGTIME)
         isEmpty.value = []
         
@@ -195,15 +203,16 @@ import { id } from 'element-plus/es/locale';
   }
   
   
-  const getGoods=async()=>{
+  const getGoods=async(keyword:string)=>{
     getUserList().then(()=>{
-    ElNotification.success({
-      title: 'Success',
-      message: '搜索成功',
-      duration: durationTime
-    })})
+      userList.value = userList.value.filter(user => user.username.includes(keyword));
 
-    haveQuery.value=query.value;
+      ElNotification.success({
+        title: 'Success',
+        message: '搜索成功',
+        duration: durationTime
+      });
+    });
   }
   
   const changeSort=(value)=>{
@@ -306,28 +315,40 @@ import { id } from 'element-plus/es/locale';
     })
   }
 
-const checkLeft=()=>{
-  name_order.value=1;
-  getUserList();
-}
-
-const checkLeft1=()=>{
-  name_order.value=-1;
-  getUserList();
-}
-
-const checkLeft2=()=>{
-  name_order.value=0;
-  getUserList();
+const storeChangeStateInfo=(userId:number, ifProhibited:boolean)=>{
+  dialogVisible.value=true;
+  prohibit.value.id=userId;
+  prohibit.value.result=ifProhibited;
 }
 
 const changeState=(userId:number, ifProhibited:boolean)=>{
-  dialogVisible.value=true;
   axios.put('http://localhost:8084/api/order/prohibit?USER_ID='+userId+'&IF_PROHIBITED='+ifProhibited)
     .then(response=>{
       // getState(index)
+    }, error=>{
+      console.log(error);
+      return;
     });
-  console.log('to_State : '+ ifProhibited ? '封禁' : '解封');
+  
+  getUserList();
+}
+
+const passRegRequest=(userId:number)=>{
+  axios.put('http://localhost:8084/api/order/reg-request?USER_ID='+userId)
+  .then(response=>{
+    console.log(response.data);
+    getUserList();
+    noticeNotUpload();
+  });
+}
+
+const refuseRegRequest=(userId:number)=>{
+  axios.delete('http://localhost:8084/api/order/reg-request?USER_ID='+userId)
+  .then(response=>{
+    console.log(response.data);
+    getUserList();
+    noticeNotUpload();
+  })
 }
 
 const noticeNotUpload=()=>{

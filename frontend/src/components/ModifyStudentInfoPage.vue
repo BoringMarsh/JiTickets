@@ -1,11 +1,11 @@
 <template>
   <el-container>
-    <el-header  style="background-color: #aa1514;">
+    <el-header  style="background-color: #eeebe4;">
       <el-row justify="space-between">
         <el-col :span="4" style="display: flex; align-items: center;">
-          <img src="../assets/shibaobao_logo.png" alt="商标" style="height: 100%; max-height: 50px; margin-right: 10px;"> <!-- 添加商标图片 -->
+          <img src="../../public/Logo.png" alt="Logo" style="height: 100%; max-height: 50px; margin-right: 10px;"> <!-- 添加商标图片 -->
           <h3 style="  
-              color:aliceblue;
+              color:#9f4833;
               text-overflow:ellipsis;
               white-space:nowrap;
               overflow:hidden;">
@@ -13,11 +13,11 @@
           </h3>
         </el-col>
         <el-col :span="20" style="display: flex; justify-content: flex-end; align-items: center;">
-          <el-link icon="el-icon-arrow-left" @click="goBack" style="color: aliceblue; font-size: large; margin-left: 15px;">返回主页</el-link>
+          <el-link icon="el-icon-arrow-left" @click="goBack" style="color: #9f4833; font-size: large; margin-left: 15px;">返回主页</el-link>
         </el-col>
       </el-row>
     </el-header>
-    <el-main style="background-color: #fef0f0; min-height: 100vh;">
+    <el-main style="background-color: #fffbf7; min-height: 100vh;">
       <el-form :model="userInfo" ref="form" @submit.prevent="modifyUser" style="max-width: 1100px; position: relative; margin: auto;">
         <div style="border-bottom: 1px solid gray; padding: 10px;">
           <div style="display: flex; align-items: center;">

@@ -3,7 +3,6 @@ package cn.edu.tongji.springbackend.service.impl;
 
 import cn.edu.tongji.springbackend.controller.KeywordsController;
 import cn.edu.tongji.springbackend.dto.*;
-import cn.edu.tongji.springbackend.exceptions.LoginException;
 import cn.edu.tongji.springbackend.exceptions.NotFoundException;
 import cn.edu.tongji.springbackend.mapper.*;
 import cn.edu.tongji.springbackend.model.*;
@@ -41,7 +40,7 @@ public class ProfileServiceImpl implements ProfileService {
     private static final Logger logger = LoggerFactory.getLogger(KeywordsController.class);
 
     @Override
-    public GetStudentProfileResponse getStudentProfile(String username) {
+    public StudentProfile getStudentProfile(String username) {
 
         User user = userMapper.getUserByUsername(username);
         if (user == null) {
@@ -60,7 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
         List<String> studentKeywords = studentKeywordMapper.getStudentKeywords(userId);
 
         // Create and return the response object
-        return new GetStudentProfileResponse(
+        return new StudentProfile(
                 user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getCampus(),
                 user.getAccountStatus(), user.getBalance(), formattedDateTime, user.getRole(),
                 student.getStuName(), student.getStuYear(), student.getStuSchool(), student.getStuMajor(),
@@ -110,7 +109,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public GetSocietyProfileResponse getSocietyProfileInfo(String username) {
+    public SocietyProfile getSocietyProfileInfo(String username) {
         User user = userMapper.getUserByUsername(username);
         if (user == null) {
             throw new NotFoundException("User not found");
@@ -141,7 +140,7 @@ public class ProfileServiceImpl implements ProfileService {
             imageBase64List.add(imageBase64);
         }
         // Create and return the response object
-        return new GetSocietyProfileResponse(
+        return new SocietyProfile(
                 user.getId(), user.getUsername(), user.getEmail(), user.getPhone(), user.getCampus(),
                 user.getAccountStatus(), user.getBalance(), formattedDateTime, user.getRole(),
                 society.getSocName(), society.getSocIntro(), society.getSocType(),
@@ -221,7 +220,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public List<GetStudentProfileResponse> getStudentProfileList(int beginNumber, int endNumber) {
+    public GetStudentPageResponse getStudentProfileList(int beginNumber, int endNumber) {
         try {
             // 根据起始和结束索引分页查询学生列表
             int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
@@ -229,15 +228,15 @@ public class ProfileServiceImpl implements ProfileService {
             List<Student> studentList = studentMapper.getStudentListByRange(startRow, pageSize);
             // 处理数据库记录不足的情况
             if (studentList.isEmpty()) {
-                return new ArrayList<>(); // 返回一个空列表
+                return new GetStudentPageResponse(0, new ArrayList<>()); // 返回一个空列表
             }
             // 创建一个存储学生资料响应的列表
-            List<GetStudentProfileResponse> studentProfiles = new ArrayList<>();
+            List<StudentProfile> studentProfiles = new ArrayList<>();
             // 遍历学生列表并获取个人资料
             for (Student student : studentList) {
                 Integer stuId = student.getStuId();
                 // 创建学生资料响应对象
-                GetStudentProfileResponse studentProfile = new GetStudentProfileResponse();
+                StudentProfile studentProfile = new StudentProfile();
                 // 设置用户属性
                 User user = userMapper.getUserById(stuId);
                 studentProfile.setUserId(user.getId());
@@ -267,7 +266,7 @@ public class ProfileServiceImpl implements ProfileService {
                 // 将学生资料添加到响应列表
                 studentProfiles.add(studentProfile);
             }
-            return studentProfiles;
+            return new GetStudentPageResponse(userMapper.getCountByUserRole(0), studentProfiles);
         } catch (Exception e) {
             // 处理异常情况并返回适当的响应
             logger.error("Failed to retrieve student profiles: {}", e.getMessage());
@@ -276,7 +275,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public List<GetSocietyProfileResponse> getSocietyProfileList(int beginNumber, int endNumber) {
+    public GetSocietyPageResponse getSocietyProfileList(int beginNumber, int endNumber) {
         try {
             // 根据起始和结束索引分页查询社团列表
             int startRow = beginNumber - 1;  // 起始行索引，减1以匹配数据库行数从0开始的情况
@@ -284,15 +283,15 @@ public class ProfileServiceImpl implements ProfileService {
             List<Society> societyList = societyMapper.getSocietyListByRange(startRow, pageSize);
             // 处理数据库记录不足的情况
             if (societyList.isEmpty()) {
-                return new ArrayList<>(); // 返回一个空列表
+                return new GetSocietyPageResponse(0, new ArrayList<>()); // 返回一个空列表
             }
             // 创建一个存储学生资料响应的列表
-            List<GetSocietyProfileResponse> societyProfiles = new ArrayList<>();
+            List<SocietyProfile> societyProfiles = new ArrayList<>();
             // 遍历学生列表并获取个人资料
             for (Society society : societyList) {
                 Integer socId = society.getSocId();
                 // 创建社团资料响应对象
-                GetSocietyProfileResponse societyProfile = new GetSocietyProfileResponse();
+                SocietyProfile societyProfile = new SocietyProfile();
                 // 设置用户属性
                 User user = userMapper.getUserById(socId);
                 societyProfile.setUserId(user.getId());
@@ -337,7 +336,7 @@ public class ProfileServiceImpl implements ProfileService {
                 // 将学生资料添加到响应列表
                 societyProfiles.add(societyProfile);
             }
-            return societyProfiles;
+            return new GetSocietyPageResponse(userMapper.getCountByUserRole(1), societyProfiles);
         } catch (Exception e) {
             // 处理异常情况并返回适当的响应
             logger.error("Failed to retrieve student profiles: {}", e.getMessage());
@@ -350,6 +349,18 @@ public class ProfileServiceImpl implements ProfileService {
         User user = userMapper.getUserById(userId);
         user.setAccountStatus(ifProhibited ? 0 : 1);
         userMapper.updateUser(user);
+    }
+
+    @Override
+    public void passRegRequest(int userId) {
+        User user = userMapper.getUserById(userId);
+        user.setAccountStatus(1);
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public void refuseRegRequest(int userId) {
+        userMapper.deleteUserById(userId);
     }
 }
 

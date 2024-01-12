@@ -67,11 +67,13 @@ public class UserController {
     }
     */
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    @GetMapping("/login")
+    public ResponseEntity<?> login(
+            @RequestParam("USERNAME") String username,
+            @RequestParam("PASSWORD") String password) {
         try {
-            logger.info("Successfully received request: {}", loginRequest);
-            LoginResponse loginResponse = loginService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            logger.info("Successfully received request: {USERNAME: \"" + username + "\", PASSWORD: \"" + password + "\"}");
+            LoginResponse loginResponse = loginService.login(username, password);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (LoginException e) {
             // Handle login-related exceptions (e.g., account not found, incorrect password)
@@ -87,7 +89,7 @@ public class UserController {
         try {
             logger.info("start to get student profile");
             logger.info("Successfully received request: {}", username);
-            GetStudentProfileResponse studentProfile = profileService.getStudentProfile(username);
+            StudentProfile studentProfile = profileService.getStudentProfile(username);
             if (studentProfile != null) {
                 return new ResponseEntity<>(studentProfile, HttpStatus.OK);
             } else {
@@ -116,7 +118,7 @@ public class UserController {
             logger.info("start to get society profile");
             logger.info("Successfully received request: {}", username);
             // Fetch student information using the provided username
-            GetSocietyProfileResponse societyProfile = profileService.getSocietyProfileInfo(username);
+            SocietyProfile societyProfile = profileService.getSocietyProfileInfo(username);
             if (societyProfile != null) {
                 return new ResponseEntity<>(societyProfile, HttpStatus.OK);
             } else {

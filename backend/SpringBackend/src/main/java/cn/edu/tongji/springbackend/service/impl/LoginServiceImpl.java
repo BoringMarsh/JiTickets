@@ -6,6 +6,7 @@ import cn.edu.tongji.springbackend.dto.*;
 import cn.edu.tongji.springbackend.exceptions.LoginException;
 import cn.edu.tongji.springbackend.mapper.UserMapper;
 import cn.edu.tongji.springbackend.model.*;
+import cn.edu.tongji.springbackend.service.EncryptService;
 import cn.edu.tongji.springbackend.service.LoginService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginServiceImpl implements LoginService {
+    @Resource
+    private EncryptService encryptService;
     @Resource
     private UserMapper userMapper;
 
@@ -30,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
                 throw new LoginException("Account does not exist");
             }
 
-            if (!password.equals(user.getPassword())) {
+            if (!encryptService.passwordCmp(user.getPassword(), password)) {
                 // Incorrect password
                 logger.warn("Login failed: Incorrect password.");
                 throw new LoginException("Incorrect password");
