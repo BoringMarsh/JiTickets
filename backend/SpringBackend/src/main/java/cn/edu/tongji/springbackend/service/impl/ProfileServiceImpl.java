@@ -362,5 +362,18 @@ public class ProfileServiceImpl implements ProfileService {
     public void refuseRegRequest(int userId) {
         userMapper.deleteUserById(userId);
     }
+
+    @Override
+    public void updateUserBalance(String username, Double newBalance) {
+        // 使用userId查找用户
+        User user = userMapper.getUserByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + username);
+        }
+        // 更新用户的余额
+        user.setBalance(newBalance);
+        // 保存更新
+        userMapper.updateUser(user);
+    }
 }
 

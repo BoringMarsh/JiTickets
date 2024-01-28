@@ -15,4 +15,6 @@ public interface ProfileService {
     void setUserProhibitedStatus(int userId, boolean ifProhibited);
     void passRegRequest(int userId);
     void refuseRegRequest(int userId);
+
+    void updateUserBalance(String username, Double newBalance);
 }

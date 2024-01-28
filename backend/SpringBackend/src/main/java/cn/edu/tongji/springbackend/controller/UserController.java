@@ -143,6 +143,18 @@ public class UserController {
         }
     }
 
+    @PostMapping("/balance/setBalance")
+    public ResponseEntity<?> setBalance(@RequestBody BalanceRequest balanceRequest) {
+        try {
+            logger.info("start to set balance");
+            logger.info("Successfully received request: {}", balanceRequest);
+            profileService.updateUserBalance(balanceRequest.getUsername(), balanceRequest.getBalance());
+            return ResponseEntity.ok().body("Balance updated successfully");
+        } catch (Exception e) {
+            logger.error("Error updating balance: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating balance");
+        }
+    }
     public GetStudentPageResponse getStudentProfileList(int beginNumber, int endNumber) {
         return profileService.getStudentProfileList(beginNumber, endNumber);
     }
